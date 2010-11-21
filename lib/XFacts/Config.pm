@@ -3,12 +3,13 @@ use 5.012;
 use warnings;
 use Exporter qw(import dbh);
 
-our @EXPORT_OK = qw(config);
+our @EXPORT_OK = qw(config schema amazon dbh);
 use autodie;
 use JSON::XS qw(decode_json);
 
 use XML::Amazon;
 use DBI;
+use XFacts::Model;
 
 my $conf = decode_json do {
     open my $file, '<:encoding(UTF-8)', 'config.json';
@@ -31,10 +32,14 @@ sub dbh {
 
 sub amazon {
     XML::Amazon->new(
-        token => $config->{amazon_token},
-        sak   => $config->{amazon_secret_key},
-        local => $config->{amazon_locale} // 'us',
+        token => config()->{amazon_token},
+        sak   => config()->{amazon_secret_key},
+        local => config()->{amazon_locale} // 'us',
     );
+}
+
+sub schema {
+    XFacts::Model->connect(\&dbh);
 }
 
 1;
