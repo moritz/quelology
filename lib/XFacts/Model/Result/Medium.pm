@@ -1,4 +1,4 @@
-package XFacts::Model::Medium;
+package XFacts::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
 
 __PACKAGE__->table('medium');
@@ -17,6 +17,5 @@ __PACKAGE__->add_columns(qw/
     /);
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
-
 
 1;
