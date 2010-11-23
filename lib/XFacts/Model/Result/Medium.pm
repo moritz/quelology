@@ -13,9 +13,11 @@ __PACKAGE__->add_columns(qw/
     small_image
     medium_image
     large_image
-    publish_date
+    publish_year
     /);
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
+__PACKAGE__->has_many('sequels', "XFacts::Model::Result::MediumLink", 'first');
+__PACKAGE__->has_many('prequels', "XFacts::Model::Result::MediumLink", 'second');
 
 1;
