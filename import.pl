@@ -21,7 +21,7 @@ for (@objs) {
     say $_->title;
 }
 my %rels = (
-    'The Lord of the Ring' => [0, 1, 2],
+    'The Lord of the Rings' => [0, 1, 2],
     'Demon Series' => [3, 4],
     'The Black Magician Trilogy' => [5, 6, 7],
     'The Traitor Spy Trilogy' => [8, 9],
@@ -40,20 +40,31 @@ while (my ($l, $r) = each %rels) {
 
 my $middleearth = $schema->resultset('Medium')
         ->create({ title => 'Middle Earth' });
-$middleearth->attach_rightmost_child(@objs[10, 11], $roots{'The Lord of the Ring'}, $objs[12]);
+$middleearth->attach_rightmost_child(@objs[10, 11], $roots{'The Lord of the Rings'}, $objs[12]);
 
-my $rs = $schema->resultset('Medium')->search({
-        'id'   =>  {'=' =>  \'root_id'},
-    });
+my $rs = $schema->resultset('Medium')->root_nodes;
+
+say;
+
 while (my $node = $rs->next) {
     print_recursively($node);
 }
 
+say;
+
 sub print_recursively {
     my $n = shift;
-    say +("    " x $n->level), " ", $n->title;
+    say +("    " x $n->level), $n->title;
     for ($n->children) {
         print_recursively($_);
     }
 }
 
+$rs->reset;
+
+while (my $node = $rs->next) {
+    say $node->title;
+    for my $n ($node->descendants) {
+        say '   ' x $n->level, $n->title;
+    }
+}

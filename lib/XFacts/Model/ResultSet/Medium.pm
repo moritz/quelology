@@ -30,5 +30,11 @@ sub from_asin {
     return $row;
 }
 
+sub root_nodes {
+    my $self = shift;
+    $self->search({
+        id => { '=' => \'root_id' },
+    });
+}
 
 1;
