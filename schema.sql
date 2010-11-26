@@ -16,3 +16,5 @@ CREATE TABLE medium (
     r INTEGER,
     level INTEGER
 );
+
+CREATE INDEX medium_root_id on medium (root_id);
