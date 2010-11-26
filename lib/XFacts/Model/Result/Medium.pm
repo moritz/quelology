@@ -30,4 +30,5 @@ __PACKAGE__->tree_columns({
         right_column    => 'r',
         level_column    => 'level',
 });
+
 1;

@@ -12,16 +12,17 @@ sub from_asin {
         my $a = XFacts::Config::amazon();
         my $m = $a->asin($asin);
         if ($m) {
-            $row = $self->create({
+            my $h = {
                 asin            => $asin,
                 title           => $m->title,
-                made_by         => $m->made_by,
-                publisher       => $m->publisher,
+                made_by         => scalar($m->made_by),
+                publisher       => scalar($m->publisher),
                 amazon_url      => $m->url,
                 small_image     => $m->image('s'),
                 medium_image    => $m->image('m'),
                 large_image     => $m->image('l'),
-            });
+            };
+            $row = $self->create($h);
         } else {
             confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
         }

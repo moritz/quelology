@@ -15,17 +15,16 @@ my @asins = (
                 qw(0316037834 0316037869),
                 # the Hobbit, Silmarillion, unfinished tales
                 qw(0261102664 B0017PICLQ 0618154043),
-              );
-
+            );
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
 for (@objs) {
     say $_->title;
 }
 my %rels = (
-'The Lord of the Ring' => [0, 1, 2],
-'Demon Series' => [3, 4],
-'The Black Magician Trilogy' => [5, 6, 7],
-'The Traitor Spy Trilogy' => [8, 9],
+    'The Lord of the Ring' => [0, 1, 2],
+    'Demon Series' => [3, 4],
+    'The Black Magician Trilogy' => [5, 6, 7],
+    'The Traitor Spy Trilogy' => [8, 9],
 );
 
 my %roots;
@@ -44,7 +43,7 @@ my $middleearth = $schema->resultset('Medium')
 $middleearth->attach_rightmost_child(@objs[10, 11], $roots{'The Lord of the Ring'}, $objs[12]);
 
 my $rs = $schema->resultset('Medium')->search({
-        'id'   =>   \'root_id',
+        'id'   =>  {'=' =>  \'root_id'},
     });
 while (my $node = $rs->next) {
     print_recursively($node);
@@ -52,9 +51,9 @@ while (my $node = $rs->next) {
 
 sub print_recursively {
     my $n = shift;
-    say "  " x $n->level, " ", $n->title;
+    say +("    " x $n->level), " ", $n->title;
     for ($n->children) {
-        print_recursively $_;
+        print_recursively($_);
     }
 }
 
