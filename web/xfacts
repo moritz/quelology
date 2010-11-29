@@ -1,0 +1,108 @@
+#!/usr/bin/env perl
+use 5.012;
+use warnings;
+
+use Mojolicious::Lite;
+use lib 'lib';
+use lib '../lib';
+use XFacts::Config qw(schema);
+
+my $schema = schema;
+
+get '/' =>  sub {
+    my $self = shift;
+    my $t = '';
+    $self->render(
+        root        => [$schema->resultset('Medium')->root_nodes],
+        template    => 'index',
+        title       => 'List of series',
+    );
+};
+
+get '/m/:id' => sub {
+    my $self = shift;
+    my $node = $schema->resultset('Medium')->find($self->param('id'));
+    my $template = $node->is_leaf ? 'medium' : 'tree';
+    $self->render(
+        layout  => 'basic',
+        title   => 'Details',
+        node    => $node,
+        template => $template,
+    );
+} => 'medium';
+
+get '/t/:id' => sub {
+    my $self = shift;
+    $self->render(
+        layout  => 'basic',
+        title   => 'Tree details',
+        node    => $schema->resultset('Medium')->find($self->param('id')),
+    );
+} => 'tree';
+
+app->start;
+__DATA__
+
+@@ index.html.ep
+% layout 'basic';
+<h1>List of Series</h1>
+<ul>
+<% for my $n (@$root) { %>
+    <li>
+    <%= link_to $n->title, medium => { id => $n->id } %>
+    </li>
+<% } %>
+</ul>
+
+@@ tree.html.ep
+<h1><%= $node->title %></h1>
+<ul>
+<% my $prev_level = 1;
+   for my $n ($node->descendants) { %>
+      <%
+      my $l = $n->level - $prev_level; 
+      $prev_level = $n->level;
+      my $ld = '';
+      if ($l > 0) {
+        $ld = '<ul>' x $l;
+      } elsif ($l < 0) {
+        $ld = '</ul>' x abs($l);
+      }
+    %>
+        <%== $ld =%>
+    <li>
+        <%= link_to($n->title, medium => { id => $n->id }) =%>
+    </li>
+<% } =%>
+<%== '</ul>' x $prev_level =%>
+
+@@ medium.html.ep
+<div class="node level<%= $node->level %>">
+    <h2><%= $node->title %></h2>
+    <% if (defined $node->made_by) { %>
+        <p>Author: <%= $node->made_by %></p>
+    <% } %>
+    <a href="<%= $node->amazon_url %>">
+        <% if (defined $node->medium_image) { %>
+            <img src="<%= $node->medium_image %>"
+                alt="Cover of <%= $node->title %>" />
+        <% } %>
+        <br />
+        View on amazon
+    </a>
+</div>
+
+@@ layouts/basic.html.ep
+<!doctype html><html>
+    <head>
+        <title><%= $title %></title>
+        <style type="text/css"><!--
+            .node {
+            border: 1px dotted black;
+            padding: 0.3em;
+            max-width: 20em;
+        }
+  // --></style>
+    </head>
+    <body><%== content %></body>
+</html>

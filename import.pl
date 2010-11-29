@@ -15,7 +15,14 @@ my @asins = (
                 qw(0316037834 0316037869),
                 # the Hobbit, Silmarillion, unfinished tales
                 qw(0261102664 B0017PICLQ 0618154043),
-            );
+                # Kushiel's Dart, Chosen, Avatar
+                qw(0765342987 0765345048 0765347539),
+                # Kushiel's Scion, Justice, Mercy
+                qw(044661002X 0446610143 044661016X),
+                # Naamah's Kiss, Curse, Blessing
+                qw(0446198048 0446198056 0446198072),
+    );
+
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
 for (@objs) {
     say $_->title;
@@ -25,6 +32,9 @@ my %rels = (
     'Demon Series' => [3, 4],
     'The Black Magician Trilogy' => [5, 6, 7],
     'The Traitor Spy Trilogy' => [8, 9],
+    "Kushiel's Dart (Phedre)" => [13, 14, 15],
+    "Kushiel's Scion (Imriel)" => [16, 17, 18],
+    "Naamah's Gift (Moirin)" => [19, 20, 21],
 );
 
 my %roots;
@@ -40,26 +50,22 @@ while (my ($l, $r) = each %rels) {
 
 my $middleearth = $schema->resultset('Medium')
         ->create({ title => 'Middle Earth' });
-$middleearth->attach_rightmost_child(@objs[10, 11], $roots{'The Lord of the Rings'}, $objs[12]);
+$middleearth->attach_rightmost_child(@objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
 
+# TODO: Add "Magician's Apprentice"
+#my $trudi = $schema->resultset('Medium')
+#        ->create({ title => '' });
+#$trudi->
+
+
+my $terre_dange = $schema->resultset('Medium')
+    ->create({title => "Terre d'Ange"});
+$terre_dange
+    ->attach_rightmost_child(@roots{ "Kushiel's Dart (Phedre)",
+            "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
+
+say '';
 my $rs = $schema->resultset('Medium')->root_nodes;
-
-say;
-
-while (my $node = $rs->next) {
-    print_recursively($node);
-}
-
-say;
-
-sub print_recursively {
-    my $n = shift;
-    say +("    " x $n->level), $n->title;
-    for ($n->children) {
-        print_recursively($_);
-    }
-}
-
 $rs->reset;
 
 while (my $node = $rs->next) {

@@ -5,6 +5,16 @@ use Carp qw(confess);
 
 use parent 'DBIx::Class::ResultSet';
 
+sub scalarify {
+    @_ == 1 ? $_[0] : join ', ', @_;
+}
+
+sub unparen {
+    my $t = shift;
+    $t =~ s/\s*\([^()]+\)$//;
+    $t;
+}
+
 sub from_asin {
     my ($self, $asin) = @_;
     my $row = $self->find({ asin => $asin });
@@ -14,9 +24,9 @@ sub from_asin {
         if ($m) {
             my $h = {
                 asin            => $asin,
-                title           => $m->title,
-                made_by         => scalar($m->made_by),
-                publisher       => scalar($m->publisher),
+                title           => unparen($m->title),
+                made_by         => scalarify($m->made_by),
+                publisher       => scalarify($m->publisher),
                 amazon_url      => $m->url,
                 small_image     => $m->image('s'),
                 medium_image    => $m->image('m'),
