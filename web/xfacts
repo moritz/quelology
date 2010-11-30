@@ -22,7 +22,7 @@ get '/' =>  sub {
 
 get '/m/:id' => sub {
     my $self = shift;
-    my $node = $schema->resultset('Medium')->find($self->param('id'));
+    my $node = $schema->m->find($self->param('id'));
     my $template = $node->is_leaf ? 'medium' : 'tree';
     $self->render(
         layout  => 'basic',
@@ -35,7 +35,7 @@ get '/m/:id' => sub {
 get '/asin/:asin' => sub {
     my $self = shift;
     my $node = eval {
-        $schema->resultset('Medium')->from_asin($self->stash('asin'));
+        $schema->m->from_asin($self->stash('asin'));
     };
     if ($node) {
         $self->render(
@@ -55,7 +55,7 @@ get '/t/:id' => sub {
     $self->render(
         layout  => 'basic',
         title   => 'Tree details',
-        node    => $schema->resultset('Medium')->find($self->param('id')),
+        node    => $schema->m->find($self->param('id')),
     );
 } => 'tree';
 
