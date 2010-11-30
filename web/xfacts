@@ -13,7 +13,8 @@ get '/' =>  sub {
     my $self = shift;
     my $t = '';
     $self->render(
-        root        => [$schema->resultset('Medium')->root_nodes],
+        threads     => [$schema->m->threads],
+        singles     => [$schema->m->singles],
         template    => 'index',
         title       => 'List of series',
     );
@@ -67,7 +68,16 @@ __DATA__
 % layout 'basic';
 <h1>List of Series</h1>
 <ul>
-<% for my $n (@$root) { %>
+<% for my $n (@$threads) { %>
+    <li>
+    <%= link_to $n->title, medium => { id => $n->id } %>
+    by <strong><%= $n->made_by %></strong>
+    </li>
+<% } %>
+</ul>
+<h1>List of single nodes</h1>
+<ul>
+<% for my $n (@$singles) { %>
     <li>
     <%= link_to $n->title, medium => { id => $n->id } %>
     by <strong><%= $n->made_by %></strong>
@@ -93,6 +103,9 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
+        <% if ($n->small_image) { %>
+            <img src="<%= $n->small_image %>" alt="" />
+        <% } %>
         <%= link_to($n->title, medium => { id => $n->id }) %>
         by <%= $n->made_by %>
     </li>
