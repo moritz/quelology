@@ -59,8 +59,13 @@ get '/t/:id' => sub {
     );
 } => 'tree';
 
+$SIG{INT} = sub {
+    $schema->storage->disconnect;
+    exec $^X, $0, @ARGV;
+};
+
 app->start;
-$schema->disconnect;
+$schema->storage->disconnect;
 
 __DATA__
 
@@ -118,14 +123,22 @@ __DATA__
     <% if (defined $node->made_by) { %>
         <p>Author: <%= $node->made_by %></p>
     <% } %>
-    <a href="<%= $node->amazon_url %>">
+    <p>
         <% if (defined $node->medium_image) { %>
-            <img src="<%= $node->medium_image %>"
-                alt="Cover of <%= $node->title %>" />
+            <% if (defined $node->large_image) { %>
+                <a href="<%= $node->large_image %>">
+            <% } %>
+                <img src="<%= $node->medium_image %>"
+                    alt="Cover of <%= $node->title %>" />
+            <% if (defined $node->large_image) { %>
+                </a>
+            <% } %>
         <% } %>
         <br />
-        View on amazon
-    </a>
+        <a href="<%= $node->amazon_url %>">
+            View on amazon US
+        </a>
+    </p>
 </div>
 
 @@ layouts/basic.html.ep
