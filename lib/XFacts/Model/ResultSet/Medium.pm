@@ -74,4 +74,14 @@ sub root_nodes {
     });
 }
 
+sub threads {
+    my $self = shift;
+    grep !$_->is_leaf, $self->root_nodes;
+}
+
+sub singles {
+    my $self = shift;
+    grep $_->is_leaf, $self->root_nodes;
+}
+
 1;
