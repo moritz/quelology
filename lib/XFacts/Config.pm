@@ -7,7 +7,7 @@ our @EXPORT_OK = qw(config schema amazon dbh);
 use autodie;
 use JSON::XS qw(decode_json);
 
-use XML::Amazon;
+use XML::Amazon::Cached;
 use DBI;
 use XFacts::Model;
 
@@ -31,7 +31,7 @@ sub dbh {
 }
 
 sub amazon {
-    XML::Amazon->new(
+    XML::Amazon::Cached->new(
         token => config()->{amazon_token},
         sak   => config()->{amazon_secret_key},
         local => config()->{amazon_locale} // 'us',
