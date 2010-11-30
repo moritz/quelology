@@ -17,7 +17,7 @@ get '/' =>  sub {
         template    => 'index',
         title       => 'List of series',
     );
-};
+} => 'index';
 
 get '/m/:id' => sub {
     my $self = shift;
@@ -30,6 +30,24 @@ get '/m/:id' => sub {
         template => $template,
     );
 } => 'medium';
+
+get '/asin/:asin' => sub {
+    my $self = shift;
+    my $node = eval {
+        $schema->resultset('Medium')->from_asin($self->stash('asin'));
+    };
+    if ($node) {
+        $self->render(
+            template => 'medium',
+            title    => 'Details',
+            node     => $node,
+            layout   => 'basic',
+        );
+    } else {
+        $self->render(status => 404, text => 'Book not found');
+    }
+
+} => 'asin';
 
 get '/t/:id' => sub {
     my $self = shift;
@@ -52,12 +70,14 @@ __DATA__
 <% for my $n (@$root) { %>
     <li>
     <%= link_to $n->title, medium => { id => $n->id } %>
+    by <strong><%= $n->made_by %></strong>
     </li>
 <% } %>
 </ul>
 
 @@ tree.html.ep
 <h1><%= $node->title %></h1>
+<p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) { %>
@@ -73,7 +93,8 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        <%= link_to($n->title, medium => { id => $n->id }) =%>
+        <%= link_to($n->title, medium => { id => $n->id }) %>
+        by <%= $n->made_by %>
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>

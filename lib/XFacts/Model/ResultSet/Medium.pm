@@ -17,7 +17,8 @@ sub unparen {
 
 sub from_asin {
     my ($self, $asin) = @_;
-    my $row = $self->find({ asin => $asin });
+    confess("No ASIN provided") unless defined($asin) && length $asin;
+    my ($row) = $self->search({ asin => $asin });
     unless ($row) {
         my $a = XFacts::Config::amazon();
         my $m = $a->asin($asin);
