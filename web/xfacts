@@ -41,6 +41,8 @@ get '/t/:id' => sub {
 } => 'tree';
 
 app->start;
+$schema->disconnect;
+
 __DATA__
 
 @@ index.html.ep

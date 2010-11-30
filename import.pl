@@ -41,16 +41,16 @@ my %roots;
 
 while (my ($l, $r) = each %rels) {
     say "$l -> $r";
-    my $root = $schema->resultset('Medium')->create({
-            title => $l,
-    });
-    $root->attach_rightmost_child($objs[$_]) for @$r;
+    my $root = $schema->resultset('Medium')->create_root_with_children(
+        { title => $l },
+        @objs[@$r],
+    );
     $roots{$l} = $root;
 }
 
 my $middleearth = $schema->resultset('Medium')
-        ->create({ title => 'Middle Earth' });
-$middleearth->attach_rightmost_child(@objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
+        ->create_root_with_children({ title => 'Middle Earth' },
+            @objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
 
 # TODO: Add "Magician's Apprentice"
 #my $trudi = $schema->resultset('Medium')
@@ -59,10 +59,7 @@ $middleearth->attach_rightmost_child(@objs[11, 10], $roots{'The Lord of the Ring
 
 
 my $terre_dange = $schema->resultset('Medium')
-    ->create({title => "Terre d'Ange"});
-$terre_dange
-    ->attach_rightmost_child(@roots{ "Kushiel's Dart (Phedre)",
-            "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
+    ->create_root_with_children({title => "Terre d'Ange"}, @roots{ "Kushiel's Dart (Phedre)", "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
 
 say '';
 my $rs = $schema->resultset('Medium')->root_nodes;

@@ -1,9 +1,9 @@
 package XML::Amazon::Cached;
 use strict;
 use warnings;
+use mro qw/c3/;
 use parent 'XML::Amazon';
 use Cache::FileCache;
-use mro qw/c3/;
 
 my $cache = Cache::FileCache->new({
         namespace => 'XML-Amazon-Cached',

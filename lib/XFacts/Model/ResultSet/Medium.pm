@@ -40,6 +40,32 @@ sub from_asin {
     return $row;
 }
 
+sub _join_sorted {
+    my ($self, $values, $what, $children) = @_;
+    return $values->{$what} if exists $values->{$what};
+    my %freq;
+    for my $c (@$children) {
+        for (split /,\s+/, $c->$what) {
+            $freq{$_}++ if $_;
+        }
+    }
+    my @things = reverse sort { $freq{$a} <=> $freq{$b} }
+                              keys %freq;
+    return join ', ', @things;
+}
+
+sub create_root_with_children {
+    my ($self, $values, @children) = @_;
+    my %v = %$values;
+    for (qw(made_by publisher)) {
+        $v{$_} = $self->_join_sorted($values, $_, \@children);
+        warn "$_: $v{$_}\n";
+    }
+    my $new = $self->create(\%v);
+    $new->attach_rightmost_child(@children);
+    return $new;
+}
+
 sub root_nodes {
     my $self = shift;
     $self->search({
