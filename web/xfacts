@@ -159,12 +159,33 @@ by <%= $n->made_by %>
     <head>
         <title><%= $title %></title>
         <style type="text/css"><!--
+            body {
+                padding: 0px;
+                margin: 0px;
+            }
+            #header {
+                padding: 0.5em;
+                margin: 0px;
+                background-color: #FFFF66;
+                border-bottom: #FF9900 solid 2px;
+                height: 2em;
+            }
+            #content {
+                margin: 1em;
+            
+            }
             .node {
-            border: 1px dotted black;
-            padding: 0.3em;
-            max-width: 20em;
-        }
+                border: 1px dotted black;
+                padding: 0.3em;
+                max-width: 20em;
+                margin: none;
+            }
   // --></style>
     </head>
-    <body><%== content %></body>
+    <body>
+        <p id="header"><%= link_to Home => 'index' %>
+        <div id="content">
+            <%== content %>
+        </div>
+    </body>
 </html>
