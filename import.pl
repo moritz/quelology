@@ -6,7 +6,7 @@ use XFacts::Config qw(schema amazon);
 my $schema = schema;
 my @asins = (
                 # lord of the rings
-                qw(0618574948 0618129081 0618574972),
+                qw(0007269706 0618129081 0007269722),
                 # demons by Peter V. Brett
                 qw(0345518705 0345503813),
                 # black magician
@@ -21,6 +21,9 @@ my @asins = (
                 qw(044661002X 0446610143 044661016X),
                 # Naamah's Kiss, Curse, Blessing
                 qw(0446198048 0446198056 0446198072),
+                # Bartimaeus (just imported so there are a few 
+                # related but not yet linked books in the DB)
+                qw(0786852550 1423123727 078683868X 142310420X 038560615X),
     );
 
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
