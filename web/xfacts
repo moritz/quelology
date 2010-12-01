@@ -93,6 +93,9 @@ __DATA__
 @@ tree.html.ep
 <h1><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
+<% if ($node->asin) { %>
+    <%= include 'small_medium', n => $node =%>
+<% } %>
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) { %>
@@ -108,11 +111,7 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        <% if ($n->small_image) { %>
-            <img src="<%= $n->small_image %>" alt="" />
-        <% } %>
-        <%= link_to($n->title, medium => { id => $n->id }) %>
-        by <%= $n->made_by %>
+        <%= include 'small_medium', n => $n =%>
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
@@ -140,6 +139,14 @@ __DATA__
         </a>
     </p>
 </div>
+
+@@ small_medium.html.ep
+<% if ($n->small_image) { %>
+    <img src="<%= $n->small_image %>" alt="" />
+<% } %>
+<%= link_to($n->title, medium => { id => $n->id }) %>
+by <%= $n->made_by %>
+
 
 @@ layouts/basic.html.ep
 <!doctype html><html>
