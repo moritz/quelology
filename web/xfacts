@@ -93,6 +93,9 @@ __DATA__
 @@ tree.html.ep
 <h1><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
+<% if ($node->id != $node->root_id) { %>
+    <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
+<% } %>
 <% if ($node->asin) { %>
     <%= include 'small_medium', n => $node =%>
 <% } %>
@@ -121,6 +124,9 @@ __DATA__
     <h2><%= $node->title %></h2>
     <% if (defined $node->made_by) { %>
         <p>Author: <%= $node->made_by %></p>
+    <% } %>
+    <% if ($node->id != $node->root_id) { %>
+        <p>This is part of a <%= link_to "series (" . $node->root->title . ").", tree => { id => $node->root_id }; %></p>
     <% } %>
     <p>
         <% if (defined $node->medium_image) { %>
