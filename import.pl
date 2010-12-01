@@ -28,7 +28,7 @@ for (@objs) {
     say $_->title;
 }
 my %rels = (
-    'The Lord of the Rings' => [0, 1, 2],
+#    'The Lord of the Rings' => [0, 1, 2],
     'Demon Series' => [3, 4],
     'The Black Magician Trilogy' => [5, 6, 7],
     'The Traitor Spy Trilogy' => [8, 9],
@@ -39,8 +39,13 @@ my %rels = (
 
 my %roots;
 
+my $lotr = $schema->m->from_asin('0618260587');
+$lotr->attach_rightmost_child(@objs[0, 1, 2]);
+$roots{'The Lord of the Rings'} = $lotr;
+
 while (my ($l, $r) = each %rels) {
     say "$l -> $r";
+
     my $root = $schema->resultset('Medium')->create_root_with_children(
         { title => $l },
         @objs[@$r],
