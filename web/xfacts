@@ -5,9 +5,13 @@ use warnings;
 use Mojolicious::Lite;
 use lib 'lib';
 use lib '../lib';
-use XFacts::Config qw(schema);
+use XFacts::Config qw(schema config);
+use utf8;
 
 my $schema = schema;
+my $static = Mojolicious::Static->new;
+
+app->secret( config()->{web_secret} );
 
 get '/' =>  sub {
     my $self = shift;
@@ -172,7 +176,6 @@ by <%= $n->made_by %>
             }
             #content {
                 margin: 1em;
-            
             }
             .node {
                 border: 1px dotted black;
