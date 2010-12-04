@@ -76,12 +76,12 @@ sub root_nodes {
 
 sub threads {
     my $self = shift;
-    grep !$_->is_leaf, $self->root_nodes;
+    $self->root_nodes->search({ r => { '<>' => 2 }});
 }
 
 sub singles {
     my $self = shift;
-    grep $_->is_leaf, $self->root_nodes;
+    $self->root_nodes->search({ r => { '=' => 2 }});
 }
 
 1;
