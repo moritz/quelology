@@ -177,17 +177,19 @@ __DATA__
 <script type="text/javascript">
     $('.medium').draggable({
         snap: ".drop",
-        revert: true,
         cursorAt: { top: 16, left: 16 },
+        stop: function () {
+//            alert('OH NOEZ, U LOSTED IT!');
+        },
         helper: function (event) {
             return $( '<img src="/image/drag.png" >' );
         }
     });
-    $('.drop').droppable(
-        function() {
-            alert('dropped');
+    $('.drop').droppable({
+        drop: function (event, ui) {
+            alert('dropped ' + event + ' on ' + ui);
         }
-    );
+    });
 </script>
 
 @@ medium.html.ep
