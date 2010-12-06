@@ -1,5 +1,6 @@
 package XFacts::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
+use aliased XFacts::Model::DropPoint => 'DropPoint';
 
 __PACKAGE__->load_components(qw( Tree::NestedSet ));
 __PACKAGE__->table('medium');
@@ -31,5 +32,51 @@ __PACKAGE__->tree_columns({
         right_column    => 'r',
         level_column    => 'level',
 });
+
+sub thread_with_drop_points {
+    my $self = shift;
+    my @nodes = $self->nodes;
+    my @things;
+
+    my @todo;
+    my $previous_level = 1;
+    for my $i (0..$#nodes) {
+        my $_ = $nodes[$i];
+        my $level = $_->level;
+
+        for (my $l = $previous_level; $l >= $level; $l--) {
+            if (defined $todo[$l]) {
+                push @things, $todo[$l];
+                $todo[$l] = undef;
+            }
+        }
+
+        $previous_level = $level;
+
+        push @things, DropPoint->new(level => $level, where => 'before', id => $_->id );
+        push @things, [$_];
+        if ($nodes[$i+1] && $nodes[$i+1]->level > $level) {
+            # we have descendants
+            # so don't add a 'append stuff below' here
+        } else {
+        # no descendants
+            push @{$things[-1]}, DropPoint->new(level => $level, where => 'below', id => $_->id );
+        }
+
+        my $has_later_sibling = 0;
+        {
+            for my $j ($i+1 .. $#nodes) {
+                $has_later_sibling = 1 if $level == $nodes[$j]->level;
+                last if $level >= $nodes[$j]->level;
+            }
+        }
+        unless ($has_later_sibling) {
+            $todo[$level] = DropPoint->new(level => $level, 'where' => 'after', id => $_->id );
+        }
+    }
+    push @things, grep defined, reverse @todo;
+
+    return @things;
+}
 
 1;

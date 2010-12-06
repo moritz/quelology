@@ -54,6 +54,14 @@ get '/asin/:asin' => sub {
 
 } => 'asin';
 
+get '/drop/:id' => sub {
+    my $self = shift;
+    $self->render(template => 'drop', nodes => [$schema->m
+        ->find($self->param('id'))->thread_with_drop_points],
+        title => 'foo',
+    );
+};
+
 get '/t/:id' => sub {
     my $self = shift;
     $self->render(
@@ -70,6 +78,7 @@ $SIG{INT} = sub {
 
 app->start;
 $schema->storage->disconnect;
+1;
 
 __DATA__
 
@@ -95,6 +104,7 @@ __DATA__
 </ul>
 
 @@ tree.html.ep
+% layout 'basic';
 <h1><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
 <% if ($node->id != $node->root_id) { %>
@@ -105,8 +115,7 @@ __DATA__
 <% } %>
 <ul>
 <% my $prev_level = 1;
-   for my $n ($node->descendants) { %>
-      <%
+   for my $n ($node->descendants) {
       my $l = $n->level - $prev_level; 
       $prev_level = $n->level;
       my $ld = '';
@@ -122,6 +131,64 @@ __DATA__
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
+
+
+@@ drop.html.ep
+% layout 'basic';
+<%
+    my $first_node = $nodes->[1][0];
+%>
+<h1><%= $first_node->title %></h1>
+<p>by <strong><%= $first_node->made_by; %></strong>, published by <strong><%= $first_node->publisher; %></strong>.</p> 
+
+<ul>
+<% 
+    my $prev_level = 1;
+    for my $n (@$nodes) {
+        my $current_level;
+        if (UNIVERSAL::isa($n, 'XFacts::Model::DropPoint')) {
+            $current_level =  $n->level;
+        } else {
+            $current_level = $n->[0]->level;
+        }
+        my $l = $current_level - $prev_level; 
+        my $ld = '';
+        if ($l > 0) {
+            $ld = '<ul>' x $l;
+        } elsif ($l < 0) {
+            $ld = '</ul>' x abs($l);
+        }
+    %>
+        %== $ld
+   <li>
+        <% if (UNIVERSAL::isa($n, 'XFacts::Model::DropPoint')) { %>
+            <%= include 'drop_point', d => $n =%>
+        <% } else { %>
+            <%= include 'small_medium', n => $n->[0] =%>
+            <% if ($n->[1]) { %>
+                <%= include 'drop_point', d => $n->[1] =%>
+            <% } %>
+        <% } %>
+    </li>
+%   $prev_level = $current_level;
+% }
+%== '</ul>' x $prev_level;
+
+<script type="text/javascript">
+    $('.medium').draggable({
+        snap: ".drop",
+        revert: true,
+        cursorAt: { top: 16, left: 16 },
+        helper: function (event) {
+            return $( '<img src="/image/drag.png" >' );
+        }
+    });
+    $('.drop').droppable(
+        function() {
+            alert('dropped');
+        }
+    );
+</script>
 
 @@ medium.html.ep
 <div class="node level<%= $node->level %>">
@@ -151,12 +218,20 @@ __DATA__
 </div>
 
 @@ small_medium.html.ep
-<% if ($n->small_image) { %>
-    <img src="<%= $n->small_image %>" alt="" />
-<% } %>
-<%= link_to($n->title, medium => { id => $n->id }) %>
-by <%= $n->made_by %>
+<span id="medium_<%= $n->id %>" class="medium">
+    <% if ($n->small_image) { %>
+        <img src="<%= $n->small_image %>" alt="" />
+    <% } %>
+    <%= link_to($n->title, medium => { id => $n->id }) %>
+    by <%= $n->made_by %>
+</span>
 
+@@ drop_point.html.ep
+<img 
+    src="/image/drop-target.png" width="32" height="32"
+    id="drop_<%= $d->where %>_<%= $d->id %>" class="drop"
+    alt="Drag a book with your mouse and drop it here to insert it here"
+>
 
 @@ layouts/basic.html.ep
 <!doctype html><html>
@@ -184,6 +259,9 @@ by <%= $n->made_by %>
                 margin: none;
             }
   // --></style>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
     </head>
     <body>
         <p id="header"><%= link_to Home => 'index' %>
@@ -192,3 +270,5 @@ by <%= $n->made_by %>
         </div>
     </body>
 </html>
+
+
