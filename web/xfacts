@@ -12,6 +12,7 @@ my $schema = schema;
 my $static = Mojolicious::Static->new;
 
 app->secret( config()->{web_secret} );
+app->types->type(html => 'text/html; charset=utf-8');
 
 get '/' =>  sub {
     my $self = shift;
