@@ -77,6 +77,30 @@ $SIG{INT} = sub {
     exec $^X, $0, @ARGV;
 };
 
+post '/edit' => sub {
+    my $self = shift;
+    my ($source_id, $target_id, $where)
+            = map $self->param($_), qw/source_id target_id edit_where/;
+    my $target = $schema->m->find($target_id);
+    die "No target with id $target_id" unless $target;
+    my $source = $schema->m->find($source_id);
+    die "No source with id $source_id" unless $source;
+
+    if ( $where eq 'after' ) {
+        $target->attach_right_sibling($source);
+    } elsif ( $where eq 'before' ) {
+        $target->attach_left_sibling($source);
+    } elsif ( $where eq 'below' ) {
+        $target->attach_leftmost_child($source);
+    } else {
+        die "Don't know what to do with position '$where' (allowed: before, after, below)";
+    }
+    $self->render(template => 'drop', nodes => [$target->thread_with_drop_points],
+        title => 'edited foo',
+    );
+
+};
+
 app->start;
 $schema->storage->disconnect;
 1;
@@ -142,6 +166,12 @@ __DATA__
 <h1><%= $first_node->title %></h1>
 <p>by <strong><%= $first_node->made_by; %></strong>, published by <strong><%= $first_node->publisher; %></strong>.</p> 
 
+<form id="edit_form" method="post" action="/edit">
+    <input type="hidden" id="source_id" name="source_id">
+    <input type="hidden" id="target_id" name="target_id">
+    <input type="hidden" id="edit_where" name="edit_where">
+</form>
+
 <ul>
 <% 
     my $prev_level = 1;
@@ -180,9 +210,9 @@ __DATA__
         snap: ".drop",
         snapMode: 'inner',
         cursorAt: { top: 16, left: 16 },
-        stop: function () {
+//        stop: function () {
 //            alert('OH NOEZ, U LOSTED IT!');
-        },
+//        },
         helper: function (event) {
             return $( '<img src="/image/drag.png" >' );
         }
@@ -190,8 +220,11 @@ __DATA__
     $('.drop').droppable({
         drop: function (event, ui) {
             var target_spec = $(this).attr('id').split('_');
-            var source_id = ui.draggable.attr('id');
-            alert('moving ' + source_id + ' ' + target_spec[1] + ' ' + target_spec[2]);
+            var source_id = ui.draggable.attr('id').split('_')[1];
+            $('#source_id').val(ui.draggable.attr('id').split('_')[1]);
+            $('#edit_where').val(target_spec[1]);
+            $('#target_id').val(target_spec[2]);
+            $('#edit_form').submit();
         }
     });
 </script>
