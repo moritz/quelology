@@ -178,6 +178,7 @@ __DATA__
 <script type="text/javascript">
     $('.medium').draggable({
         snap: ".drop",
+        snapMode: 'inner',
         cursorAt: { top: 16, left: 16 },
         stop: function () {
 //            alert('OH NOEZ, U LOSTED IT!');
@@ -188,7 +189,9 @@ __DATA__
     });
     $('.drop').droppable({
         drop: function (event, ui) {
-            alert('dropped ' + event + ' on ' + ui);
+            var target_spec = $(this).attr('id').split('_');
+            var source_id = ui.draggable.attr('id');
+            alert('moving ' + source_id + ' ' + target_spec[1] + ' ' + target_spec[2]);
         }
     });
 </script>
@@ -226,11 +229,11 @@ __DATA__
         <img src="<%= $n->small_image %>" alt="" />
     <% } %>
     <%= link_to($n->title, medium => { id => $n->id }) %>
-    by <%= $n->made_by %>
+    by <%= $n->made_by %> (id <%= $n->id %>)
 </span>
 
 @@ drop_point.html.ep
-<img 
+<img
     src="/image/drop-target.png" width="32" height="32"
     id="drop_<%= $d->where %>_<%= $d->id %>" class="drop"
     alt="Drag a book with your mouse and drop it here to insert it here"
@@ -270,6 +273,8 @@ __DATA__
         <p id="header"><%= link_to Home => 'index' %>
         <div id="content">
             <%== content %>
+        </div>
+        <div id="debug">
         </div>
     </body>
 </html>
