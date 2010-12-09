@@ -76,7 +76,16 @@ sub thread_with_drop_points {
     }
     push @things, grep defined, reverse @todo;
 
+    # we can't add before or after root node yet.
+#    shift @things;
+    pop @things;
+
     return @things;
+}
+
+sub is_root {
+    my $self = shift;
+    return $self->root_id == $self->id;
 }
 
 1;

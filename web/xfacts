@@ -59,7 +59,7 @@ get '/drop/:id' => sub {
     my $self = shift;
     $self->render(template => 'drop', nodes => [$schema->m
         ->find($self->param('id'))->thread_with_drop_points],
-        title => 'foo',
+        title => 'Edit a tree',
     );
 };
 
@@ -86,6 +86,10 @@ post '/edit' => sub {
     my $source = $schema->m->find($source_id);
     die "No source with id $source_id" unless $source;
 
+    if ( $target->is_root && $where ne 'below' ) {
+        die "Can't modify root nodes in such a way yet";
+    }
+
     if ( $where eq 'after' ) {
         $target->attach_right_sibling($source);
     } elsif ( $where eq 'before' ) {
@@ -96,7 +100,7 @@ post '/edit' => sub {
         die "Don't know what to do with position '$where' (allowed: before, after, below)";
     }
     $self->render(template => 'drop', nodes => [$target->thread_with_drop_points],
-        title => 'edited foo',
+        title => 'Edited tree',
     );
 
 };
