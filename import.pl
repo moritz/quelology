@@ -3,27 +3,31 @@ use 5.012;
 use lib 'lib';
 use XFacts::Config qw(schema amazon);
 
+binmode STDOUT, ':encoding(UTF-8)';
+
 my $schema = schema;
 my @asins = (
-                # lord of the rings
-                qw(0007269706 0618129081 0007269722),
-                # demons by Peter V. Brett
-                qw(0345518705 0345503813),
-                # black magician
-                qw(006057528X 0060575298 0060575301),
-                # traitor spy trilogy
-                qw(0316037834 0316037869),
-                # the Hobbit, Silmarillion, unfinished tales
-                qw(0261102664 B0017PICLQ 0618154043),
-                # Kushiel's Dart, Chosen, Avatar
-                qw(0765342987 0765345048 0765347539),
-                # Kushiel's Scion, Justice, Mercy
-                qw(044661002X 0446610143 044661016X),
-                # Naamah's Kiss, Curse, Blessing
-                qw(0446198048 0446198056 0446198072),
-                # Bartimaeus (just imported so there are a few 
-                # related but not yet linked books in the DB)
-                qw(0786852550 1423123727 078683868X 142310420X 038560615X),
+            # lord of the rings
+            qw(0007269706 0618129081 0007269722),
+            # demons by Peter V. Brett
+            qw(0345518705 0345503813),
+            # black magician
+            qw(006057528X 0060575298 0060575301),
+            # traitor spy trilogy
+            qw(0316037834 0316037869),
+            # the Hobbit, Silmarillion, unfinished tales
+            qw(0261102664 B0017PICLQ 0618154043),
+            # Kushiel's Dart, Chosen, Avatar
+            qw(0765342987 0765345048 0765347539),
+            # Kushiel's Scion, Justice, Mercy
+            qw(044661002X 0446610143 044661016X),
+            # Naamah's Kiss, Curse, Blessing
+            qw(0446198048 0446198056 0446198072),
+            # Bartimaeus (just imported so there are a few 
+            # related but not yet linked books in the DB)
+            qw(0786852550 1423123727 078683868X 142310420X 038560615X),
+            # Kushiel (German)
+            qw(3802581202 3802581210 3802581229),
     );
 
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
@@ -38,6 +42,7 @@ my %rels = (
     "Kushiel's Dart (Phedre)" => [13, 14, 15],
     "Kushiel's Scion (Imriel)" => [16, 17, 18],
     "Naamah's Gift (Moirin)" => [19, 20, 21],
+    "Kushiel's Auserwählte" => [27, 28, 29],
 );
 
 my %roots;

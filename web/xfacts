@@ -27,7 +27,7 @@ get '/' =>  sub {
 
 get '/m/:id' => sub {
     my $self = shift;
-    my $node = $schema->m->find($self->param('id'));
+    my $node = $schema->m->by_id($self->param('id'));
     my $template = $node->is_leaf ? 'medium' : 'tree';
     $self->render(
         layout  => 'basic',
@@ -55,10 +55,10 @@ get '/asin/:asin' => sub {
 
 } => 'asin';
 
-get '/drop/:id' => sub {
+get '/edit/:id' => sub {
     my $self = shift;
-    $self->render(template => 'drop', nodes => [$schema->m
-        ->find($self->param('id'))->thread_with_drop_points],
+    $self->render(template => 'edit', nodes => [$schema->m
+        ->by_id($self->param('id'))->thread_with_drop_points],
         title => 'Edit a tree',
     );
 };
@@ -68,7 +68,7 @@ get '/t/:id' => sub {
     $self->render(
         layout  => 'basic',
         title   => 'Tree details',
-        node    => $schema->m->find($self->param('id')),
+        node    => $schema->m->by_id($self->param('id')),
     );
 } => 'tree';
 
@@ -99,7 +99,7 @@ post '/edit' => sub {
     } else {
         die "Don't know what to do with position '$where' (allowed: before, after, below)";
     }
-    $self->render(template => 'drop', nodes => [$target->thread_with_drop_points],
+    $self->render(template => 'edit', nodes => [$target->thread_with_drop_points],
         title => 'Edited tree',
     );
 
@@ -116,7 +116,7 @@ __DATA__
 <h1>List of Series</h1>
 <ul>
 <% for my $n (@$threads) { %>
-    <li>
+    <li class="medium">
     <%= link_to $n->title, medium => { id => $n->id } %>
     by <strong><%= $n->made_by %></strong>
     </li>
@@ -125,7 +125,7 @@ __DATA__
 <h1>List of single nodes</h1>
 <ul>
 <% for my $n (@$singles) { %>
-    <li>
+    <li class="medium">
     <%= link_to $n->title, medium => { id => $n->id } %>
     by <strong><%= $n->made_by %></strong>
     </li>
@@ -134,8 +134,10 @@ __DATA__
 
 @@ tree.html.ep
 % layout 'basic';
-<h1><%= $node->title %></h1>
+<h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
+%# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
+<p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 <% if ($node->id != $node->root_id) { %>
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 <% } %>
@@ -162,7 +164,7 @@ __DATA__
 <%== '</ul>' x $prev_level =%>
 
 
-@@ drop.html.ep
+@@ edit.html.ep
 % layout 'basic';
 <%
     my $first_node = $nodes->[1][0];
@@ -276,6 +278,11 @@ __DATA__
     alt="Drag a book with your mouse and drop it here to insert it here"
 >
 
+@@ shelf.html.ep
+<div id="shelf">
+    <p id="placeholder">Personal book shelf - drag books here.</p>
+</div>
+
 @@ layouts/basic.html.ep
 <!doctype html><html>
     <head>
@@ -290,7 +297,7 @@ __DATA__
                 margin: 0px;
                 background-color: #FFFF66;
                 border-bottom: #FF9900 solid 2px;
-                height: 2em;
+                min-height: 2em;
             }
             #content {
                 margin: 1em;
@@ -301,13 +308,19 @@ __DATA__
                 max-width: 20em;
                 margin: none;
             }
+            #shelf m
+                padding: 2em;
+            }
   // --></style>
     <link rel="shortcut icon" href="/favicon.ico">
     <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
     <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
     </head>
     <body>
-        <p id="header"><%= link_to Home => 'index' %>
+        <div id="header">
+        <p style="display: inline;"><%= link_to Home => 'index' %> </p>
+        <%== include 'shelf' %>
+        </div>
         <div id="content">
             <%== content %>
         </div>
