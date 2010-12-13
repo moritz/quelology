@@ -80,19 +80,29 @@ $SIG{INT} = sub {
     exec $^X, $0, @ARGV;
 };
 
+sub render_shelf {
+    my $self = shift;
+    $self->render(text => join ', ', @{$self->session->{ids}});
+}
+
+post '/shelf/delete'=> sub {
+    my $self = shift;
+    $self->session->{ids} = [];
+    render_shelf($self);
+};
+
 post '/shelf/add' => sub {
     my $self = shift;
 
 #    $self->session->default_expiration(7 * 24 * 3600);
     my @values = @{ $self->session('shelf_ids') // [] };
     unshift @{$self->session->{ids}}, $self->param('id');
-    $self->render(text => join ', ', @{$self->session->{ids}});
+    render_shelf($self);
 } => 'shelf/add';
 
 get '/shelf/' => sub {
     my $self = shift;
-    $self->render(text => join ', ', @{$self->session->{ids}});
-
+    render_shelf($self);
 } => 'shelf';
 
 post '/edit' => sub {
@@ -300,6 +310,7 @@ __DATA__
 <div id="shelf">
     <p id="placeholder">Personal book shelf - drag books here.</p>
 </div>
+<a href="#" onclick="clear_shelf()">Clear bookshelf</a>
 
 @@ layouts/basic.html.ep
 <!doctype html><html>
