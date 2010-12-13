@@ -5,6 +5,11 @@ use Carp qw(confess);
 
 use parent 'DBIx::Class::ResultSet';
 
+sub by_id {
+    my $obj = shift->find(shift);
+    return $obj->alias_for //= $obj;
+}
+
 sub scalarify {
     @_ == 1 ? $_[0] : join ', ', @_;
 }

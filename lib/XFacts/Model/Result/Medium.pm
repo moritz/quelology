@@ -16,6 +16,7 @@ __PACKAGE__->add_columns(qw/
     medium_image
     large_image
     publish_year
+    same_as
     root_id
     l
     r
@@ -25,6 +26,7 @@ __PACKAGE__->add_columns(qw/
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('root', 'XFacts::Model::Result::Medium', 'root_id');
+__PACKAGE__->belongs_to('alias_for', 'XFacts::Model::Result::Medium', 'same_as');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',

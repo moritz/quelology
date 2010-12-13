@@ -12,6 +12,7 @@ CREATE TABLE medium (
     large_image VARCHAR(255),
     publish_year SMALLINT,
     root_id INTEGER REFERENCES medium (id) ON DELETE CASCADE,
+    same_as INTEGER REFERENCES medium (id) ON DELETE CASCADE,
     l INTEGER NOT NULL DEFAULT(1),
     r INTEGER NOT NULL DEFAULT(2),
     level INTEGER NOT NULL DEFAULT(0)
