@@ -3,13 +3,16 @@ use 5.012;
 use warnings;
 
 use Mojolicious::Lite;
+use Mojolicious::Session;
 use lib 'lib';
 use lib '../lib';
 use XFacts::Config qw(schema config);
 use utf8;
 
-my $schema = schema;
-my $static = Mojolicious::Static->new;
+my $schema   = schema;
+my $static   = Mojolicious::Static->new;
+my $session  = app->session;
+my $app      = app;
 
 app->secret( config()->{web_secret} );
 app->types->type(html => 'text/html; charset=utf-8');
@@ -77,6 +80,21 @@ $SIG{INT} = sub {
     exec $^X, $0, @ARGV;
 };
 
+post '/shelf/add' => sub {
+    my $self = shift;
+
+#    $self->session->default_expiration(7 * 24 * 3600);
+    my @values = @{ $self->session('shelf_ids') // [] };
+    unshift @{$self->session->{ids}}, $self->param('id');
+    $self->render(text => join ', ', @{$self->session->{ids}});
+} => 'shelf/add';
+
+get '/shelf/' => sub {
+    my $self = shift;
+    $self->render(text => join ', ', @{$self->session->{ids}});
+
+} => 'shelf';
+
 post '/edit' => sub {
     my $self = shift;
     my ($source_id, $target_id, $where)
@@ -105,7 +123,7 @@ post '/edit' => sub {
 
 };
 
-app->start;
+$app->start;
 $schema->storage->disconnect;
 1;
 
@@ -213,7 +231,7 @@ __DATA__
 
 <script type="text/javascript">
     $('.medium').draggable({
-        snap: ".drop",
+        snap: ".droppable",
         snapMode: 'inner',
         cursorAt: { top: 16, left: 16 },
 //        stop: function () {
@@ -274,7 +292,7 @@ __DATA__
 @@ drop_point.html.ep
 <img
     src="/image/drop-target.png" width="32" height="32"
-    id="drop_<%= $d->where %>_<%= $d->id %>" class="drop"
+    id="drop_<%= $d->where %>_<%= $d->id %>" class="drop droppable"
     alt="Drag a book with your mouse and drop it here to insert it here"
 >
 
@@ -308,16 +326,17 @@ __DATA__
                 max-width: 20em;
                 margin: none;
             }
-            #shelf m
-                padding: 2em;
+            #shelf {
+                padding: 0.1em;
             }
   // --></style>
     <link rel="shortcut icon" href="/favicon.ico">
     <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
     <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
+    <script type="text/javascript" src="/js/custom.js"></script>
     </head>
     <body>
-        <div id="header">
+        <div id="header" class="droppable">
         <p style="display: inline;"><%= link_to Home => 'index' %> </p>
         <%== include 'shelf' %>
         </div>

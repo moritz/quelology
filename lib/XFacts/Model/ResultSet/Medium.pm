@@ -7,7 +7,7 @@ use parent 'DBIx::Class::ResultSet';
 
 sub by_id {
     my $obj = shift->find(shift);
-    return $obj->alias_for //= $obj;
+    return $obj->alias_for // $obj;
 }
 
 sub scalarify {
