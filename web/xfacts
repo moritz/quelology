@@ -82,7 +82,7 @@ $SIG{INT} = sub {
 
 sub render_shelf {
     my $self = shift;
-    $self->render(text => join ', ', @{$self->session->{ids}});
+    $self->render(text => join ', ', @{$self->session->{ids} // ['<empty>']});
 }
 
 post '/shelf/delete'=> sub {
@@ -238,30 +238,6 @@ __DATA__
 %   $prev_level = $current_level;
 % }
 %== '</ul>' x $prev_level;
-
-<script type="text/javascript">
-    $('.medium').draggable({
-        snap: ".droppable",
-        snapMode: 'inner',
-        cursorAt: { top: 16, left: 16 },
-//        stop: function () {
-//            alert('OH NOEZ, U LOSTED IT!');
-//        },
-        helper: function (event) {
-            return $( '<img src="/image/drag.png" >' );
-        }
-    });
-    $('.drop').droppable({
-        drop: function (event, ui) {
-            var target_spec = $(this).attr('id').split('_');
-            var source_id = ui.draggable.attr('id').split('_')[1];
-            $('#source_id').val(ui.draggable.attr('id').split('_')[1]);
-            $('#edit_where').val(target_spec[1]);
-            $('#target_id').val(target_spec[2]);
-            $('#edit_form').submit();
-        }
-    });
-</script>
 
 @@ medium.html.ep
 <div class="node level<%= $node->level %>">
