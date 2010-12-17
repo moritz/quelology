@@ -4,9 +4,11 @@ use warnings;
 
 use Mojolicious::Lite;
 use Mojolicious::Session;
+use Mojo::ByteStream 'b';
 use lib 'lib';
 use lib '../lib';
 use XFacts::Config qw(schema config);
+use Carp qw(confess);
 use utf8;
 
 my $schema   = schema;
@@ -14,8 +16,20 @@ my $static   = Mojolicious::Static->new;
 my $session  = app->session;
 my $app      = app;
 
+# $SIG{__WARN__} = \&confess;
+
 app->secret( config()->{web_secret} );
 app->types->type(html => 'text/html; charset=utf-8');
+
+app->helper(shelf => sub {
+    my $self = shift;
+    my @items = @{ $self->session->{ids} // [] };
+    return b($self->render(
+        items   => [map($schema->m->by_id($_), @items)],
+        partial => 1,
+        template => 'small-shelf',
+    ));
+});
 
 get '/' =>  sub {
     my $self = shift;
@@ -82,7 +96,7 @@ $SIG{INT} = sub {
 
 sub render_shelf {
     my $self = shift;
-    $self->render(text => join ', ', @{$self->session->{ids} // ['<empty>']});
+    $self->render(template => 'just-shelf');
 }
 
 post '/shelf/delete'=> sub {
@@ -94,13 +108,12 @@ post '/shelf/delete'=> sub {
 post '/shelf/add' => sub {
     my $self = shift;
 
-#    $self->session->default_expiration(7 * 24 * 3600);
-    my @values = @{ $self->session('shelf_ids') // [] };
+    warn "ID: " . $self->param('id');
     unshift @{$self->session->{ids}}, $self->param('id');
     render_shelf($self);
 } => 'shelf/add';
 
-get '/shelf/' => sub {
+get '/shelf/small' => sub {
     my $self = shift;
     render_shelf($self);
 } => 'shelf';
@@ -144,7 +157,7 @@ __DATA__
 <h1>List of Series</h1>
 <ul>
 <% for my $n (@$threads) { %>
-    <li class="medium">
+    <li class="medium" id="medium_<%= $n->id %>">
     <%= link_to $n->title, medium => { id => $n->id } %>
     by <strong><%= $n->made_by %></strong>
     </li>
@@ -153,7 +166,7 @@ __DATA__
 <h1>List of single nodes</h1>
 <ul>
 <% for my $n (@$singles) { %>
-    <li class="medium">
+    <li class="medium" id="medium_<%= $n->id %>">
     <%= link_to $n->title, medium => { id => $n->id } %>
     by <strong><%= $n->made_by %></strong>
     </li>
@@ -282,11 +295,27 @@ __DATA__
     alt="Drag a book with your mouse and drop it here to insert it here"
 >
 
+@@ just-shelf.html.ep
+%== shelf
+
+@@ small-shelf.html.ep
+<div id="shelf">
+    % if (@$items) {
+        <ul>
+    %   for my $i (@$items) {
+            <li><%= link_to $i->short_title, medium => { id => $i->id } %></li>
+    %   }
+        </ul>
+    % } else {
+        <p id="placeholder">Personal book shelf - drag books here.</p>
+    %}
+    <a href="#" onclick="clear_shelf()" style="clear: left">Clear bookshelf</a>
+</div>
+
 @@ shelf.html.ep
 <div id="shelf">
-    <p id="placeholder">Personal book shelf - drag books here.</p>
+    <strong>Outdated template</strong>
 </div>
-<a href="#" onclick="clear_shelf()">Clear bookshelf</a>
 
 @@ layouts/basic.html.ep
 <!doctype html><html>
@@ -316,6 +345,11 @@ __DATA__
             #shelf {
                 padding: 0.1em;
             }
+            #shelf li {
+                float: left; 
+                list-style-type: none;
+                padding: 1ex;
+            }
   // --></style>
     <link rel="shortcut icon" href="/favicon.ico">
     <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
@@ -325,7 +359,7 @@ __DATA__
     <body>
         <div id="header" class="droppable">
         <p style="display: inline;"><%= link_to Home => 'index' %> </p>
-        <%== include 'shelf' %>
+        <%== shelf %>
         </div>
         <div id="content">
             <%== content %>

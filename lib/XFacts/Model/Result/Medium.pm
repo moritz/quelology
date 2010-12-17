@@ -1,6 +1,7 @@
 package XFacts::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
 use aliased XFacts::Model::DropPoint => 'DropPoint';
+use utf8;
 
 __PACKAGE__->load_components(qw( Tree::NestedSet ));
 __PACKAGE__->table('medium');
@@ -88,6 +89,16 @@ sub thread_with_drop_points {
 sub is_root {
     my $self = shift;
     return $self->root_id == $self->id;
+}
+
+sub short_title {
+    my $self = shift;
+    my $t = $self->title;
+    if (length $t > 14) {
+        return substr($t, 0, 14) . '‥';
+    } else {
+        return $t;
+    }
 }
 
 1;

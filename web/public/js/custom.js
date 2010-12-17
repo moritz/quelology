@@ -7,7 +7,7 @@ $(document).ready(function() {
             return $( '<img src="/image/drag.png" >' );
         }
     });
-    $('.drop').droppable({
+    $('.droppable').droppable({
         drop: function (event, ui) {
             var target_spec = $(this).attr('id').split('_');
             var source_id = ui.draggable.attr('id').split('_')[1];
