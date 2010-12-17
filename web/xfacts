@@ -108,8 +108,6 @@ post '/shelf/delete'=> sub {
 
 post '/shelf/add' => sub {
     my $self = shift;
-
-    warn "ID: " . $self->param('id');
     unshift @{$self->session->{shelf_ids}}, $self->param('id');
     @{$self->session->{shelf_ids}} = uniq @{$self->session->{shelf_ids}};
     render_shelf($self);
