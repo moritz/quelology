@@ -325,16 +325,25 @@ __DATA__
             body {
                 padding: 0px;
                 margin: 0px;
+                height: 100%;
+            }
+            .shelf-droppable {
+                background-color: #FFFF66;
+                border-bottom: #FF9900 solid 2px;
             }
             #header {
                 padding: 0.5em;
                 margin: 0px;
-                background-color: #FFFF66;
-                border-bottom: #FF9900 solid 2px;
                 min-height: 2em;
+            }
+            #left-column {
+                position: absolute;
+                width: 2em;
+                height: 100%;
             }
             #content {
                 margin: 1em;
+                margin-left: 3em;
             }
             .node {
                 border: 1px dotted black;
@@ -357,15 +366,17 @@ __DATA__
     <script type="text/javascript" src="/js/custom.js"></script>
     </head>
     <body>
-        <div id="header" class="droppable">
-        <p style="display: inline;"><%= link_to Home => 'index' %> </p>
-        <%== shelf %>
+        <div id="header" class="shelf-droppable droppable">
+            <p style="display: inline;"><%= link_to Home => 'index' %> </p>
+            <%== shelf %>
+        </div>
+        <div id="left-column" class="shelf-droppable droppable">
         </div>
         <div id="content">
             <%== content %>
         </div>
-        <div id="debug">
-        </div>
+    <div id="debug">
+    </div>
     </body>
 </html>
 

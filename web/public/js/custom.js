@@ -18,7 +18,7 @@ $(document).ready(function() {
         }
     });
 
-    $('#header').droppable({
+    $('.shelf-droppable').droppable({
         drop: function(ent, ui) {
             var source_id = ui.draggable.attr('id').split('_')[1];
             $.ajax({
