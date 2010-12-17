@@ -9,6 +9,7 @@ use lib 'lib';
 use lib '../lib';
 use XFacts::Config qw(schema config);
 use Carp qw(confess);
+use List::MoreUtils qw/uniq/;
 use utf8;
 
 my $schema   = schema;
@@ -23,7 +24,7 @@ app->types->type(html => 'text/html; charset=utf-8');
 
 app->helper(shelf => sub {
     my $self = shift;
-    my @items = @{ $self->session->{ids} // [] };
+    my @items = @{ $self->session->{shelf_ids} // [] };
     return b($self->render(
         items   => [map($schema->m->by_id($_), @items)],
         partial => 1,
@@ -101,7 +102,7 @@ sub render_shelf {
 
 post '/shelf/delete'=> sub {
     my $self = shift;
-    $self->session->{ids} = [];
+    $self->session->{shelf_ids} = [];
     render_shelf($self);
 };
 
@@ -109,7 +110,8 @@ post '/shelf/add' => sub {
     my $self = shift;
 
     warn "ID: " . $self->param('id');
-    unshift @{$self->session->{ids}}, $self->param('id');
+    unshift @{$self->session->{shelf_ids}}, $self->param('id');
+    @{$self->session->{shelf_ids}} = uniq @{$self->session->{shelf_ids}};
     render_shelf($self);
 } => 'shelf/add';
 

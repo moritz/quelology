@@ -94,8 +94,9 @@ sub is_root {
 sub short_title {
     my $self = shift;
     my $t = $self->title;
-    if (length $t > 14) {
-        return substr($t, 0, 14) . '‥';
+    my $max_length = 20;
+    if (length $t > $max_length) {
+        return substr($t, 0, $max_length) . '…';
     } else {
         return $t;
     }
