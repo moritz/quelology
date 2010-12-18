@@ -129,6 +129,11 @@ get '/shelf/small' => sub {
     render_shelf($self);
 } => 'shelf';
 
+get '/shelf/connect' => sub {
+    my $self = shift;
+
+};
+
 post '/edit' => sub {
     my $self = shift;
     my ($source_id, $target_id, $where)
@@ -215,6 +220,12 @@ __DATA__
 <% } =%>
 <%== '</ul>' x $prev_level =%>
 
+@@ edit_form.html.ep
+<form id="edit_form" method="post" action="/edit">
+    <input type="hidden" id="source_id" name="source_id">
+    <input type="hidden" id="target_id" name="target_id">
+    <input type="hidden" id="edit_where" name="edit_where">
+</form>
 
 @@ edit.html.ep
 % layout 'basic';
@@ -224,12 +235,10 @@ __DATA__
 <h1><%= $first_node->title %></h1>
 <p>by <strong><%= $first_node->made_by; %></strong>, published by <strong><%= $first_node->publisher; %></strong>.</p> 
 
-<form id="edit_form" method="post" action="/edit">
-    <input type="hidden" id="source_id" name="source_id">
-    <input type="hidden" id="target_id" name="target_id">
-    <input type="hidden" id="edit_where" name="edit_where">
-</form>
+<%== include 'edit_form' %>
+<%== include 'drop_tree', nodes => $nodes %>
 
+@@ drop_tree.html.ep
 <ul>
 <% 
     my $prev_level = 1;
@@ -322,7 +331,7 @@ __DATA__
     % } else {
         <p id="placeholder">Personal book shelf - drag books here.</p>
     %}
-    <a href="/shelf">Connect books on your shelf</a>
+    <a href="/shelf/connect">Connect books on your shelf</a>
     <a href="#" onclick="clear_shelf()" style="clear: left">Clear bookshelf</a>
 </div>
 
