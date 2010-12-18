@@ -28,6 +28,9 @@ my @asins = (
             qw(0786852550 1423123727 078683868X 142310420X 038560615X),
             # Kushiel (German)
             qw(3802581202 3802581210 3802581229),
+            # Knuth TAoCP (boxed set 1..4a, 1, 2, 3, 4a)
+            # index 30 to 34
+            qw(0321751043 0201896834 0201896842 0201896850 0201038048),
     );
 
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
@@ -54,14 +57,14 @@ $roots{'The Lord of the Rings'} = $lotr;
 while (my ($l, $r) = each %rels) {
     say "$l -> $r";
 
-    my $root = $schema->resultset('Medium')->create_root_with_children(
+    my $root = $schema->m->create_root_with_children(
         { title => $l },
         @objs[@$r],
     );
     $roots{$l} = $root;
 }
 
-my $middleearth = $schema->resultset('Medium')
+my $middleearth = $schema->m
         ->create_root_with_children({ title => 'Middle Earth' },
             @objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
 
@@ -71,11 +74,13 @@ my $middleearth = $schema->resultset('Medium')
 #$trudi->
 
 
-my $terre_dange = $schema->resultset('Medium')
+my $terre_dange = $schema->m
     ->create_root_with_children({title => "Terre d'Ange"}, @roots{ "Kushiel's Dart (Phedre)", "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
 
+$schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
+
 say '';
-my $rs = $schema->resultset('Medium')->root_nodes;
+my $rs = $schema->m->root_nodes;
 $rs->reset;
 
 while (my $node = $rs->next) {
