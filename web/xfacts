@@ -329,7 +329,6 @@ __DATA__
             }
             .shelf-droppable {
                 background-color: #FFFF66;
-                border-bottom: #FF9900 solid 2px;
             }
             #header {
                 padding: 0.5em;
