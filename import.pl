@@ -42,7 +42,7 @@ my %rels = (
     "Kushiel's Dart (Phedre)" => [13, 14, 15],
     "Kushiel's Scion (Imriel)" => [16, 17, 18],
     "Naamah's Gift (Moirin)" => [19, 20, 21],
-    "Kushiel's Auserwählte" => [27, 28, 29],
+    "Kushiels Auserwählte" => [27, 28, 29],
 );
 
 my %roots;
