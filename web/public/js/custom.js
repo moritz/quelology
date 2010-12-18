@@ -1,3 +1,15 @@
+function add_id_to_shelf(source_id) {
+    $.ajax({
+        type: 'POST',
+        url:  '/shelf/add',
+        data: {
+            id: source_id
+        },
+        success: function(response) {
+            $('#shelf').html(response);
+        }
+    })
+}
 $(document).ready(function() {
     $('.medium').draggable({
         snap: ".droppable",
@@ -21,16 +33,7 @@ $(document).ready(function() {
     $('.shelf-droppable').droppable({
         drop: function(ent, ui) {
             var source_id = ui.draggable.attr('id').split('_')[1];
-            $.ajax({
-                type: 'POST',
-                url:  '/shelf/add',
-                data: {
-                    id: source_id
-                },
-                success: function(response) {
-                    $('#shelf').html(response);
-                }
-            })
+            add_id_to_shelf(source_id);
         }
     });
 });
