@@ -129,7 +129,12 @@ get '/shelf/small' => sub {
 
 get '/shelf/connect' => sub {
     my $self = shift;
-
+    my @nodes = map [$schema->m->by_id($_)->thread_with_drop_points], @{ $self->session->{shelf_ids} // [] };
+    $self->render(
+        template => 'shelf/connect',
+        title    => 'Personal Bookshelf',
+        nodes    => \@nodes,
+    );
 };
 
 post '/edit' => sub {
@@ -190,9 +195,31 @@ __DATA__
 @@ add_shelf_link.html.ep
 <p class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>)">Add to personal book shelf</a></p>
 
+@@ shelf/connect.html.ep
+% layout 'basic';
+<h1>Personal Book Shelf - Connect Books and Series</h1>
+<%== include 'edit_form' %>
+<p>Use drag and drop!</p>
+% for my $n (@$nodes) {
+    % my $first_node = $n->[1][0];
+    <h2><%= $first_node->title %></h2>
+    <p>by <strong><%= $first_node->made_by; %></strong></p> 
+    <%== include 'drop_tree', nodes => $n %>
+% }
+
+
+@@ tree-inline.html.ep
+<div class="medium tree_inline">
+    <h2><%= $node->title %></h2>
+    %== include 'tree-part', node => $node
+</div>
+
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
+%== include 'tree-part', node => $node
+
+@@ tree-part.html.ep
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
 %# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
