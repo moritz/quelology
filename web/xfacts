@@ -14,8 +14,6 @@ use utf8;
 
 my $schema   = schema;
 my $static   = Mojolicious::Static->new;
-my $session  = app->session;
-my $app      = app;
 
 # $SIG{__WARN__} = \&confess;
 
@@ -162,7 +160,7 @@ post '/edit' => sub {
 
 };
 
-$app->start;
+app->start;
 $schema->storage->disconnect;
 1;
 
@@ -189,15 +187,20 @@ __DATA__
 <% } %>
 </ul>
 
+@@ add_shelf_link.html.ep
+<p class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>)">Add to personal book shelf</a></p>
+
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
 %# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
-<% if ($node->id != $node->root_id) { %>
+% if ($node->id != $node->root_id) {
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
-<% } %>
+% }
+%== include add_shelf_link => (node => $node)
+
 <% if ($node->asin) { %>
     <%= include 'small_medium', n => $node =%>
 <% } %>
@@ -281,6 +284,7 @@ __DATA__
 <% if ($node->id != $node->root_id) { %>
     <p>This is part of a <%= link_to "series (" . $node->root->title . ").", tree => { id => $node->root_id }; %></p>
 <% } %>
+%== include add_shelf_link => (node => $node)
 <p>
     <% if (defined $node->medium_image) { %>
         <% if (defined $node->large_image) { %>
@@ -401,5 +405,3 @@ __DATA__
     </div>
     </body>
 </html>
-
-
