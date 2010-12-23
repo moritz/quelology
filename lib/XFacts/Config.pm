@@ -3,11 +3,12 @@ use 5.012;
 use warnings;
 use Exporter qw(import dbh);
 
-our @EXPORT_OK = qw(config schema amazon dbh);
+our @EXPORT_OK = qw(config schema amazon amazon_net dbh);
 use autodie;
 use JSON::XS qw(decode_json);
 
 use XML::Amazon::Cached;
+use Net::Amazon;
 use DBI;
 use XFacts::Model;
 
@@ -31,10 +32,19 @@ sub dbh {
 }
 
 sub amazon {
-    XML::Amazon::Cached->new(
+    state $a = XML::Amazon::Cached->new(
         token => config()->{amazon_token},
         sak   => config()->{amazon_secret_key},
         local => config()->{amazon_locale} // 'us',
+    );
+}
+
+sub amazon_net {
+    state $a = Net::Amazon->new(
+        token       => config->{amazon_token},
+        secret_key  => config->{amazon_secret_key},
+        locale      => config->{amazon_locale},
+        cache       => Cache::FileCache->new({ namespace => 'Net-Amazon' }),
     );
 }
 

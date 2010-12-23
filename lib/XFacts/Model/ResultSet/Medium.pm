@@ -38,6 +38,17 @@ sub from_asin {
                 medium_image    => $m->image('m'),
                 large_image     => $m->image('l'),
             };
+            # get more information from a different module
+            $a = XFacts::Config::amazon_net();
+            my $res = $a->search(asin => $asin);
+            if ($res->is_success) {
+                # TODO: be more robust
+                my ($book) = $res->properties;
+                $h->{ISBN} = $book->isbn if $book->isbn;
+                my $date = $book->publication_date // $book->ReleaseDate;
+                my $year = (split /-/, $date)[0];
+                $h->{publish_year} = $year if $year;
+            }
             $row = $self->create($h);
         } else {
             confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
