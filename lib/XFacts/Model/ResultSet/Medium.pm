@@ -20,6 +20,34 @@ sub unparen {
     $t;
 }
 
+sub _hash_from_xml_amazon {
+    my $m = shift;
+    my $h = {
+        asin            => $m->asin,
+        title           => unparen($m->title),
+        made_by         => scalarify($m->made_by),
+        publisher       => scalarify($m->publisher),
+        amazon_url      => $m->url,
+        small_image     => $m->image('s'),
+        medium_image    => $m->image('m'),
+        large_image     => $m->image('l'),
+    };
+
+    # get more information through a different module
+    my $a = XFacts::Config::amazon_net();
+    my $res = $a->search(asin => $h->{asin});
+    if ($res->is_success) {
+        # TODO: be more robust
+        my ($book) = $res->properties;
+        $h->{ISBN} = $book->isbn if $book->isbn;
+        my $date = $book->publication_date // $book->ReleaseDate;
+        my $year = (split /-/, $date)[0];
+        $h->{publish_year} = $year if $year;
+    }
+
+    return $h;
+}
+
 sub from_asin {
     my ($self, $asin) = @_;
     confess("No ASIN provided") unless defined($asin) && length $asin;
@@ -28,27 +56,7 @@ sub from_asin {
         my $a = XFacts::Config::amazon();
         my $m = $a->asin($asin);
         if ($m) {
-            my $h = {
-                asin            => $asin,
-                title           => unparen($m->title),
-                made_by         => scalarify($m->made_by),
-                publisher       => scalarify($m->publisher),
-                amazon_url      => $m->url,
-                small_image     => $m->image('s'),
-                medium_image    => $m->image('m'),
-                large_image     => $m->image('l'),
-            };
-            # get more information from a different module
-            $a = XFacts::Config::amazon_net();
-            my $res = $a->search(asin => $asin);
-            if ($res->is_success) {
-                # TODO: be more robust
-                my ($book) = $res->properties;
-                $h->{ISBN} = $book->isbn if $book->isbn;
-                my $date = $book->publication_date // $book->ReleaseDate;
-                my $year = (split /-/, $date)[0];
-                $h->{publish_year} = $year if $year;
-            }
+            my $h = _hash_from_xml_amazon($m);
             $row = $self->create($h);
         } else {
             confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
