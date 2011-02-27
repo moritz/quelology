@@ -99,6 +99,26 @@ get '/t/:id' => sub {
     );
 } => 'tree';
 
+get '/search/:keyword' => sub {
+    my $self = shift;
+    my $keyword = $self->param('keyword');
+    my $res = XFacts::Config::amazon->search(
+                    keywords => $keyword,
+                    type     => 'Books',
+               );
+#    if ($res->is_success) {
+        $self->render(
+            layout  => 'basic',
+            title   => "Search r,sults for '$keyword'",
+            template => 'search',
+            results => [$res->collection],
+        );
+#    } else {
+#        die $res->message;
+#    }
+
+} => 'search';
+
 $SIG{INT} = sub {
     $schema->storage->disconnect;
     exec $^X, $0, @ARGV;
@@ -365,6 +385,17 @@ __DATA__
     <a href="/shelf/connect">Connect books on your shelf</a>
     <a href="#" onclick="clear_shelf()" style="clear: left">Clear bookshelf</a>
 </div>
+
+@@ search.html.ep
+<ul>
+    % for (@$results) {
+        <li>
+            <a href="/asin/<%= $_->asin =%>">
+            <img src="<%= $_->image('s') %>" alt="">
+            <%= $_->title %></a> by <i><%= $_->made_by =%></i>
+        </li>
+    % }
+</ul>
 
 @@ shelf.html.ep
 <div id="shelf">
