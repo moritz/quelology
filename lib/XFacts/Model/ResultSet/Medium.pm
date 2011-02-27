@@ -2,6 +2,7 @@ package XFacts::Model::ResultSet::Medium;
 use strict;
 use 5.012;
 use Carp qw(confess);
+use Carp::Always;
 
 use parent 'DBIx::Class::ResultSet';
 
@@ -55,6 +56,7 @@ sub websearch {
         keywords    => $keywords,
         type        => 'Books',
     );
+#    die $a_res->message unless $a_res->is_success;
     my @r;
     for ($a_res->collection) {
         if (my ($r) = $self->search({asin => $_->asin})) {
@@ -103,7 +105,6 @@ sub create_root_with_children {
     my %v = %$values;
     for (qw(made_by publisher)) {
         $v{$_} = $self->_join_sorted($values, $_, \@children);
-        warn "$_: $v{$_}\n";
     }
     my $new = $self->create(\%v);
     $new->attach_rightmost_child(@children);

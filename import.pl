@@ -16,7 +16,7 @@ my @asins = (
             # traitor spy trilogy
             qw(0316037834 0316037869),
             # the Hobbit, Silmarillion, unfinished tales
-            qw(0261102664 B0017PICLQ 0618154043),
+            qw(0345296044 B0017PICLQ 0618154043),
             # Kushiel's Dart, Chosen, Avatar
             qw(0765342987 0765345048 0765347539),
             # Kushiel's Scion, Justice, Mercy
