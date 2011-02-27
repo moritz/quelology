@@ -48,6 +48,25 @@ sub _hash_from_xml_amazon {
     return $h;
 }
 
+sub websearch {
+    my ($self, $keywords) = @_;
+    my $amazon = XFacts::Config::amazon();
+    my $a_res  = $amazon->search(
+        keywords    => $keywords,
+        type        => 'Books',
+    );
+    my @r;
+    for ($a_res->collection) {
+        if (my ($r) = $self->search({asin => $_->asin})) {
+            push @r, $r;
+        } else {
+            my $r = $self->create(_hash_from_xml_amazon($_));
+            push @r, $r;
+        }
+    }
+    return @r;
+}
+
 sub from_asin {
     my ($self, $asin) = @_;
     confess("No ASIN provided") unless defined($asin) && length $asin;

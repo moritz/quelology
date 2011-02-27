@@ -106,16 +106,12 @@ get '/search/:keyword' => sub {
                     keywords => $keyword,
                     type     => 'Books',
                );
-#    if ($res->is_success) {
-        $self->render(
-            layout  => 'basic',
-            title   => "Search r,sults for '$keyword'",
-            template => 'search',
-            results => [$res->collection],
-        );
-#    } else {
-#        die $res->message;
-#    }
+    $self->render(
+        layout  => 'basic',
+        title   => "Search r,sults for '$keyword'",
+        template => 'search',
+        results => [$schema->m->websearch($keyword)],
+    );
 
 } => 'search';
 
@@ -390,9 +386,7 @@ __DATA__
 <ul>
     % for (@$results) {
         <li>
-            <a href="/asin/<%= $_->asin =%>">
-            <img src="<%= $_->image('s') %>" alt="">
-            <%= $_->title %></a> by <i><%= $_->made_by =%></i>
+            <%= include small_medium  => (n => $_) =%>
         </li>
     % }
 </ul>
