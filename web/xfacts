@@ -388,7 +388,7 @@ __DATA__
     % if (@$items) {
         <ul>
     %   for my $i (@$items) {
-            <li><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
+            <li class="draggable" id="shelfmedium_<%= $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
                 <%= $i->short_title %>
             <% end %></li>
     %   }
