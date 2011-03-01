@@ -295,7 +295,7 @@ __DATA__
     my $first_node = $nodes->[1][0];
 %>
 <h1><%= $first_node->title %></h1>
-<p>by <strong><%= $first_node->made_by; %></strong>, published by <strong><%= $first_node->publisher; %></strong>.</p> 
+<p>by <strong><%= $first_node->made_by; %></strong>, published by <%= $first_node->publisher; %>.</p> 
 
 <%== include 'drop_tree', nodes => $nodes %>
 
@@ -366,14 +366,15 @@ __DATA__
     <% if ($n->small_image) { %>
         <img src="<%= $n->small_image %>" alt="" />
     <% } %>
-    <%= link_to($n->title, details => { id => $n->id }) %>
-    by <%= $n->made_by %> (id <%= $n->id %>)
+%#    <%= link_to($n->title, details => { id => $n->id }) %>
+    <a href="/details/<% $n->id %>"><% $n->title %></a>
+    by <% $n->made_by %> (id <% $n->id %>)
 </span>
 
 @@ drop_point.html.ep
 <img
     src="/image/drop-target.png" width="32" height="32"
-    id="drop_<%= $d->where %>_<%= $d->id %>" class="drop droppable"
+    id="drop_<% $d->where %>_<% $d->id %>" class="drop droppable"
     alt="Drag a book with your mouse and drop it here to insert it here"
 >
 
@@ -385,8 +386,8 @@ __DATA__
     % if (@$items) {
         <ul>
     %   for my $i (@$items) {
-            <li class="draggable" id="shelfmedium_<%= $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
-                <%= $i->short_title %>
+            <li class="draggable" id="shelfmedium_<% $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
+                <% $i->short_title %>
             <% end %></li>
     %   }
         </ul>
@@ -415,7 +416,7 @@ __DATA__
 @@ layouts/basic.html.ep
 <!doctype html><html>
     <head>
-        <title><%= $title %></title>
+        <title><% $title %></title>
         <style type="text/css"><!--
             body {
                 padding: 0px;
