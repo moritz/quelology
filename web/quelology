@@ -13,9 +13,6 @@ use List::MoreUtils qw/uniq/;
 use utf8;
 
 my $schema   = schema;
-my $static   = Mojolicious::Static->new;
-
-# $SIG{__WARN__} = \&confess;
 
 app->secret( config()->{web_secret} );
 app->types->type(html => 'text/html; charset=utf-8');
