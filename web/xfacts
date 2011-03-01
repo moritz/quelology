@@ -99,7 +99,7 @@ get '/t/:id' => sub {
     );
 } => 'tree';
 
-get '/search/:keyword' => sub {
+sub search {
     my $self = shift;
     my $keyword = $self->param('keyword');
     my $res = XFacts::Config::amazon->search(
@@ -113,7 +113,9 @@ get '/search/:keyword' => sub {
         results => [$schema->m->websearch($keyword)],
     );
 
-} => 'search';
+}
+get  '/search/:keyword' => \&search => 'search';
+post '/search/'         => \&search;
 
 $SIG{INT} = sub {
     $schema->storage->disconnect;
@@ -447,6 +449,10 @@ __DATA__
     <body>
         <div id="header" class="shelf-droppable droppable">
             <p style="display: inline;"><%= link_to Home => 'index' %> </p>
+            <form action="/search/" method="post">
+            <p style="float:right"><input type="text" id="keyword" name="keyword" />
+               <input type="submit" value="search" />
+            </p>
             <%== shelf %>
         </div>
         <div id="left-column" class="shelf-droppable droppable">
