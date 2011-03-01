@@ -1,7 +1,7 @@
 use warnings;
 use 5.012;
 use lib 'lib';
-use XFacts::Config qw(schema amazon);
+use Quelology::Config qw(schema amazon);
 
 binmode STDOUT, ':encoding(UTF-8)';
 

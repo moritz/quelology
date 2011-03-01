@@ -1,4 +1,4 @@
-package XFacts::Config;
+package Quelology::Config;
 use 5.012;
 use warnings;
 use Exporter qw(import dbh);
@@ -10,7 +10,7 @@ use JSON::XS qw(decode_json);
 use XML::Amazon::Cached;
 use Net::Amazon;
 use DBI;
-use XFacts::Model;
+use Quelology::Model;
 
 my $conf = decode_json do {
     open my $file, '<:encoding(UTF-8)', 'config.json';
@@ -49,7 +49,7 @@ sub amazon_net {
 }
 
 sub schema {
-    XFacts::Model->connect(\&dbh);
+    Quelology::Model->connect(\&dbh);
 }
 
 1;

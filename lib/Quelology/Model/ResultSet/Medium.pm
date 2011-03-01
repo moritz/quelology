@@ -1,4 +1,4 @@
-package XFacts::Model::ResultSet::Medium;
+package Quelology::Model::ResultSet::Medium;
 use strict;
 use 5.012;
 use Carp qw(confess);
@@ -34,7 +34,7 @@ sub _hash_from_xml_amazon {
     };
 
     # get more information through a different module
-    my $a = XFacts::Config::amazon_net();
+    my $a = Quelology::Config::amazon_net();
     my $res = $a->search(asin => $h->{asin});
     if ($res->is_success) {
         # TODO: be more robust
@@ -50,7 +50,7 @@ sub _hash_from_xml_amazon {
 
 sub websearch {
     my ($self, $keywords) = @_;
-    my $amazon = XFacts::Config::amazon();
+    my $amazon = Quelology::Config::amazon();
     my $a_res  = $amazon->search(
         keywords    => $keywords,
         type        => 'Books',
@@ -73,7 +73,7 @@ sub from_asin {
     confess("No ASIN provided") unless defined($asin) && length $asin;
     my ($row) = $self->search({ asin => $asin });
     unless ($row) {
-        my $a = XFacts::Config::amazon();
+        my $a = Quelology::Config::amazon();
         my $m = $a->asin($asin);
         if ($m) {
             my $h = _hash_from_xml_amazon($m);

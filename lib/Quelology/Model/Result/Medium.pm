@@ -1,6 +1,6 @@
-package XFacts::Model::Result::Medium;
+package Quelology::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
-use aliased XFacts::Model::DropPoint => 'DropPoint';
+use aliased Quelology::Model::DropPoint => 'DropPoint';
 use utf8;
 
 __PACKAGE__->load_components(qw( Tree::NestedSet ));
@@ -26,8 +26,8 @@ __PACKAGE__->add_columns(qw/
 
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
-__PACKAGE__->belongs_to('root', 'XFacts::Model::Result::Medium', 'root_id');
-__PACKAGE__->belongs_to('alias_for', 'XFacts::Model::Result::Medium', 'same_as');
+__PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Medium', 'root_id');
+__PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Medium', 'same_as');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',

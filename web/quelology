@@ -7,7 +7,7 @@ use Mojolicious::Session;
 use Mojo::ByteStream 'b';
 use lib 'lib';
 use lib '../lib';
-use XFacts::Config qw(schema config);
+use Quelology::Config qw(schema config);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use utf8;
@@ -102,7 +102,7 @@ get '/t/:id' => sub {
 sub search {
     my $self = shift;
     my $keyword = $self->param('keyword');
-    my $res = XFacts::Config::amazon->search(
+    my $res = Quelology::Config::amazon->search(
                     keywords => $keyword,
                     type     => 'Books',
                );
@@ -308,12 +308,12 @@ __DATA__
     my $prev_level = 1;
     for my $n (@$nodes) {
         my $current_level;
-        if (UNIVERSAL::isa($n, 'XFacts::Model::DropPoint')) {
+        if (UNIVERSAL::isa($n, 'Quelology::Model::DropPoint')) {
             $current_level =  $n->level;
         } else {
             $current_level = $n->[0]->level;
         }
-        my $l = $current_level - $prev_level; 
+        my $l = $current_level - $prev_level;
         my $ld = '';
         if ($l > 0) {
             $ld = '<ul>' x $l;
@@ -323,7 +323,7 @@ __DATA__
     %>
         %== $ld
    <li>
-        <% if (UNIVERSAL::isa($n, 'XFacts::Model::DropPoint')) { %>
+        <% if (UNIVERSAL::isa($n, 'Quelology::Model::DropPoint')) { %>
             <%= include 'drop_point', d => $n =%>
         <% } else { %>
             <%= include 'small_medium', n => $n->[0] =%>

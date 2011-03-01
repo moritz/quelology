@@ -1,4 +1,4 @@
-package XFacts::Model;
+package Quelology::Model;
 use Carp qw(confess);
 
 use parent qw/DBIx::Class::Schema/;
