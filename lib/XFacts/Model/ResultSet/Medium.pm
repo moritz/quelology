@@ -2,7 +2,6 @@ package XFacts::Model::ResultSet::Medium;
 use strict;
 use 5.012;
 use Carp qw(confess);
-use Carp::Always;
 
 use parent 'DBIx::Class::ResultSet';
 
