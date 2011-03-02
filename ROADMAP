@@ -1,0 +1,24 @@
+The following features are planned for Quelology:
+
+
+1) Initial feature phase:
+    * explaining texts
+    * edit titles etc.
+    * search in the database
+    * authentication, signup
+    * more advanced tree edit (?)
+
+(go live in read-only mode)
+
+2) Big Redesign phase:
+    * consistent design
+    * easier tree editing
+
+(go live for real)
+
+3) More Feature phase:
+    * use aliases
+    * timeline view
+    * translations
+    * i18n, l10n
+    * on-site SEO (titles, URLs)
