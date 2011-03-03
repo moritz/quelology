@@ -386,8 +386,8 @@ __DATA__
     % if (@$items) {
         <ul>
     %   for my $i (@$items) {
-            <li class="draggable" id="shelfmedium_<% $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
-                <% $i->short_title %>
+            <li class="draggable" id="shelfmedium_<%= $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
+                <%= $i->short_title %>
             <% end %></li>
     %   }
         </ul>
@@ -416,7 +416,7 @@ __DATA__
 @@ layouts/basic.html.ep
 <!doctype html><html>
     <head>
-        <title><% $title %></title>
+        <title><%= $title %></title>
         <style type="text/css"><!--
             body {
                 padding: 0px;
