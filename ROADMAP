@@ -7,6 +7,7 @@ The following features are planned for Quelology:
     * search in the database
     * authentication, signup
     * more advanced tree edit (?)
+    * imprint
 
 (go live in read-only mode)
 
@@ -23,3 +24,10 @@ The following features are planned for Quelology:
     * i18n, l10n
     * on-site SEO (titles, URLs)
     * other data source /link destination than amazon
+    * non-book media
+    * log changes to make them reversible
+
+4) Even More Features phase (speculative at best):
+    * "social" features (?)
+    * badges/achievement for editing (?)
+    * voting on correctness, content; maybe user karma (?)
