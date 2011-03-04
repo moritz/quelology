@@ -15,10 +15,10 @@ function update_medium(id, what) {
 //    alert('updating ' + what + ' of ' + id);
     var span = $('#medium_' + id);
     var cancel = span.html();
-    var link = $(span.children('a')[0]);
+    var thing = $(span.children('.data_' + what)[0]);
     var combined =  what + '_' + id;
     var form = $('<form>').attr('id', 'form_' + combined);
-    var input = $('<input>').attr('id', 'input_' + combined).attr('value', link.text());
+    var input = $('<input>').attr('id', 'input_' + combined).attr('value', thing.text());
     form.append(input);
     input = $('<input>').attr('type', 'submit').attr('value', 'Do it!');
     form.append(input);
@@ -46,7 +46,7 @@ function update_medium(id, what) {
         return false;
     });
 
-    link.replaceWith(form);
+    thing.replaceWith(form);
 }
 
 $(document).ready(function() {
