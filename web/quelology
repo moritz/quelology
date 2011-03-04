@@ -405,7 +405,7 @@ __DATA__
 
 @@ edit_marker.html.ep
 <% if ($edit) { %>
-    <a href="#" onclick="update_medium(<%= $n->id %>, '<%= $what %>')">
+    <a href="#" onclick="update_medium(<%= $n->id %>, '<%= $what %>'); return false">
         <img src="/image/edit.png" alt="(edit <%= $name %>)" title="edit <%= $name %>"
             width="16" height="16" />
     </a>
