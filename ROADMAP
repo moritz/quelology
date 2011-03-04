@@ -2,8 +2,13 @@ The following features are planned for Quelology:
 
 
 1) Initial feature phase:
+TODO:
     * explaining texts
     * edit titles etc.
+        mostly done. Lacks:
+            - editing of root nodes
+            - guard against multiple edit fields at once
+              (which would mean that a user input might be lost)
     * search in the database
     * authentication, signup
     * more advanced tree edit (?)
