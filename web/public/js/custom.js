@@ -13,6 +13,7 @@ function add_id_to_shelf(source_id) {
 
 function edit_medium(id) {
     var span = $('#medium_' + id);
+    var cancel = span.html();
     var link = $(span.children('a')[0]);
     var input_id = 'title_' + id;
     var form = $('<form action="/update/title" method="post"></form>').attr('id', 'form_changetitle_' + id);
@@ -20,7 +21,10 @@ function edit_medium(id) {
     form.append(input);
     input = $('<input></input>').attr('type', 'submit').attr('value', 'Do it!');
     form.append(input);
-
+    input = $('<input>').attr('value', 'cancel').attr('type', 'button').click(function() {
+        span.html(cancel);
+    });
+    form.append(input);
 
     form.submit(function(e) {
         var new_title = $('#input_title_' + id).attr('value');
