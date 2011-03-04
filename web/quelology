@@ -468,6 +468,7 @@ __DATA__
             <p style="float:right"><input type="text" id="keyword" name="keyword" />
                <input type="submit" value="search" />
             </p>
+            </form>
             <%== shelf %>
         </div>
         <div id="left-column" class="shelf-droppable droppable">
