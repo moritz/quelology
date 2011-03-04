@@ -395,7 +395,7 @@ __DATA__
     <%= link_to($n->title, details => { id => $n->id }) %>
     <% if ($edit) { %>
         <a href="#" onclick="update_medium(<%= $n->id %>, 'title')">
-            <img src="/image/edit.png" alt="(edit title)" title="(edit title)"
+            <img src="/image/edit.png" alt="(edit title)" title="edit title"
                  width="16" height="16" />
         </a>
     <% } %>
@@ -405,7 +405,7 @@ __DATA__
         <%= $n->made_by %>
         <% if ($edit) { %>
             <a href="#" onclick="update_medium(<%= $n->id %>, 'made_by')">
-                <img src="/image/edit.png" alt="(edit title)" title="(edit author)"
+                <img src="/image/edit.png" alt="(edit author)" title="edit author"
                     width="16" height="16" />
             </a>
         <% } %>
