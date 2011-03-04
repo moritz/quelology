@@ -40,8 +40,7 @@ function edit_medium(id) {
                 title: new_title
             },
             success: function(response) {
-                alert('Success!');
-                link.html('updated!!');
+                span.replaceWith(response);
             }
         });
         // TODO: intercept form submission to do it AJAX-y

@@ -108,10 +108,14 @@ post '/update/title' => sub {
     my $self = shift;
     die "empty title" unless $self->param('title');
     warn("New title: " . $self->param('title'));
-    $schema->m->by_id($self->param('id'))->update({title => $self->param('title')});
+    my $node = $schema->m->by_id($self->param('id'));
+    $node->update({title => $self->param('title')});
     # TODO: return some JSON or HTML or so...
-    $self->render(text => 'title updated');
-
+    $self->render(
+        template    => 'small_medium',
+        n           => $node,
+        edit        => 1,
+    );
 };
 
 sub search {
