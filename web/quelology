@@ -104,12 +104,14 @@ get '/t/:id' => sub {
     );
 } => 'tree';
 
-post '/update/title' => sub {
+post '/update/:what' => sub {
     my $self = shift;
-    die "empty title" unless $self->param('title');
-    warn("New title: " . $self->param('title'));
+    my $what = $self->param('what');
+    my %allowed = (title => 1, made_by => 1);
+    die "Can't change '$what'" unless $allowed{$what};
+    die "empty $what" unless $self->param($what);
     my $node = $schema->m->by_id($self->param('id'));
-    $node->update({title => $self->param('title')});
+    $node->update({$what => $self->param($what)});
     # TODO: return some JSON or HTML or so...
     $self->render(
         template    => 'small_medium',
