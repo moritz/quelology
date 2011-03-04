@@ -10,6 +10,26 @@ function add_id_to_shelf(source_id) {
         }
     })
 }
+
+function edit_medium(id) {
+    var span = $('#medium_' + id);
+    var link = $(span.children('a')[0]);
+    var input_id = 'title_' + id;
+    var form = $('<form action="/update" method="post"></form>').attr('id', 'form_changetitle_' + id);
+    var input = $('<input></input>').attr('name', 'title').attr('id', 'title').attr('value', link.text());
+    alert(input.html());
+    form.append(input);
+    input = $('<input></input>').attr('name', 'id').attr('type', 'hidden').attr('value', id);
+    form.append(input);
+
+    form.submit(function() {
+        // TODO: intercept form submission to do it AJAX-y
+    });
+
+    link.replaceWith(form);
+    alert("Trying to edit " + link.text());
+}
+
 $(document).ready(function() {
     $('.medium').draggable({
         snap: ".droppable",
