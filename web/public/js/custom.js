@@ -15,19 +15,36 @@ function edit_medium(id) {
     var span = $('#medium_' + id);
     var link = $(span.children('a')[0]);
     var input_id = 'title_' + id;
-    var form = $('<form action="/update" method="post"></form>').attr('id', 'form_changetitle_' + id);
-    var input = $('<input></input>').attr('name', 'title').attr('id', 'title').attr('value', link.text());
-    alert(input.html());
+    var form = $('<form action="/update/title" method="post"></form>').attr('id', 'form_changetitle_' + id);
+    var input = $('<input></input>').attr('name', 'title').attr('id', 'input_title_' + id).attr('value', link.text());
     form.append(input);
-    input = $('<input></input>').attr('name', 'id').attr('type', 'hidden').attr('value', id);
+    input = $('<input></input>').attr('type', 'submit').attr('value', 'Do it!');
     form.append(input);
 
-    form.submit(function() {
+
+    form.submit(function(e) {
+        var new_title = $('#input_title_' + id).attr('value');
+        if (new_title == '') {
+            alert('Cannot submit with empty title');
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/update/title',
+            data: {
+                "id": id,
+                title: new_title
+            },
+            success: function(response) {
+                alert('Success!');
+                link.html('updated!!');
+            }
+        });
         // TODO: intercept form submission to do it AJAX-y
+        return false;
     });
 
     link.replaceWith(form);
-    alert("Trying to edit " + link.text());
 }
 
 $(document).ready(function() {
