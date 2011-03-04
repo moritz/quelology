@@ -11,39 +11,38 @@ function add_id_to_shelf(source_id) {
     })
 }
 
-function edit_medium(id) {
+function update_medium(id, what) {
+//    alert('updating ' + what + ' of ' + id);
     var span = $('#medium_' + id);
     var cancel = span.html();
     var link = $(span.children('a')[0]);
-    var input_id = 'title_' + id;
-    var form = $('<form action="/update/title" method="post"></form>').attr('id', 'form_changetitle_' + id);
-    var input = $('<input></input>').attr('name', 'title').attr('id', 'input_title_' + id).attr('value', link.text());
+    var combined =  what + '_' + id;
+    var form = $('<form>').attr('id', 'form_' + combined);
+    var input = $('<input>').attr('id', 'input_' + combined).attr('value', link.text());
     form.append(input);
-    input = $('<input></input>').attr('type', 'submit').attr('value', 'Do it!');
+    input = $('<input>').attr('type', 'submit').attr('value', 'Do it!');
     form.append(input);
-    input = $('<input>').attr('value', 'cancel').attr('type', 'button').click(function() {
+    input = $('<input>').attr('type', 'button').attr('value', 'cancel').click(function() {
         span.html(cancel);
     });
     form.append(input);
 
     form.submit(function(e) {
-        var new_title = $('#input_title_' + id).attr('value');
-        if (new_title == '') {
-            alert('Cannot submit with empty title');
+        var new_value = $('#input_' + combined).attr('value');
+        if (new_value == '') {
             return false;
         }
-        $.ajax({
+        var data = { "id": id };
+        data[what] = new_value;
+        var spec = {
             type: 'POST',
-            url: '/update/title',
-            data: {
-                "id": id,
-                title: new_title
-            },
+            url: '/update/' + what,
             success: function(response) {
                 span.replaceWith(response);
             }
-        });
-        // TODO: intercept form submission to do it AJAX-y
+        };
+        spec["data"] = data;
+        $.ajax(spec);
         return false;
     });
 
