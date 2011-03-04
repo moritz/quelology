@@ -34,9 +34,17 @@ get '/' =>  sub {
         threads     => [$schema->m->threads],
         singles     => [$schema->m->singles],
         template    => 'index',
-        title       => 'List of series',
+        title       => 'Quelology - book sequels and prequels',
     );
 } => 'index';
+
+sub title_for {
+    my $node = shift;
+    my $title = sprintf '%s for "%s" by %s',
+                        $node->is_leaf ? "Details" : "Quelology",
+                        $node->title,
+                        $node->made_by;
+}
 
 get '/m/:id' => sub {
     my $self = shift;
@@ -44,7 +52,7 @@ get '/m/:id' => sub {
     my $template = $node->is_leaf ? 'medium' : 'tree';
     $self->render(
         layout  => 'basic',
-        title   => 'Details',
+        title   => title_for($node),
         node    => $node,
         template => $template,
     );
@@ -55,7 +63,7 @@ get '/details/:id' => sub {
     my $node = $schema->m->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
-        title   => "Details for " . $node->title . " by " . $node->made_by,
+        title   => title_for($node),
         node    => $node,
         template => 'medium',
     );
@@ -69,7 +77,7 @@ get '/asin/:asin' => sub {
     if ($node) {
         $self->render(
             template => 'medium',
-            title    => 'Details',
+            title    => title_for($node),
             node     => $node,
             layout   => 'basic',
         );
