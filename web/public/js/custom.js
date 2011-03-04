@@ -18,7 +18,7 @@ function update_medium(id, what) {
     var thing = $(span.children('.data_' + what)[0]);
     var combined =  what + '_' + id;
     var form = $('<form>').attr('id', 'form_' + combined);
-    var input = $('<input>').attr('id', 'input_' + combined).attr('value', thing.text());
+    var input = $('<input>').attr('id', 'input_' + combined).attr('value', $.trim(thing.text()));
     form.append(input);
     input = $('<input>').attr('type', 'submit').attr('value', 'Do it!');
     form.append(input);
