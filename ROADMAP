@@ -13,6 +13,7 @@ TODO:
     * authentication, signup
     * more advanced tree edit (?)
     * imprint
+    * unit tests
 
 (go live in read-only mode)
 
@@ -23,6 +24,7 @@ TODO:
 (go live for real)
 
 3) More Feature phase:
+    * cross-browser testing
     * use aliases
     * timeline view
     * translations

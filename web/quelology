@@ -393,25 +393,23 @@ __DATA__
 
     <span class="data_title">
     <%= link_to($n->title, details => { id => $n->id }) %>
-    <% if ($edit) { %>
-        <a href="#" onclick="update_medium(<%= $n->id %>, 'title')">
-            <img src="/image/edit.png" alt="(edit title)" title="edit title"
-                 width="16" height="16" />
-        </a>
-    <% } %>
+    %== include 'edit_marker' => edit => $edit, what => 'title', name => 'title'
     </span>
     by 
     <span class="data_made_by">
         <%= $n->made_by %>
-        <% if ($edit) { %>
-            <a href="#" onclick="update_medium(<%= $n->id %>, 'made_by')">
-                <img src="/image/edit.png" alt="(edit author)" title="edit author"
-                    width="16" height="16" />
-            </a>
-        <% } %>
+        %== include 'edit_marker' => edit => $edit, what => 'made_by', name => 'author'
     </span>
     (id <%= $n->id %>)
 </span>
+
+@@ edit_marker.html.ep
+<% if ($edit) { %>
+    <a href="#" onclick="update_medium(<%= $n->id %>, '<%= $what %>')">
+        <img src="/image/edit.png" alt="(edit <%= $name %>)" title="edit <%= $name %>"
+            width="16" height="16" />
+    </a>
+<% } %>
 
 @@ drop_point.html.ep
 <img
