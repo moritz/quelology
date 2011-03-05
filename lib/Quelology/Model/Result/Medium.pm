@@ -81,7 +81,7 @@ sub thread_with_drop_points {
 
     # we can't add before or after root node yet.
 #    shift @things;
-    pop @things;
+#    pop @things;
 
     return @things;
 }

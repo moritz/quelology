@@ -178,10 +178,21 @@ get '/shelf/small' => sub {
 
 get '/shelf/connect' => sub {
     my $self = shift;
-    my @nodes = map [$schema->m->by_id($_)->thread_with_drop_points], @{ $self->session->{shelf_ids} // [] };
+    my %seen;
+    my @nodes;
+    for my $id (@{ $self->session->{shelf_ids} // [] }) {
+        next if $seen{$id};
+        push @nodes, [];
+        for ($schema->m->by_id($id)->thread_with_drop_points) {
+            if (ref($_) eq 'ARRAY') {
+                ++$seen{$_->[0]->id};
+            }
+            push @{$nodes[-1]}, $_;
+        }
+    }
     $self->render(
         template => 'shelf/connect',
-        title    => 'Personal Bookshelf',
+        title    => 'Personal Bookshelf - extend the Quelology',
         nodes    => \@nodes,
     );
 };
@@ -213,23 +224,25 @@ post '/edit' => sub {
             { title => '<unnamed>' },
             @children,
         );
+        # TODO: delete @children from session,
+        # add $where_to_go->id
     }
     elsif ( $where eq 'after' ) {
         $target->attach_right_sibling($source);
+        # remove $source from session
     }
     elsif ( $where eq 'before' ) {
         $target->attach_left_sibling($source);
+        # remove $source from session
     }
     elsif ( $where eq 'below' ) {
         $target->attach_leftmost_child($source);
+        # remove $source from session
     }
     else {
         die "Don't know what to do with position '$where' (allowed: before, after, below)";
     }
-    $self->render(template => 'edit', nodes => [$where_to_go->thread_with_drop_points],
-        title => 'Edited tree',
-    );
-
+    $self->redirect_to('/shelf/connect');
 };
 
 get '/imprint' => sub {
@@ -275,7 +288,7 @@ __DATA__
 
 @@ shelf/connect.html.ep
 % layout 'basic';
-<h1>Personal Book Shelf - Connect Books and Series</h1>
+<h1>Personal Book Shelf - Contribute to the Quelology</h1>
 <p>Use drag and drop!</p>
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
@@ -499,7 +512,7 @@ responsible for whatever he writes.</p>
                 margin: 0px;
                 height: 100%;
             }
-            .shelf-droppable {
+            .shelf-droppable, #footer {
                 background-color: #FFFF66;
             }
             #header {
@@ -515,6 +528,10 @@ responsible for whatever he writes.</p>
             #content {
                 margin: 1em;
                 margin-left: 3em;
+            }
+            #footer {
+                padding: 0.3em;
+                margin-left: 2em;
             }
             .node {
                 border: 1px dotted black;
