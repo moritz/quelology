@@ -63,6 +63,14 @@ $(document).ready(function() {
             return $( '<img src="/image/drag.png" >' );
         }
     });
+//    $('.medium').children().draggable({
+//        snap: ".droppable",
+//        snapMode: 'inner',
+//        cursorAt: { top: 16, left: 16 },
+//        helper: function (event) {
+//            return $( '<img src="/image/drag.png" >' );
+//        }
+//    });
     $('.droppable').droppable({
         drop: function (event, ui) {
             var target_spec = $(this).attr('id').split('_');

@@ -284,7 +284,7 @@ __DATA__
 </ul>
 
 @@ add_shelf_link.html.ep
-<span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>)">Add to personal book shelf</a></span>
+<span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to personal book shelf</a></span>
 
 @@ shelf/connect.html.ep
 % layout 'basic';
@@ -478,7 +478,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 <ul>
     % for (@$results) {
         <li>
-            <%= include small_medium  => (n => $_) %>
+            <%= include small_medium  => (n => $_, edit => 0) %>
             <%= include 'add_shelf_link', node => $_ =%>
         </li>
     % }
