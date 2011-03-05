@@ -48,7 +48,7 @@ get '/' =>  sub {
 sub title_for {
     my $node = shift;
     my $title = sprintf '%s for "%s" by %s',
-                        $node->is_leaf ? "Details" : "Quelology",
+                        (shift // ($node->is_leaf ? "Details" : "Quelology")),
                         $node->title,
                         $node->made_by;
 }
@@ -96,18 +96,21 @@ get '/asin/:asin' => sub {
 
 get '/edit/:id' => sub {
     my $self = shift;
-    $self->render(template => 'edit', nodes => [$schema->m
-        ->by_id($self->param('id'))->thread_with_drop_points],
-        title => 'Edit a tree',
+    my $root = $schema->m ->by_id($self->param('id'));
+    $self->render(
+        template => 'edit',
+        nodes    => [$root->thread_with_drop_points],
+        title    => title_for($root, 'Edit'),
     );
 };
 
 get '/t/:id' => sub {
     my $self = shift;
+    my $node = $schema->m->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
         title   => 'Tree details',
-        node    => $schema->m->by_id($self->param('id')),
+        node    => title_for($node),
     );
 } => 'tree';
 
@@ -227,6 +230,15 @@ post '/edit' => sub {
         title => 'Edited tree',
     );
 
+};
+
+get '/imprint' => sub {
+    my $self = shift;
+    $self->render(
+        template => 'imprint',
+        title    => 'Legal Details for Quelology',
+        layout   => 'basic',
+    );
 };
 
 app->start;
@@ -464,6 +476,19 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     <strong>Outdated template</strong>
 </div>
 
+@@ imprint.html.ep
+<h1>Legal Details</h1>
+<p>Responsible for this site in general is</p>
+<p>
+Moritz Lenz <br />
+Sperlingstr. 2 <br />
+91056 Erlange <br />
+Germany
+</p>
+<p>Please note that much of the content is user-generated,
+and belongs to whoever generated it. Each author is
+responsible for whatever he writes.</p>
+
 @@ layouts/basic.html.ep
 <!doctype html><html>
     <head>
@@ -527,7 +552,8 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
         <div id="content">
             <%== content %>
         </div>
-    <div id="debug">
+    <div id="footer">
+        <a href="/imprint">Legal Details</a>
     </div>
     </body>
 </html>

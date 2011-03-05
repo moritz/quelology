@@ -7,10 +7,10 @@ TODO:
     * search in the database
     * authentication, signup
     * more advanced tree edit (?)
-    * imprint
     * unit tests
 DONE:
     * edit titles etc.
+    * imprint
 
 (go live in read-only mode)
 
@@ -34,6 +34,7 @@ DONE:
     * more advanced edit:
         - guard against multiple edit fields at once
             (which would mean that a user input might be lost)
+    * mass edit form
 
 4) Even More Features phase (speculative at best):
     * "social" features (?)
