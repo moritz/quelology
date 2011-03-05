@@ -109,8 +109,8 @@ get '/t/:id' => sub {
     my $node = $schema->m->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
-        title   => 'Tree details',
-        node    => title_for($node),
+        title   => title_for($node),
+        node    => $node,
     );
 } => 'tree';
 
@@ -267,18 +267,16 @@ __DATA__
 <h2>List of Series</h2>
 <ul>
 <% for my $n (@$threads) { %>
-    <li class="medium" id="medium_<%= $n->id %>">
-    <%= link_to $n->title, medium => { id => $n->id } %>
-    by <strong><%= $n->made_by %></strong>
+    <li>
+    %== include small_medium_noimg => n => $n
     </li>
 <% } %>
 </ul>
 <h2>List of single nodes</h2>
 <ul>
 <% for my $n (@$singles) { %>
-    <li class="medium" id="medium_<%= $n->id %>">
-    <%= link_to $n->title, medium => { id => $n->id } %>
-    by <strong><%= $n->made_by %></strong>
+    <li>
+    <%== include small_medium_noimg => n => $n %>
     </li>
 <% } %>
 </ul>
@@ -317,10 +315,8 @@ __DATA__
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 % }
 %== include add_shelf_link => (node => $node)
-
-<% if ($node->asin) { %>
-    <%= include 'small_medium', n => $node, edit => 0 =%>
-<% } %>
+!
+<%= include 'small_medium', n => $node, edit => 0 =%>
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
@@ -393,7 +389,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 %== '</ul>' x $prev_level;
 
 @@ medium.html.ep
-<div class="node draggable" id="medium_<%= $node->id %>">
+<div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
 <h2><%= $node->title %></h2>
 <% if (defined $node->made_by) { %>
     <p>Author: <%= $node->made_by %></p>
@@ -420,9 +416,22 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     </p>
 </div>
 
+@@ small_medium_noimg.html.ep
+<span id="medium_<%= $n->id %>" class="medium" data-id="<%= $n->id %>">
+    <span class="data_title">
+    <%= link_to($n->title, medium => { id => $n->id }) %>
+    </span>
+    by
+    <span class="data_made_by">
+        <%= $n->made_by %>
+    </span>
+    (id <%= $n->id %>)
+</span>
+
 @@ small_medium.html.ep
 % my $tree_position = $n->is_root ? 'root' : $n->is_leaf ? 'leaf' : 'middle';
-<span id="medium_<%= $n->id %>" class="medium" data-treeposition="<%= $tree_position %>">
+<span id="medium_<%= $n->id %>" class="medium" data-treeposition="<%= $tree_position %>"
+    data-id="<%= $n->id %>">
     <% if ($n->small_image) { %>
         <img src="<%= $n->small_image %>" alt="" />
     <% } %>
@@ -462,7 +471,8 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     % if (@$items) {
         <ul>
     %   for my $i (@$items) {
-            <li class="draggable" id="shelfmedium_<%= $i->id %>"><%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
+            <li class="draggable" id="shelfmedium_<%= $i->id %>" data-id="<%= $i->id %>">
+            <%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
                 <%= $i->short_title %>
             <% end %></li>
     %   }
@@ -538,6 +548,9 @@ responsible for whatever he writes.</p>
                 padding: 0.3em;
                 max-width: 20em;
                 margin: none;
+            }
+            .data_made_by {
+                font-weight: bold;
             }
             #shelf {
                 padding: 0.1em;
