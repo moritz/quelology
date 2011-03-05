@@ -230,7 +230,9 @@ __DATA__
 
 @@ index.html.ep
 % layout 'basic';
-<h1>List of Series</h1>
+<h1>Quelology - Semantic relations between books</h1>
+<p>Want to find a sequel or prequel to a book? Here is the right place!</p>
+<h2>List of Series</h2>
 <ul>
 <% for my $n (@$threads) { %>
     <li class="medium" id="medium_<%= $n->id %>">
@@ -239,7 +241,7 @@ __DATA__
     </li>
 <% } %>
 </ul>
-<h1>List of single nodes</h1>
+<h2>List of single nodes</h2>
 <ul>
 <% for my $n (@$singles) { %>
     <li class="medium" id="medium_<%= $n->id %>">
@@ -318,8 +320,9 @@ __DATA__
 <%
     my $first_node = $nodes->[1][0];
 %>
-<h1><%= $first_node->title %></h1>
-<p>by <strong><%= $first_node->made_by; %></strong>, published by <%= $first_node->publisher; %>.</p> 
+<h1 class="root_title"><%= $first_node->title %></h1>
+<p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
+published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p> 
 
 <%== include 'drop_tree', nodes => $nodes %>
 
@@ -386,7 +389,8 @@ __DATA__
 </div>
 
 @@ small_medium.html.ep
-<span id="medium_<%= $n->id %>" class="medium">
+% my $tree_position = $n->is_root ? 'root' : $n->is_leaf ? 'leaf' : 'middle';
+<span id="medium_<%= $n->id %>" class="medium" data-treeposition="<%= $tree_position %>">
     <% if ($n->small_image) { %>
         <img src="<%= $n->small_image %>" alt="" />
     <% } %>

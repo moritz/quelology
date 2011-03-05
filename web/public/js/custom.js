@@ -39,6 +39,11 @@ function update_medium(id, what) {
             url: '/update/' + what,
             success: function(response) {
                 span.replaceWith(response);
+                span = $('#medium_' + id);
+                var new_val = $(span.children('.data_' + what)[0]);
+                if ( span.attr('data-treeposition') == 'root') {
+                    $('.root_' + what).text($.trim(new_val.text()));
+                };
             }
         };
         spec["data"] = data;

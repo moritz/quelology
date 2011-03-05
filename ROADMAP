@@ -4,16 +4,13 @@ The following features are planned for Quelology:
 1) Initial feature phase:
 TODO:
     * explaining texts
-    * edit titles etc.
-        mostly done. Lacks:
-            - editing of root nodes
-            - guard against multiple edit fields at once
-              (which would mean that a user input might be lost)
     * search in the database
     * authentication, signup
     * more advanced tree edit (?)
     * imprint
     * unit tests
+DONE:
+    * edit titles etc.
 
 (go live in read-only mode)
 
@@ -24,8 +21,9 @@ TODO:
 (go live for real)
 
 3) More Feature phase:
+    * CSRF protection
     * cross-browser testing
-    * use aliases
+    * use, created and view aliases
     * timeline view
     * translations
     * i18n, l10n
@@ -33,6 +31,9 @@ TODO:
     * other data source /link destination than amazon
     * non-book media
     * log changes to make them reversible
+    * more advanced edit:
+        - guard against multiple edit fields at once
+            (which would mean that a user input might be lost)
 
 4) Even More Features phase (speculative at best):
     * "social" features (?)
