@@ -295,13 +295,6 @@ __DATA__
     <%== include 'drop_tree', nodes => $n %>
 % }
 
-
-@@ tree-inline.html.ep
-<div class="medium tree_inline">
-    <h2><%= $node->title %></h2>
-    %== include 'tree-part', node => $node
-</div>
-
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
@@ -315,8 +308,7 @@ __DATA__
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 % }
 %== include add_shelf_link => (node => $node)
-!
-<%= include 'small_medium', n => $node, edit => 0 =%>
+%= include 'small_medium', n => $node, edit => 0
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
@@ -493,11 +485,6 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
         </li>
     % }
 </ul>
-
-@@ shelf.html.ep
-<div id="shelf">
-    <strong>Outdated template</strong>
-</div>
 
 @@ imprint.html.ep
 <h1>Legal Details</h1>
