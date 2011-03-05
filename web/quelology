@@ -12,6 +12,13 @@ use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use utf8;
 
+sub trim {
+    my $s = $_[0];
+    $s =~ s/\A\s+//;
+    $s =~ s/\s+\z//;
+    $s;
+}
+
 my $schema   = schema;
 
 app->secret( config()->{web_secret} );
@@ -111,7 +118,7 @@ post '/update/:what' => sub {
     die "Can't change '$what'" unless $allowed{$what};
     die "empty $what" unless $self->param($what);
     my $node = $schema->m->by_id($self->param('id'));
-    $node->update({$what => $self->param($what)});
+    $node->update({$what => trim $self->param($what)});
     # TODO: return some JSON or HTML or so...
     $self->render(
         template    => 'small_medium',
@@ -122,7 +129,7 @@ post '/update/:what' => sub {
 
 sub search {
     my $self = shift;
-    my $keyword = $self->param('keyword');
+    my $keyword = trim $self->param('keyword');
     my $res = Quelology::Config::amazon->search(
                     keywords => $keyword,
                     type     => 'Books',
