@@ -20,7 +20,8 @@ CREATE TABLE medium (
 
 CREATE INDEX medium_root_id_idx on medium (root_id);
 
-CREATE TABLE user_auth (
+DROP TABLE IF EXISTS user_login CASCADE;
+CREATE TABLE user_login (
     id      SERIAL      PRIMARY KEY,
     name    VARCHAR(64) UNIQUE,
     salt    BYTEA       NOT NULL,

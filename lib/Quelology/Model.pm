@@ -8,7 +8,13 @@ sub m {
 }
 
 sub login {
-    shift->resultset('UserLogin');
+    my ($self, $username, $password) = @_;
+    my $user = $self->resultset('UserLogin')->find({name => $username});
+    unless ($user) {
+        warn "No such user '$username'";
+        return;
+    }
+    $user->authenticate($password);
 }
 
 __PACKAGE__->load_namespaces();
