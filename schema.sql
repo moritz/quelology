@@ -19,3 +19,11 @@ CREATE TABLE medium (
 );
 
 CREATE INDEX medium_root_id_idx on medium (root_id);
+
+CREATE TABLE user_auth (
+    id      SERIAL      PRIMARY KEY,
+    name    VARCHAR(64) UNIQUE,
+    salt    BYTEA       NOT NULL,
+    cost    INTEGER     NOT NULL,
+    pw_hash BYTEA       NOT NULL
+);
