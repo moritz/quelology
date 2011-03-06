@@ -291,7 +291,7 @@ __DATA__
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
     <h2><%= $first_node->title %></h2>
-    <p>by <strong><%= $first_node->made_by; %></strong></p> 
+    <p>by <strong><%= $first_node->made_by; %></strong></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
 
@@ -301,7 +301,7 @@ __DATA__
 %== include 'tree-part', node => $node
 
 @@ tree-part.html.ep
-<p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p> 
+<p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
 %# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
@@ -312,7 +312,7 @@ __DATA__
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
-      my $l = $n->level - $prev_level; 
+      my $l = $n->level - $prev_level;
       $prev_level = $n->level;
       my $ld = '';
       if ($l > 0) {
@@ -342,13 +342,13 @@ __DATA__
 %>
 <h1 class="root_title"><%= $first_node->title %></h1>
 <p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
-published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p> 
+published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p>
 
 <%== include 'drop_tree', nodes => $nodes %>
 
 @@ drop_tree.html.ep
 <ul>
-<% 
+<%
     my $prev_level = 1;
     for my $n (@$nodes) {
         my $current_level;
@@ -432,7 +432,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     <%= link_to($n->title, details => { id => $n->id }) %>
     %== include 'edit_marker' => edit => $edit, what => 'title', name => 'title'
     </span>
-    by 
+    by
     <span class="data_made_by">
         <%= $n->made_by %>
         %== include 'edit_marker' => edit => $edit, what => 'made_by', name => 'author'
@@ -543,7 +543,7 @@ responsible for whatever he writes.</p>
                 padding: 0.1em;
             }
             #shelf li {
-                float: left; 
+                float: left;
                 list-style-type: none;
                 padding: 1ex;
             }
