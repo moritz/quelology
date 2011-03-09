@@ -137,11 +137,13 @@ sub search {
                     keywords => $keyword,
                     type     => 'Books',
                );
+    my ($series, $media) = $schema->m->websearch($keyword);
     $self->render(
-        layout  => 'basic',
-        title   => "Search results for '$keyword'",
+        layout   => 'basic',
+        title    => "Search results for '$keyword'",
         template => 'search',
-        results => [$schema->m->websearch($keyword)],
+        series   => $series,
+        media    => $media,
     );
 
 }
@@ -298,9 +300,6 @@ __DATA__
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
-%== include 'tree-part', node => $node
-
-@@ tree-part.html.ep
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
 %# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
@@ -308,6 +307,9 @@ __DATA__
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 % }
 %== include add_shelf_link => (node => $node)
+%== include 'tree-part', node => $node
+
+@@ tree-part.html.ep
 %= include 'small_medium', n => $node, edit => 0
 <ul>
 <% my $prev_level = 1;
@@ -477,14 +479,27 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 </div>
 
 @@ search.html.ep
-<ul>
-    % for (@$results) {
-        <li>
-            <%= include small_medium  => (n => $_, edit => 0) %>
-            <%= include 'add_shelf_link', node => $_ =%>
-        </li>
-    % }
-</ul>
+% if (@$series) {
+    <h2>Series</h2>
+    <ul>
+        % for (@$series) {
+            <li>
+                %== include 'tree-part', node => $_
+            </li>
+        % }
+    </ul>
+% }
+% if (@$media) {
+    <h2>Single Books</h2>
+    <ul>
+        % for (@$media) {
+            <li>
+                <%= include small_medium  => (n => $_, edit => 0) %>
+                <%= include 'add_shelf_link', node => $_ =%>
+            </li>
+        % }
+    </ul>
+% }
 
 @@ imprint.html.ep
 <h1>Legal Details</h1>

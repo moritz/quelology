@@ -91,6 +91,10 @@ sub is_root {
     return $self->root_id == $self->id;
 }
 
+sub is_single {
+    $_[0]->r == 2;
+}
+
 sub short_title {
     my $self = shift;
     my $t = $self->title;
