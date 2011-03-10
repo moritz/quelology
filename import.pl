@@ -79,13 +79,22 @@ my $terre_dange = $schema->m
 
 $schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
 
-say '';
-my $rs = $schema->m->root_nodes;
-$rs->reset;
+# say '';
+# my $rs = $schema->m->root_nodes;
+# $rs->reset;
+# 
+# while (my $node = $rs->next) {
+#     say $node->title;
+#     for my $n ($node->descendants) {
+#         say '   ' x $n->level, $n->title;
+#     }
+# }
 
-while (my $node = $rs->next) {
-    say $node->title;
-    for my $n ($node->descendants) {
-        say '   ' x $n->level, $n->title;
-    }
+say 'User setup';
+
+for (qw/test admin root moritz/) {
+    $schema->resultset('UserLogin')->create({
+        name     =>  $_,
+        password => $_ . '123',
+    });
 }
