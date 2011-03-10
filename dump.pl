@@ -1,7 +1,7 @@
 use warnings;
 use 5.012;
 use lib 'lib';
-use XFacts::Config qw(schema);
+use Quelology::Config qw(schema);
 
 my $schema = schema;
 
