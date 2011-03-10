@@ -310,7 +310,7 @@ __DATA__
 %== include 'tree-part', node => $node
 
 @@ tree-part.html.ep
-%= include 'small_medium', n => $node, edit => 0
+%= include 'small_medium', n => $node
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
@@ -325,7 +325,7 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        <%= include 'small_medium', n => $n, edit => 0 =%>
+        <%= include 'small_medium', n => $n =%>
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
@@ -432,18 +432,18 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 
     <span class="data_title">
     <%= link_to($n->title, details => { id => $n->id }) %>
-    %== include 'edit_marker' => edit => $edit, what => 'title', name => 'title'
+    %== include 'edit_marker' => edit => stash('edit'), what => 'title', name => 'title'
     </span>
     by
     <span class="data_made_by">
         <%= $n->made_by %>
-        %== include 'edit_marker' => edit => $edit, what => 'made_by', name => 'author'
+        %== include 'edit_marker' => edit => stash('edit'), what => 'made_by', name => 'author'
     </span>
     (id <%= $n->id %>)
 </span>
 
 @@ edit_marker.html.ep
-<% if ($edit) { %>
+<% if (stash 'edit') { %>
     <a href="#" onclick="update_medium(<%= $n->id %>, '<%= $what %>'); return false">
         <img src="/image/edit.png" alt="(edit <%= $name %>)" title="edit <%= $name %>"
             width="16" height="16" />
