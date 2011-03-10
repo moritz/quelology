@@ -4,13 +4,16 @@ The following features are planned for Quelology:
 1) Initial feature phase:
 TODO:
     * explaining texts
-    * search in the database
     * authentication, signup
     * more advanced tree edit (?)
     * unit tests
 DONE:
     * edit titles etc.
     * imprint
+    * search in the database
+        (cheated version, just uses amazon and then looks
+         up threads by ASIN)
+
 
 (go live in read-only mode)
 
@@ -23,6 +26,7 @@ DONE:
 3) More Feature phase:
     * CSRF protection
     * cross-browser testing
+    * proper database search
     * use, created and view aliases
     * timeline view
     * translations
@@ -35,8 +39,11 @@ DONE:
         - guard against multiple edit fields at once
             (which would mean that a user input might be lost)
     * mass edit form
+    * proper fulltext index + search
 
 4) Even More Features phase (speculative at best):
     * "social" features (?)
     * badges/achievement for editing (?)
     * voting on correctness, content; maybe user karma (?)
+    * additional meta-information (characters that appear in books, author
+        pages) (?)
