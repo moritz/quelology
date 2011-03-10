@@ -34,9 +34,9 @@ my @asins = (
     );
 
 my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
-for (@objs) {
-    say $_->title;
-}
+#for (@objs) {
+#    say $_->title;
+#}
 my %rels = (
 #    'The Lord of the Rings' => [0, 1, 2],
     'Demon Series' => [3, 4],
