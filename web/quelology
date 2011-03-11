@@ -19,7 +19,7 @@ sub trim {
     $s;
 }
 
-my $schema   = schema;
+my $schema = schema;
 
 app->secret( config()->{web_secret} );
 app->types->type(html => 'text/html; charset=utf-8');
@@ -79,7 +79,7 @@ get '/details/:id' => sub {
 get '/asin/:asin' => sub {
     my $self = shift;
     my $node = eval {
-        $schema->m->from_asin($self->stash('asin'));
+        $schema->m->from_asin($self->param('asin'));
     };
     if ($node) {
         $self->render(
@@ -263,6 +263,9 @@ post '/login/' => sub {
     my $u        = $schema->resultset('UserLogin')
                    ->authenticate($username, $password);
     if ($u) {
+        $self->session->expiration(4 * 60 * 60);
+        $self->session->{logged_in} = 1;
+        $self->session->{user}      = $u->name;
         $self->flash(message => 'Login successful, welcome!');
         $self->redirect_to('/');
     } else {
@@ -325,8 +328,7 @@ __DATA__
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
-%# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
-<p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
+<p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 % }
@@ -610,7 +612,11 @@ responsible for whatever he writes.</p>
     <body>
         <%== include 'edit_form' %>
         <div id="header" class="shelf-droppable droppable">
-            <p style="display: inline;"><%= link_to Home => 'index' %> </p>
+            <p style="display: inline;"><%= link_to Home => 'index' %>.
+            % if (session 'logged_in') {
+                Logged in as '<%= session 'user' %>'.
+            % }
+            </p>
             <form action="/search/" method="post">
             <p style="float:right"><input type="text" id="keyword" name="keyword" />
                <input type="submit" value="search" />
