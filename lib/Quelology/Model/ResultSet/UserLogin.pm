@@ -26,6 +26,12 @@ sub create {
     });
 }
 
+sub authenticate {
+    my ($self, $name, $password) = @_;
+    my ($user) = $self->search({ name => $name });
+    return unless $user;
+    $user->authenticate($password);
+}
 
 
 1;

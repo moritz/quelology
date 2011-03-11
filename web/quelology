@@ -247,6 +247,30 @@ post '/edit' => sub {
     $self->redirect_to('/shelf/connect');
 };
 
+get '/login/' => sub {
+    my $self = shift;
+    $self->render(
+        template => 'login',
+        title    => 'Log in to the Quelology',
+        layout   => 'basic',
+    );
+};
+
+post '/login/' => sub {
+    my $self     = shift;
+    my $username = $self->param('username');
+    my $password = $self->param('password');
+    my $u        = $schema->resultset('UserLogin')
+                   ->authenticate($username, $password);
+    if ($u) {
+        $self->flash(message => 'Login successful, welcome!');
+        $self->redirect_to('/');
+    } else {
+        $self->flash(message => 'Login failed, please try again');
+        $self->redirect_to('/login/');
+    }
+};
+
 get '/imprint' => sub {
     my $self = shift;
     $self->render(
@@ -501,6 +525,17 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     </ul>
 % }
 
+@@ login.html.ep
+<form action="/login/" method="post">
+<dl>
+    <dt>Username</dt>
+    <dd><input name="username" /></dd>
+    <dt>Password</dt>
+    <dd><input name="password" type="password"  /></dd>
+    <dt></dt>
+    <dl><input type="submit" />
+</dl>
+
 @@ imprint.html.ep
 <h1>Legal Details</h1>
 <p>Responsible for this site in general is</p>
@@ -545,6 +580,10 @@ responsible for whatever he writes.</p>
                 padding: 0.3em;
                 margin-left: 2em;
             }
+            .flash {
+                font-weight: bold;
+                color: red;
+            }
             .node {
                 border: 1px dotted black;
                 padding: 0.3em;
@@ -582,6 +621,9 @@ responsible for whatever he writes.</p>
         <div id="left-column" class="shelf-droppable droppable">
         </div>
         <div id="content">
+            % if (flash 'message') {
+                <p class="flash"><%= flash 'message' %></p>
+            % }
             <%== content %>
         </div>
     <div id="footer">
