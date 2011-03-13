@@ -250,7 +250,7 @@ post '/edit' => sub {
 get '/login/' => sub {
     my $self = shift;
     if ($self->session('logged_in')) {
-        $self->flash(message => 'already logged in');
+        $self->flash(message => 'You are already logged in.');
         $self->redirect_to('/');
     } else {
         $self->render(
@@ -629,6 +629,9 @@ responsible for whatever he writes.</p>
             <p style="display: inline;"><%= link_to Home => 'index' %>.
             % if (session 'logged_in') {
                 Logged in as '<%= session 'user' %>'.
+                <a href="/logout/">Logout</a>.
+            % } else {
+                <a href="/login/">Log in</a>.
             % }
             </p>
             <form action="/search/" method="post">
