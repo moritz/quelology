@@ -249,11 +249,24 @@ post '/edit' => sub {
 
 get '/login/' => sub {
     my $self = shift;
-    $self->render(
-        template => 'login',
-        title    => 'Log in to the Quelology',
-        layout   => 'basic',
-    );
+    if ($self->session('logged_in')) {
+        $self->flash(message => 'already logged in');
+        $self->redirect_to('/');
+    } else {
+        $self->render(
+            template => 'login',
+            title    => 'Log in to the Quelology',
+            layout   => 'basic',
+        );
+    }
+};
+
+get '/logout/' => sub {
+    my $self = shift;
+    delete $self->session->{logged_in};
+    delete $self->session->{user};
+    $self->flash(message => 'Logout successful');
+    $self->redirect_to('/');
 };
 
 post '/login/' => sub {
@@ -263,7 +276,7 @@ post '/login/' => sub {
     my $u        = $schema->resultset('UserLogin')
                    ->authenticate($username, $password);
     if ($u) {
-        $self->session->expiration(4 * 60 * 60);
+        $self->session(expiration => 4 * 60 * 60);
         $self->session->{logged_in} = 1;
         $self->session->{user}      = $u->name;
         $self->flash(message => 'Login successful, welcome!');
@@ -328,7 +341,8 @@ __DATA__
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
-<p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
+%# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
+<p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
 % }
