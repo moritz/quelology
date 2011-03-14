@@ -4,15 +4,17 @@ The following features are planned for Quelology:
 1) Initial feature phase:
 TODO:
     * explaining texts
-    * authentication, signup
+    * authorization, signup
     * more advanced tree edit (?)
-    * unit tests
+    * web unit tests
 DONE:
+    * authentication
     * edit titles etc.
     * imprint
     * search in the database
         (cheated version, just uses amazon and then looks
          up threads by ASIN)
+    * simple model unit tests
 
 
 (go live in read-only mode)

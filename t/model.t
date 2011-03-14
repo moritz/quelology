@@ -19,6 +19,8 @@ is length($m->ISBN), 10, 'ISBN is 10 chars long';
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
 
+# TODO: check the whole tree structure
+
 ok !$schema->resultset('UserLogin')->authenticate('test', 'wrong'),
     'can NOT authenticate with wrong password';
 ok !$schema->resultset('UserLogin')->authenticate('notthere', 'wrong'),
