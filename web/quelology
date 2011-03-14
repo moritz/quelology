@@ -117,6 +117,33 @@ get '/edit/:id' => sub {
         nodes    => [$root->thread_with_drop_points],
         title    => title_for($root, 'Edit'),
     );
+} => 'edit';
+
+post '/lump/' => sub {
+    my $self = shift;
+    my @nodes;
+    for ($self->param) {
+        next unless /^\d+$/;
+        push @nodes, $schema->m->by_id($_);
+    }
+    if (@nodes <= 2) {
+        $self->flash(message => "Grouping less than two nodes is a no-op");
+        $self->redirect_to('/');
+        return;
+    }
+#    use Carp;
+#    local $SIG{__WARN__} = \&Carp::confess;
+    @nodes = sort { ($a->publish_year // 0) <=> ($b->publish_year // 0) } @nodes;
+
+    my $new_thread = $schema->m->create_root_with_children(
+        { title => '<unnamed>' },
+        @nodes,
+    );
+    $self->flash(message => 'Please change the title of this new series, and check the order of items');
+    unshift @{$self->session->{shelf_ids}}, $new_thread->id;
+    clean_session($self);
+    $self->redirect_to('/shelf/connect');
+#    $self->redirect_to(edit => id => $new_thread->id);
 };
 
 get '/t/:id' => sub {
@@ -546,14 +573,21 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 % }
 % if (@$media) {
     <h2>Single Books</h2>
+    <form action="/lump/" method="post">
     <ul>
         % for (@$media) {
             <li>
+                <input type="checkbox" name="<%= $_->id %>" />
                 <%= include small_medium  => (n => $_, edit => 0) %>
                 <%= include 'add_shelf_link', node => $_ =%>
             </li>
         % }
     </ul>
+    <input type="submit" value="Group together" />
+    </form>
+% }
+% if (!@$series && !@$media) {
+    <p>No search results, please try it with different search terms.</p>
 % }
 
 @@ login.html.ep
