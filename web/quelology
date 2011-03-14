@@ -12,6 +12,8 @@ use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use utf8;
 
+my $schema = schema;
+
 sub trim {
     my $s = $_[0];
     $s =~ s/\A\s+//;
@@ -19,7 +21,20 @@ sub trim {
     $s;
 }
 
-my $schema = schema;
+sub clean_session {
+    my $self = shift;
+    my %seen;
+    return unless $self->session->{shelf_ids};
+    my @new;
+    for (@{$self->session->{shelf_ids}}) {
+        next if $seen{$_};
+        my $node = $schema->m->by_id($_);
+        next if $seen{$node->root_id};
+        push @new, $node->root_id;
+        $seen{$node->root_id} = 1;
+    }
+    $self->session->{shelf_ids} = \@new;
+}
 
 app->secret( config()->{web_secret} );
 app->types->type(html => 'text/html; charset=utf-8');
@@ -169,7 +184,7 @@ post '/shelf/delete'=> sub {
 post '/shelf/add' => sub {
     my $self = shift;
     unshift @{$self->session->{shelf_ids}}, $self->param('id');
-    @{$self->session->{shelf_ids}} = uniq @{$self->session->{shelf_ids}};
+    clean_session($self);
     render_shelf($self);
 } => 'shelf/add';
 
@@ -208,7 +223,7 @@ post '/edit' => sub {
     my $source = $schema->m->find($source_id);
     die "No source with id $source_id" unless $source;
 
-    warn "Moving $source_id $where $target_id\n";
+#    warn "Moving $source_id $where $target_id\n";
 
     my $where_to_go = $target;
 
@@ -226,8 +241,8 @@ post '/edit' => sub {
             { title => '<unnamed>' },
             @children,
         );
-        # TODO: delete @children from session,
-        # add $where_to_go->id
+        unshift @{$self->session->{shelf_ids}}, $where_to_go->id;
+        clean_session($self);
     }
     elsif ( $where eq 'after' ) {
         $target->attach_right_sibling($source);
