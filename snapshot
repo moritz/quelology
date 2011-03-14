@@ -1,3 +1,3 @@
 #!/bin/sh
-pg_dump --clean --no-owner xfacts-dev -U xfacts-dev -h localhost \
-        | grep -v '^COMMENT ON' > t/db-snapshot.sql
+pg_dump --clean --no-owner quelology-dev -U quelology-dev -h localhost \
+        | grep -v 'COMMENT ON' > t/db-snapshot.sql
