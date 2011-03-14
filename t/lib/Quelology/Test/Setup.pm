@@ -3,6 +3,10 @@ use strict;
 use warnings;
 use autodie qw/system/;
 
+BEGIN {
+    $Quelology::RunMode = 'test';
+}
+
 our @EXPORT = qw/init_db/;
 use Exporter qw/import/;
 

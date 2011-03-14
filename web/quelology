@@ -36,7 +36,7 @@ sub clean_session {
     $self->session->{shelf_ids} = \@new;
 }
 
-app->secret( config()->{web_secret} );
+app->secret( config('web_secret') );
 app->types->type(html => 'text/html; charset=utf-8');
 
 app->helper(shelf => sub {
