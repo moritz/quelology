@@ -56,7 +56,7 @@ get '/' =>  sub {
         threads     => [$schema->m->threads],
         singles     => [$schema->m->singles],
         template    => 'index',
-        title       => 'Quelology - book sequels and prequels',
+        title       => 'Quelology - Semantic Relations Between Books',
     );
 } => 'index';
 
@@ -126,7 +126,7 @@ post '/lump/' => sub {
         next unless /^\d+$/;
         push @nodes, $schema->m->by_id($_);
     }
-    if (@nodes <= 2) {
+    if (@nodes < 2) {
         $self->flash(message => "Grouping less than two nodes is a no-op");
         $self->redirect_to('/');
         return;
@@ -338,7 +338,7 @@ get '/imprint' => sub {
     );
 };
 
-app->start;
+app->start unless caller;
 $schema->storage->disconnect;
 1;
 
@@ -346,7 +346,7 @@ __DATA__
 
 @@ index.html.ep
 % layout 'basic';
-<h1>Quelology - Semantic relations between books</h1>
+<h1><%= $title %></h1>
 <p>Want to find a sequel or prequel to a book? Here is the right place!</p>
 <h2>List of Series</h2>
 <ul>
