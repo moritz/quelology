@@ -383,10 +383,10 @@ __DATA__
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
-%# <p><%= link_to('Edit this series', edit => { id => $node->id }); %></p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
-    <p>This is part of a <%= link_to "Bigger series (" . $node->title . ").", tree => { id => $node->root_id }; %></p>
+    <p>This is part of a <a href="/t/<%= $node->root_id %>">Bigger series
+    (<%= $node->title %>)</a></p>
 % }
 %== include add_shelf_link => (node => $node)
 %== include 'tree-part', node => $node
@@ -471,7 +471,8 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     <p>Author: <%= $node->made_by %></p>
 <% } %>
 <% if ($node->id != $node->root_id) { %>
-    <p>This is part of a <%= link_to "series (" . $node->root->title . ").", tree => { id => $node->root_id }; %></p>
+    <p>This is part of a <a href="/t/<%= $node->root_id %>">bigger series
+    (<%= $node->title %>)</a></p>
 <% } %>
 %== include add_shelf_link => (node => $node)
 <p>
@@ -495,7 +496,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
 @@ small_medium_noimg.html.ep
 <span id="medium_<%= $n->id %>" class="medium" data-id="<%= $n->id %>">
     <span class="data_title">
-    <%= link_to($n->title, medium => { id => $n->id }) %>
+    <a href="/m/<%= $n->id %>"><%= $n->title %></a>
     </span>
     by
     <span class="data_made_by">
@@ -513,7 +514,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
     <% } %>
 
     <span class="data_title">
-    <%= link_to($n->title, details => { id => $n->id }) %>
+    <a href="/details/<%= $n->id %>"><%= $n->title %></a>
     %== include 'edit_marker' => edit => stash('edit'), what => 'title', name => 'title'
     </span>
     by
@@ -548,9 +549,8 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
         <ul>
     %   for my $i (@$items) {
             <li class="draggable" id="shelfmedium_<%= $i->id %>" data-id="<%= $i->id %>">
-            <%= link_to medium => { id => $i->id } => (title => $i->title) => begin %>
-                <%= $i->short_title %>
-            <% end %></li>
+            <a href="/m/<%= $i->id%>" title="<%= $i->title %>"><%= $i->short_title %></a>
+            </li>
     %   }
         </ul>
     % } else {
@@ -675,7 +675,7 @@ responsible for whatever he writes.</p>
     <body>
         <%== include 'edit_form' %>
         <div id="header" class="shelf-droppable droppable">
-            <p style="display: inline;"><%= link_to Home => 'index' %>.
+            <p style="display: inline;"><a href="/">Home</a>
             % if (session 'logged_in') {
                 Logged in as '<%= session 'user' %>'.
                 <a href="/logout/">Logout</a>.
