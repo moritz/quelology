@@ -116,6 +116,7 @@ get '/edit/:id' => sub {
         template => 'edit',
         nodes    => [$root->thread_with_drop_points],
         title    => title_for($root, 'Edit'),
+        layout   => 'basic',
     );
 } => 'edit';
 
@@ -131,8 +132,6 @@ post '/lump/' => sub {
         $self->redirect_to('/');
         return;
     }
-#    use Carp;
-#    local $SIG{__WARN__} = \&Carp::confess;
     @nodes = sort { ($a->publish_year // 0) <=> ($b->publish_year // 0) } @nodes;
 
     my $new_thread = $schema->m->create_root_with_children(
@@ -143,7 +142,6 @@ post '/lump/' => sub {
     unshift @{$self->session->{shelf_ids}}, $new_thread->id;
     clean_session($self);
     $self->redirect_to('/shelf/connect');
-#    $self->redirect_to(edit => id => $new_thread->id);
 };
 
 get '/t/:id' => sub {
@@ -172,6 +170,18 @@ post '/update/:what' => sub {
     );
 };
 
+post '/delete' => sub {
+    my $self = shift;
+    my $node = $schema->m->by_id($self->param('id'));
+    my $root = $node->root;
+    $node->take_cutting;
+    $self->render(
+        template => 'edit',
+        nodes    => [$root->thread_with_drop_points],
+    );
+};
+
+
 sub search {
     my $self = shift;
     my $keyword = trim $self->param('keyword');
@@ -189,8 +199,11 @@ sub search {
     );
 
 }
+
+
 get  '/search/:keyword' => \&search => 'search';
 post '/search/'         => \&search;
+
 
 $SIG{INT} = sub {
     $schema->storage->disconnect;
@@ -420,15 +433,15 @@ __DATA__
 </form>
 
 @@ edit.html.ep
-% layout 'basic';
 <%
     my $first_node = $nodes->[1][0];
 %>
-<h1 class="root_title"><%= $first_node->title %></h1>
-<p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
-published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p>
-
-<%== include 'drop_tree', nodes => $nodes %>
+<div class="whole_tree" data-id="<%= $first_node->id %>">
+  <h1 class="root_title"><%= $first_node->title %></h1>
+  <p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
+  published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p>
+  <%== include 'drop_tree', nodes => $nodes %>
+</div>
 
 @@ drop_tree.html.ep
 <ul>
@@ -523,6 +536,7 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
         %== include 'edit_marker' => edit => stash('edit'), what => 'made_by', name => 'author'
     </span>
     (id <%= $n->id %>)
+    %== include  'delete_marker', edit => stash('edit')
 </span>
 
 @@ edit_marker.html.ep
@@ -532,6 +546,14 @@ published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
             width="16" height="16" />
     </a>
 <% } %>
+
+@@ delete_marker.html.ep
+% if (stash 'edit') {
+   <a href="#" onclick="delete_medium(<%= $n->id %>); return false">
+       <img src="/image/delete.png" alt="remove from series"
+            title="remove from series" width="16" height="16" />
+   </a>
+% }
 
 @@ drop_point.html.ep
 <img

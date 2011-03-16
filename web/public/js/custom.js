@@ -54,6 +54,21 @@ function update_medium(id, what) {
     thing.replaceWith(form);
 }
 
+function delete_medium(id) {
+    $.ajax({
+        type: 'POST',
+        url: '/delete',
+        data: {
+            id: id
+        },
+        success: function(response) {
+            var container = $('#medium_' + id).parents('div.whole_tree');
+            container.replaceWith(response);
+        }
+    });
+
+}
+
 $(document).ready(function() {
     $('.medium').draggable({
         snap: ".droppable",

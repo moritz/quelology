@@ -1,3 +1,5 @@
 Main idea and code: Moritz Lenz
 Name: [Gulliver] from perlmonks
-web/public/images/edit.png: empathy-common
+
+web/public/image/edit.png: empathy-common
+web/public/image/delete.png: gnome-icon-theme
