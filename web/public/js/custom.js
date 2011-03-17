@@ -66,7 +66,20 @@ function delete_medium(id) {
             container.replaceWith(response);
         }
     });
+}
 
+function dissolve_tree(id) {
+    $.ajax({
+        type: 'POST',
+        url: '/dissolve',
+        data: {
+            id: id
+        },
+        success: function(response) {
+            var container = $('#medium_' + id).parents('div.whole_tree');
+            container.replaceWith(response);
+        }
+    });
 }
 
 $(document).ready(function() {

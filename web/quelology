@@ -181,6 +181,13 @@ post '/delete' => sub {
     );
 };
 
+post '/dissolve' => sub {
+    my $self = shift;
+    my $node = $schema->m->by_id($self->param('id'));
+    $node->dissolve();
+    $self->render(text => '');
+};
+
 
 sub search {
     my $self = shift;
@@ -439,7 +446,12 @@ __DATA__
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title"><%= $first_node->title %></h1>
   <p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
-  published by <span class="root_publisher"><%= $first_node->publisher; %></span>.</p>
+  published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
+  <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
+    <img src="/image/dissolve.png" alt="" width="16" height="16" />
+    Dissolve this series
+  </a>
+  </p>
   <%== include 'drop_tree', nodes => $nodes %>
 </div>
 
@@ -645,6 +657,9 @@ responsible for whatever he writes.</p>
                 padding: 0px;
                 margin: 0px;
                 height: 100%;
+            }
+            a img {
+                border: none;
             }
             .shelf-droppable, #footer {
                 background-color: #FFFF66;
