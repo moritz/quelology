@@ -358,6 +358,15 @@ get '/imprint' => sub {
     );
 };
 
+get '/about' => sub {
+    my $self = shift;
+    $self->render(
+        template => 'about',
+        title    => 'About quelology.org',
+        layout   => 'basic',
+    );
+};
+
 app->start unless caller;
 $schema->storage->disconnect;
 1;
@@ -368,6 +377,8 @@ __DATA__
 % layout 'basic';
 <h1><%= $title %></h1>
 <p>Want to find a sequel or prequel to a book? Here is the right place!</p>
+
+<p><a href="/about">Learn more about quelology.org</a></p>
 <h2>List of Series</h2>
 <ul>
 <% for my $n (@$threads) { %>
@@ -634,6 +645,24 @@ __DATA__
     <dt></dt>
     <dl><input type="submit" />
 </dl>
+
+@@ about.html.ep
+<h1>About quelology.org</h1>
+<p>The idea of quelology.org is to gather semantic data about book relations,
+and make it easily available to everybody who is interested in it.</p>
+<p>For now we store which books form a common sequel. Hence the name:
+<strong>Quel</strong>ology is the science of whether a book is a
+se<strong>quel</strong> or pre<strong>quel</strong>.</p>
+
+<h2>Planned features</h2>
+<p>In future we wawnt to store more relations between books:</p>
+<ul>
+    <li>What translations exist, what's the original language?
+        Who translated it?</li>
+    <li>Which language(s) is the book written in?</li>
+    <li>Which editions of the same book exist?</li>
+</ul>
+
 
 @@ imprint.html.ep
 <h1>Legal Details</h1>

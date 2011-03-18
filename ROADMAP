@@ -3,11 +3,10 @@ The following features are planned for Quelology:
 
 1) Initial feature phase:
 TODO:
-    * explaining texts
     * authorization, signup
-    * more advanced tree edit (?)
     * web unit tests
 DONE:
+    * explaining texts
     * authentication
     * edit titles etc.
     * imprint
