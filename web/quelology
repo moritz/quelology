@@ -663,6 +663,13 @@ se<strong>quel</strong> or pre<strong>quel</strong>.</p>
     <li>Which editions of the same book exist?</li>
 </ul>
 
+<h2>Project details, feedback</h2>
+
+<p>The Quelology is a project by <a href="http://perlgeek.de/">Moritz Lenz</a>.</p>
+<p>The source code is available on
+<a href="https://github.com/moritz/quelology/">github</a>.</p>
+<p>If you have any suggestions, bug reports, encouragements or even want to contribute, please send an email to <em>moritz at faui2k3 dot org</em>, including the moniker <code>[quelology]</code> in the subject.</p>
+
 
 @@ imprint.html.ep
 <h1>Legal Details</h1>
