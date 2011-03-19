@@ -45,4 +45,11 @@ for my $page (qw/about login imprint/) {
     ;
 }
 
+$r->get_ok('/edit/44')
+    ->status_is(403, '/edit/$id is auth protected');
+$r->post_form_ok('/login/', { username => 'test', password => 'test123' })
+    ->status_is(302);
+$r->get_ok('/edit/44')
+    ->status_is(200, '/edit/$id is open after authentication');
+
 done_testing;
