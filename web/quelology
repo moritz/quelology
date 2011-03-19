@@ -156,7 +156,8 @@ post '/login/' => sub {
         $self->session->{logged_in} = 1;
         $self->session->{user}      = $u->name;
         $self->flash(message => 'Login successful, welcome!');
-        $self->redirect_to('/');
+        my $goto = delete $self->session->{goto_after_login} // '/';
+        $self->redirect_to($goto);
     } else {
         $self->flash(message => 'Login failed, please try again');
         $self->redirect_to('/login/');
@@ -222,7 +223,27 @@ get '/shelf/small' => sub {
     render_shelf($self);
 } => 'shelf';
 
+get '/die' => sub { die 'DEBUG'; };
 
+
+under sub {
+    my $self = shift;
+    return 1 if $self->session->{logged_in};
+    use Data::Dumper;
+    if (!exists $self->session->{goto_after_login}
+            && $self->req->url !~ /\blog(in|out)\b/) {
+        $self->app->log->debug('Setting goto_after_login to "' . $self->req->url . '"');
+        $self->session->{goto_after_login} = "" . $self->req->url;
+    }
+    $self->render(
+        message => 'You need to login (or create an account) for this operation',
+        template    => 'login',
+        title       => 'Permissions denied - please log in',
+        layout      => 'basic',
+        status      => 403,
+    );
+
+};
 
 get '/edit/:id' => sub {
     my $self = shift;
@@ -253,11 +274,12 @@ post '/lump/' => sub {
         { title => '<unnamed>' },
         @nodes,
     );
-    $self->flash(message => 'Please change the title of this new series, and check the order of items');
+    $self->flash(message => 'Please change the title of the new series, and check the order of items');
     unshift @{$self->session->{shelf_ids}}, $new_thread->id;
     clean_session($self);
     $self->redirect_to('/shelf/connect');
 };
+
 
 post '/update/:what' => sub {
     my $self = shift;
@@ -647,6 +669,7 @@ __DATA__
     <dl><input type="submit" />
 </dl>
 
+
 @@ about.html.ep
 <h1>About quelology.org</h1>
 <p>The idea of quelology.org is to gather semantic data about book relations,
@@ -767,8 +790,8 @@ responsible for whatever he writes.</p>
         <div id="left-column" class="shelf-droppable droppable">
         </div>
         <div id="content">
-            % if (flash 'message') {
-                <p class="flash"><%= flash 'message' %></p>
+            % if (flash 'message' || stash 'message') {
+                <p class="flash"><%= flash('message') // stash('message') %></p>
             % }
             <%== content %>
         </div>
