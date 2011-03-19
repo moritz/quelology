@@ -109,6 +109,121 @@ get '/asin/:asin' => sub {
 
 } => 'asin';
 
+get '/t/:id' => sub {
+    my $self = shift;
+    my $node = $schema->m->by_id($self->param('id'));
+    $self->render(
+        layout  => 'basic',
+        title   => title_for($node),
+        node    => $node,
+    );
+} => 'tree';
+
+sub search {
+    my $self = shift;
+    my $keyword = trim $self->param('keyword');
+    my $res = Quelology::Config::amazon->search(
+                    keywords => $keyword,
+                    type     => 'Books',
+               );
+    my ($series, $media) = $schema->m->websearch($keyword);
+    $self->render(
+        layout   => 'basic',
+        title    => "Search results for '$keyword'",
+        template => 'search',
+        series   => $series,
+        media    => $media,
+    );
+
+}
+
+get '/logout/' => sub {
+    my $self = shift;
+    delete $self->session->{logged_in};
+    delete $self->session->{user};
+    $self->flash(message => 'Logout successful');
+    $self->redirect_to('/');
+};
+
+post '/login/' => sub {
+    my $self     = shift;
+    my $username = $self->param('username');
+    my $password = $self->param('password');
+    my $u        = $schema->resultset('UserLogin')
+                   ->authenticate($username, $password);
+    if ($u) {
+        $self->session(expiration => 4 * 60 * 60);
+        $self->session->{logged_in} = 1;
+        $self->session->{user}      = $u->name;
+        $self->flash(message => 'Login successful, welcome!');
+        $self->redirect_to('/');
+    } else {
+        $self->flash(message => 'Login failed, please try again');
+        $self->redirect_to('/login/');
+    }
+};
+
+get '/imprint' => sub {
+    my $self = shift;
+    $self->render(
+        template => 'imprint',
+        title    => 'Legal Details for Quelology',
+        layout   => 'basic',
+    );
+};
+
+get '/about' => sub {
+    my $self = shift;
+    $self->render(
+        template => 'about',
+        title    => 'About quelology.org',
+        layout   => 'basic',
+    );
+};
+
+
+get  '/search/:keyword' => \&search => 'search';
+post '/search/'         => \&search;
+
+get '/login/' => sub {
+    my $self = shift;
+    if ($self->session('logged_in')) {
+        $self->flash(message => 'You are already logged in.');
+        $self->redirect_to('/');
+    } else {
+        $self->render(
+            template => 'login',
+            title    => 'Log in to the Quelology',
+            layout   => 'basic',
+        );
+    }
+};
+
+sub render_shelf {
+    my $self = shift;
+    $self->render(template => 'just-shelf');
+}
+
+post '/shelf/delete'=> sub {
+    my $self = shift;
+    $self->session->{shelf_ids} = [];
+    render_shelf($self);
+};
+
+post '/shelf/add' => sub {
+    my $self = shift;
+    unshift @{$self->session->{shelf_ids}}, $self->param('id');
+    clean_session($self);
+    render_shelf($self);
+} => 'shelf/add';
+
+get '/shelf/small' => sub {
+    my $self = shift;
+    render_shelf($self);
+} => 'shelf';
+
+
+
 get '/edit/:id' => sub {
     my $self = shift;
     my $root = $schema->m ->by_id($self->param('id'));
@@ -143,16 +258,6 @@ post '/lump/' => sub {
     clean_session($self);
     $self->redirect_to('/shelf/connect');
 };
-
-get '/t/:id' => sub {
-    my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
-    $self->render(
-        layout  => 'basic',
-        title   => title_for($node),
-        node    => $node,
-    );
-} => 'tree';
 
 post '/update/:what' => sub {
     my $self = shift;
@@ -189,56 +294,10 @@ post '/dissolve' => sub {
 };
 
 
-sub search {
-    my $self = shift;
-    my $keyword = trim $self->param('keyword');
-    my $res = Quelology::Config::amazon->search(
-                    keywords => $keyword,
-                    type     => 'Books',
-               );
-    my ($series, $media) = $schema->m->websearch($keyword);
-    $self->render(
-        layout   => 'basic',
-        title    => "Search results for '$keyword'",
-        template => 'search',
-        series   => $series,
-        media    => $media,
-    );
-
-}
-
-
-get  '/search/:keyword' => \&search => 'search';
-post '/search/'         => \&search;
-
-
 $SIG{INT} = sub {
     $schema->storage->disconnect;
     exec $^X, $0, @ARGV;
 };
-
-sub render_shelf {
-    my $self = shift;
-    $self->render(template => 'just-shelf');
-}
-
-post '/shelf/delete'=> sub {
-    my $self = shift;
-    $self->session->{shelf_ids} = [];
-    render_shelf($self);
-};
-
-post '/shelf/add' => sub {
-    my $self = shift;
-    unshift @{$self->session->{shelf_ids}}, $self->param('id');
-    clean_session($self);
-    render_shelf($self);
-} => 'shelf/add';
-
-get '/shelf/small' => sub {
-    my $self = shift;
-    render_shelf($self);
-} => 'shelf';
 
 get '/shelf/connect' => sub {
     my $self = shift;
@@ -307,64 +366,6 @@ post '/edit' => sub {
         die "Don't know what to do with position '$where' (allowed: before, after, below)";
     }
     $self->redirect_to('/shelf/connect');
-};
-
-get '/login/' => sub {
-    my $self = shift;
-    if ($self->session('logged_in')) {
-        $self->flash(message => 'You are already logged in.');
-        $self->redirect_to('/');
-    } else {
-        $self->render(
-            template => 'login',
-            title    => 'Log in to the Quelology',
-            layout   => 'basic',
-        );
-    }
-};
-
-get '/logout/' => sub {
-    my $self = shift;
-    delete $self->session->{logged_in};
-    delete $self->session->{user};
-    $self->flash(message => 'Logout successful');
-    $self->redirect_to('/');
-};
-
-post '/login/' => sub {
-    my $self     = shift;
-    my $username = $self->param('username');
-    my $password = $self->param('password');
-    my $u        = $schema->resultset('UserLogin')
-                   ->authenticate($username, $password);
-    if ($u) {
-        $self->session(expiration => 4 * 60 * 60);
-        $self->session->{logged_in} = 1;
-        $self->session->{user}      = $u->name;
-        $self->flash(message => 'Login successful, welcome!');
-        $self->redirect_to('/');
-    } else {
-        $self->flash(message => 'Login failed, please try again');
-        $self->redirect_to('/login/');
-    }
-};
-
-get '/imprint' => sub {
-    my $self = shift;
-    $self->render(
-        template => 'imprint',
-        title    => 'Legal Details for Quelology',
-        layout   => 'basic',
-    );
-};
-
-get '/about' => sub {
-    my $self = shift;
-    $self->render(
-        template => 'about',
-        title    => 'About quelology.org',
-        layout   => 'basic',
-    );
 };
 
 app->start unless caller;

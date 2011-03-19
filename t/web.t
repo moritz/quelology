@@ -39,9 +39,10 @@ like $contents, qr/Kushiel's Dart/, 'book title appears in output';
 like $contents, qr/Jacqueline Carey/, 'book author appears in output';
 like $contents, qr/view on amazon/i, 'Amazon link';
 
-$r->get_ok('/about')
-    ->status_is(200)
-    ->text_like(title => qr/about/i)
+for my $page (qw/about login imprint/) {
+    $r->get_ok("/$page")
+        ->status_is(200)
     ;
+}
 
 done_testing;
