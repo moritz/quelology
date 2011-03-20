@@ -15,7 +15,7 @@ ok my $schema = schema(), 'can get a schema';
 ok my $m = $schema->m->by_id(1), 'medium by id';
 like $m->title, qr/Lord of the Rings/, 'can access title';
 like $m->made_by, qr/Tolkien/, 'made_by';
-is length($m->ISBN), 10, 'ISBN is 10 chars long';
+ok length($m->ISBN) == 10 || length($m->ISBN) == 13, 'ISBN is 10 or 13 chars long';
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
 

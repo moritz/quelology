@@ -28,3 +28,11 @@ CREATE TABLE user_login (
     cost    INTEGER     NOT NULL,
     pw_hash BYTEA       NOT NULL
 );
+
+DROP TABLE IF EXISTS user_info CASCADE;
+CREATE TABLE user_info (
+    id          SERIAL      PRIMARY KEY,
+    login_id    INTEGER     NOT NULL REFERENCES user_login (id),
+    real_name   VARCHAR(64),
+    email       VARCHAR(255)
+);

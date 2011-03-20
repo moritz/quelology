@@ -93,8 +93,12 @@ $schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
 say 'User setup';
 
 for (qw/test admin root moritz/) {
-    $schema->resultset('UserLogin')->create({
+    my $u = $schema->resultset('UserLogin')->create({
         name     =>  $_,
         password => $_ . '123',
+    })
+->create_related(info => {
+        email       => "$_\@example.com",
+        real_name   => lcfirst($_),
     });
 }
