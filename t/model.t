@@ -29,6 +29,10 @@ ok !$schema->resultset('UserLogin')->authenticate('notthere', 'wrong'),
 ok my $t = $schema->resultset('UserLogin')->authenticate('test', 'test123'),
     'CAN authenticate with correct credentials';
 
+is $t->info->first->real_name, 'Test',             'real name';
+is $t->info->first->email,     'test@example.com', 'email';
+
+
 lives_ok {$t->update({password => 'newpw'}) } 'can update password';
 
 ok !$schema->resultset('UserLogin')->authenticate('test', 'test123'),

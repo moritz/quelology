@@ -99,6 +99,6 @@ for (qw/test admin root moritz/) {
     })
 ->create_related(info => {
         email       => "$_\@example.com",
-        real_name   => lcfirst($_),
+        real_name   => ucfirst($_),
     });
 }

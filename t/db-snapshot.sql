@@ -255,10 +255,10 @@ COPY medium (id, asin, isbn, title, made_by, publisher, amazon_url, small_image,
 --
 
 COPY user_info (id, login_id, real_name, email) FROM stdin;
-1	1	test	test@example.com
-2	2	admin	admin@example.com
-3	3	root	root@example.com
-4	4	moritz	moritz@example.com
+1	1	Test	test@example.com
+2	2	Admin	admin@example.com
+3	3	Root	root@example.com
+4	4	Moritz	moritz@example.com
 \.
 
 
