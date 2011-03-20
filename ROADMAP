@@ -3,9 +3,10 @@ The following features are planned for Quelology:
 
 1) Initial feature phase:
 TODO:
+    * signup js goodies
+DONE:
     * signup
     * web unit tests
-DONE:
     * authorization
     * explaining texts
     * authentication
