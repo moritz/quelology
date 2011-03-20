@@ -45,8 +45,17 @@ for my $page (qw/about login imprint/) {
     ;
 }
 
-$r->get_ok('/edit/44')
-    ->status_is(403, '/edit/$id is auth protected');
+for (qw(/edit/44 /shelf/connect)) {
+    $r->get_ok($_)
+        ->status_is(403, "GET $_ is auth protected");
+}
+
+#for (qw(/lump/ /update/title /update/made_by /delete /dissolve /edit)) {
+given ('/edit') {
+    $r->post_ok($_)
+        ->status_is(403, "POST $_ is auth protected");
+}
+
 $r->post_form_ok('/login/', { username => 'test', password => 'test123' })
     ->status_is(302);
 $r->get_ok('/edit/44')

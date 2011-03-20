@@ -242,7 +242,7 @@ under sub {
         layout      => 'basic',
         status      => 403,
     );
-
+    return;
 };
 
 get '/edit/:id' => sub {
