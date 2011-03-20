@@ -10,6 +10,7 @@ use lib '../lib';
 use Quelology::Config qw(schema config);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
+use Digest::SHA1 qw/sha1/;
 use utf8;
 
 my $schema = schema;
@@ -145,6 +146,86 @@ get '/logout/' => sub {
     $self->redirect_to('/');
 };
 
+my @captcha_qa = qw/one|1 four|2 nine|3 sixteen|4 twenty-five|5 thirty-six|6/;
+
+sub create_captcha {
+    my $self = shift;
+    my $ca = $captcha_qa[rand @captcha_qa];
+    my ($q, $a) = split /\|/, $ca;
+    $self->stash(captcha => "What's the square root of $q?");
+    $self->session->{captcha_answer} = sha1($a . $self->app->secret);
+}
+
+sub captcha_correct {
+    my $self = shift;
+    my $a    = $self->param('captcha');
+    $a =~ s/\D//g;
+    unless ($a) {
+        $self->app->log->debug('No captcha answer found');
+        return;
+    }
+    my $expected = $self->session->{captcha_answer};
+    unless ($expected) {
+        $self->app->log->debug('No captcha session answer found');
+        return;
+    }
+    if (sha1($a . $self->app->secret) eq $expected) {
+        return 1;
+    }
+    $self->app->log->debug('captcha mismatch');
+    return;
+}
+
+post '/signup' => sub {
+    my $self = shift;
+    my $error = sub {
+        $self->flash(message => shift);
+        $self->redirect_to('/login/');
+        return;
+    };
+
+    my @missing;
+    my %p;
+    for (qw/username password password_confirm captcha/) {
+        push @missing, $_ unless $self->param($_);
+        $p{$_} = $self->param($_);
+    }
+    if ($p{username}) {
+        my ($existing) = $schema->resultset('UserLogin')->search({
+                name    => $p{username},
+        });
+        return $error->("Username '$p{username}' already taken")
+            if $existing;
+    }
+    return $error->('Missing ' . join(', ', @missing)) if @missing;
+    return $error->('Password and password confirmation do not match')
+        if $p{password} ne $p{password_confirm};
+    return $error->('Password too simple') if length($p{password}) < 6;
+    return $error->('Spam suspected') if length $p{email};
+    return $error->('Captcha incorrect (please write your answer as digit(s))')
+        unless captcha_correct($self);
+
+    # wow, finally success!
+    delete $self->session->{captcha_answer};
+    my $u = $schema->resultset('UserLogin')->create({
+            name        => $p{username},
+            password    => $p{password},
+    });
+    if (my $email = $self->param('email')) {
+        $u->create_related(info => {
+                email   => $email,
+        });
+    }
+
+    $self->session->{logged_in} = 1;
+    $self->session->{user} = $p{username};
+    $self->flash(message => 'Account created successfully, welcome to the Quelology!');
+
+    my $goto = delete $self->session->{goto_after_login} // '/';
+    $self->redirect_to($goto);
+
+} => 'signup';
+
 post '/login/' => sub {
     my $self     = shift;
     my $username = $self->param('username');
@@ -192,6 +273,7 @@ get '/login/' => sub {
         $self->flash(message => 'You are already logged in.');
         $self->redirect_to('/');
     } else {
+        create_captcha($self);
         $self->render(
             template => 'login',
             title    => 'Log in to the Quelology',
@@ -235,6 +317,7 @@ under sub {
         $self->app->log->debug('Setting goto_after_login to "' . $self->req->url . '"');
         $self->session->{goto_after_login} = "" . $self->req->url;
     }
+    create_captcha($self);
     $self->render(
         message => 'You need to login (or create an account) for this operation',
         template    => 'login',
@@ -668,6 +751,33 @@ __DATA__
     <dt></dt>
     <dl><input type="submit" />
 </dl>
+</form>
+
+<h2>Or create a new account</h2>
+<p>It's free of charge. We won't give your data to any third party.
+Your password will only be stored in
+<a href="http://en.wikipedia.org/wiki/Crypt_%28Unix%29#Blowfish-based_scheme">a
+secure, hashed form</a>, but it will be transmitted in plain text for now.</p>
+<p>We do our best to treat our users well. That said, your account does not come
+with a gurantuee of continued existence, availability or fitness for any purpose.</p>
+
+<form action="/signup" method="post">
+<dl>
+    <dt>Username</dt>
+    <dd><input name="username" /></dd>
+    <dt>Password</dt>
+    <dd><input name="password" type="password"  /></dd>
+    <dt>Confirm password (at least 6 characters)</dt>
+    <dd><input name="password_confirm" type="password"  /></dd>
+    <dt>Email (optional; if left out, you will have no chance to recover your password if you forget it)</dt>
+    <dd><input name="real_email" /></dd>
+    <dt><a href="http://en.wikipedia.org/wiki/CAPTCHA">Humanism verificiation</a>: <%= $captcha %></dt>
+    <dd><input name="captcha" /></dd>
+    <dt class="showmenot">Please leave the following field blank (spam protection)</dt>
+    <dd class="showmenot"><input name="email" /></dd>
+    <dd><input type="submit" /></dd>
+</dl>
+</form>
 
 
 @@ about.html.ep
@@ -762,6 +872,9 @@ responsible for whatever he writes.</p>
                 float: left;
                 list-style-type: none;
                 padding: 1ex;
+            }
+            .showmenot {
+                display: none;
             }
   // --></style>
     <link rel="shortcut icon" href="/favicon.ico">
