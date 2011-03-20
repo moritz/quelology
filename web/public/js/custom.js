@@ -42,7 +42,7 @@ function update_medium(id, what) {
                 span = $('#medium_' + id);
                 var new_val = $(span.children('.data_' + what)[0]);
                 if ( span.attr('data-treeposition') == 'root') {
-                    $('.root_' + what).text($.trim(new_val.text()));
+                    $('#title_' + id).text($.trim(new_val.text()));
                 };
             }
         };

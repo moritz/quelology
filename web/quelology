@@ -511,7 +511,7 @@ __DATA__
 <p>Use drag and drop!</p>
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
-    <h2><%= $first_node->title %></h2>
+    <h2 id="title_<%= $first_node->id %>"><%= $first_node->title %></h2>
     <p>by <strong><%= $first_node->made_by; %></strong></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
@@ -561,7 +561,7 @@ __DATA__
     my $first_node = $nodes->[1][0];
 %>
 <div class="whole_tree" data-id="<%= $first_node->id %>">
-  <h1 class="root_title"><%= $first_node->title %></h1>
+  <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
   <p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
   published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
   <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
