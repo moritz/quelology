@@ -105,9 +105,11 @@ $(document).ready(function() {
 //    });
     $('.droppable').droppable({
         drop: function (event, ui) {
-            var target_spec = $(this).attr('id').split('_');
-            var source_id = ui.draggable.attr('id').split('_')[1];
-            $('#source_id' ).val(ui.draggable.attr('id').split('_')[1]);
+            var source_id = ui.draggable.attr('data-id');
+            if (!source_id) {
+                source_id = ui.draggable.parents('*[data-id]').attr('data-id');
+            }
+            $('#source_id' ).val(source_id);
             $('#edit_where').val($(this).attr('data-where'));
             $('#target_id' ).val($(this).attr('data-id'));
             $('#edit_form' ).submit();
