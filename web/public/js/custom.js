@@ -82,21 +82,25 @@ function dissolve_tree(id) {
     });
 }
 
-$(document).ready(function() {
-    $('.medium').draggable({
+function install_draggable(what) {
+    $(what).find('.medium').draggable({
         snap: ".droppable",
         snapMode: 'inner',
-        cursorAt: { top: 16, left: 16 },
+        cursorAt: { top: 8, left: 8 },
         helper: function (event) {
-            return $( '<img src="/image/drag.png" >' );
+            return $( '<img src="/image/drag-small.png" >' );
         }
     });
+}
+
+$(document).ready(function() {
+    install_draggable(document);
 //    $('.medium').children().draggable({
 //        snap: ".droppable",
 //        snapMode: 'inner',
 //        cursorAt: { top: 16, left: 16 },
 //        helper: function (event) {
-//            return $( '<img src="/image/drag.png" >' );
+//            return $( '<img src="/image/drag-small.png" >' );
 //        }
 //    });
     $('.droppable').droppable({
@@ -104,8 +108,8 @@ $(document).ready(function() {
             var target_spec = $(this).attr('id').split('_');
             var source_id = ui.draggable.attr('id').split('_')[1];
             $('#source_id' ).val(ui.draggable.attr('id').split('_')[1]);
-            $('#edit_where').val(target_spec[1]);
-            $('#target_id' ).val(target_spec[2]);
+            $('#edit_where').val($(this).attr('data-where'));
+            $('#target_id' ).val($(this).attr('data-id'));
             $('#edit_form' ).submit();
         }
     });

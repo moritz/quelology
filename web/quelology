@@ -686,8 +686,9 @@ __DATA__
 
 @@ drop_point.html.ep
 <img
-    src="/image/drop-target.png" width="32" height="32"
+    src="/image/drop-target-small.png" width="16" height="16"
     id="drop_<%= $d->where %>_<%= $d->id %>" class="drop droppable"
+    data-id="<%= $d->id %>" data-where="<%= $d->where %>"
     alt="Drag a book with your mouse and drop it here to insert it here"
 >
 
