@@ -118,7 +118,7 @@ $(document).ready(function() {
 
     $('.shelf-droppable').droppable({
         drop: function(ent, ui) {
-            var source_id = ui.draggable.attr('id').split('_')[1];
+            var source_id = ui.draggable.attr('data-id');
             add_id_to_shelf(source_id);
         }
     });
