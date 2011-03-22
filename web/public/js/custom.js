@@ -102,14 +102,6 @@ function install_draggable(what) {
 
 $(document).ready(function() {
     install_draggable(document);
-//    $('.medium').children().draggable({
-//        snap: ".droppable",
-//        snapMode: 'inner',
-//        cursorAt: { top: 16, left: 16 },
-//        helper: function (event) {
-//            return $( '<img src="/image/drag-small.png" >' );
-//        }
-//    });
     $('.droppable').droppable({
         drop: function (event, ui) {
             var source_id = ui.draggable.attr('data-id');
