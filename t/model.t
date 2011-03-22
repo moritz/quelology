@@ -28,7 +28,6 @@ ok !$schema->resultset('UserLogin')->authenticate('notthere', 'wrong'),
 
 ok my $t = $schema->resultset('UserLogin')->authenticate('test', 'test123'),
     'CAN authenticate with correct credentials';
-
 is $t->info->first->real_name, 'Test',             'real name';
 is $t->info->first->email,     'test@example.com', 'email';
 
@@ -39,5 +38,11 @@ ok !$schema->resultset('UserLogin')->authenticate('test', 'test123'),
     'can NOT authenticate with old credentials';
 ok  $schema->resultset('UserLogin')->authenticate('test', 'newpw'),
     'CAN authenticate with new credentials';
+
+$m = $schema->m->by_id(44);
+my $computed_authors = $m->children->calc_property('made_by');
+like $computed_authors, qr/J\.R\.R\. Tolkien/, 'calc_property returned Tolkien Senior';
+like $computed_authors, qr/Christopher Tolkien/, 'calc_property returned Tolkien Junior';
+like $computed_authors, qr/Alan Lee/, 'calc_property returned Alan Lee, whoever that might be';
 
 done_testing;
