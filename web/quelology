@@ -685,12 +685,14 @@ __DATA__
 % }
 
 @@ drop_point.html.ep
+<a href="#" onclick="create_medium(<%= $d->id %>, '<%= $d->where %>'); return false">
 <img
     src="/image/drop-target-small.png" width="16" height="16"
     id="drop_<%= $d->where %>_<%= $d->id %>" class="drop droppable"
     data-id="<%= $d->id %>" data-where="<%= $d->where %>"
     alt="Drag a book with your mouse and drop it here to insert it here"
->
+/>
+</a>
 
 @@ just-shelf.html.ep
 %== shelf

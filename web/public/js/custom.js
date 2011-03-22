@@ -12,7 +12,6 @@ function add_id_to_shelf(source_id) {
 }
 
 function update_medium(id, what) {
-//    alert('updating ' + what + ' of ' + id);
     var span = $('#medium_' + id);
     var cancel = span.html();
     var thing = $(span.children('.data_' + what)[0]);
@@ -69,6 +68,11 @@ function delete_medium(id) {
             container.replaceWith(r);
         }
     });
+}
+
+function create_medium(id, where) {
+    // TODO: show dialog prompting for title and authors
+    // then send an ajaxy request
 }
 
 function dissolve_tree(id) {
