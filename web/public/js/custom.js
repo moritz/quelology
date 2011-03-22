@@ -40,6 +40,7 @@ function update_medium(id, what) {
             success: function(response) {
                 span.replaceWith(response);
                 span = $('#medium_' + id);
+                install_draggable(span);
                 var new_val = $(span.children('.data_' + what)[0]);
                 if ( span.attr('data-treeposition') == 'root') {
                     $('#title_' + id).text($.trim(new_val.text()));
@@ -63,7 +64,9 @@ function delete_medium(id) {
         },
         success: function(response) {
             var container = $('#medium_' + id).parents('div.whole_tree');
-            container.replaceWith(response);
+            var r = $(response);
+            install_draggable(r);
+            container.replaceWith(r);
         }
     });
 }
@@ -77,6 +80,8 @@ function dissolve_tree(id) {
         },
         success: function(response) {
             var container = $('#medium_' + id).parents('div.whole_tree');
+            var r = $(response);
+            install_draggable(r);
             container.replaceWith(response);
         }
     });
