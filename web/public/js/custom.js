@@ -88,14 +88,16 @@ function dissolve_tree(id) {
 }
 
 function install_draggable(what) {
-    $(what).find('.medium').draggable({
+    var drag_data = {
         snap: ".droppable",
         snapMode: 'inner',
         cursorAt: { top: 8, left: 8 },
         helper: function (event) {
             return $( '<img src="/image/drag-small.png" >' );
         }
-    });
+    };
+    $(what).find('.medium').draggable(drag_data);
+    $(what).find('.medium').contents().draggable(drag_data);
 }
 
 $(document).ready(function() {
