@@ -437,6 +437,7 @@ post '/edit' => sub {
 #    warn "Moving $source_id $where $target_id\n";
 
     my $where_to_go = $target;
+    push @{$self->session->{shelf_ids}}, $target_id;
 
     if ( $target->is_root && $where ne 'below' ) {
         my @children = $target;
@@ -470,6 +471,7 @@ post '/edit' => sub {
     else {
         die "Don't know what to do with position '$where' (allowed: before, after, below)";
     }
+    clean_session($self);
     $self->redirect_to('/shelf/connect');
 };
 
