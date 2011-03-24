@@ -3,3 +3,4 @@ Name: [Gulliver] from perlmonks
 
 web/public/image/edit.png: empathy-common
 web/public/image/delete.png: gnome-icon-theme
+web/public/image/recompute.png: gnome-icon-theme

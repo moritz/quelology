@@ -380,6 +380,21 @@ post '/update/:what' => sub {
     );
 };
 
+post '/recompute/:what' => sub {
+    my $self = shift;
+    my $what = $self->param('what');
+    my %allowed = (publisher => 1, made_by => 1);
+    die "Can't change '$what'" unless $allowed{$what};
+    my $id => $self->param('id');
+    my $node = $schema->m->by_id($id);
+    $node->update({ $what => $node->children->calc_property($what)});
+    $self->render(
+        template    => 'small_medium',
+        n           => $node,
+        edit        => 1,
+    );
+};
+
 post '/delete' => sub {
     my $self = shift;
     my $node = $schema->m->by_id($self->param('id'));
@@ -665,6 +680,12 @@ __DATA__
     <span class="data_made_by">
         <%= $n->made_by %>
         %== include 'edit_marker' => edit => stash('edit'), what => 'made_by', name => 'author'
+        % if (stash 'edit' && $n->has_leaves && !$n->asin) {
+            <a href="#" onclick="recompute_medium(<%= $n->id %>); return false">
+                <img src="/image/recompute.png" width="16" height="16"
+                    alt="recompute author" title="recompute author" />
+            </a>
+        %}
     </span>
     (id <%= $n->id %>)
     %== include  'delete_marker', edit => stash('edit')

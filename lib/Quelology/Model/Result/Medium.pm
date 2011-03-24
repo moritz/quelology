@@ -106,4 +106,10 @@ sub short_title {
     }
 }
 
+sub has_leaves {
+    my $self = shift;
+    $self->l + 1 != $self->r;
+
+}
+
 1;

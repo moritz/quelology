@@ -45,4 +45,18 @@ like $computed_authors, qr/J\.R\.R\. Tolkien/, 'calc_property returned Tolkien S
 like $computed_authors, qr/Christopher Tolkien/, 'calc_property returned Tolkien Junior';
 like $computed_authors, qr/Alan Lee/, 'calc_property returned Alan Lee, whoever that might be';
 
+# test some accessors
+my @c = $m->children();
+# @c = (silmarilion, hobbit, LOTR, Unifinished tales from Numenor)
+ok $m->is_root, 'is_root on a root node';
+for (@c) {
+    ok !$_->is_root, "is_root on a non-root node (". $_->title . ")";
+}
+for ($m, @c[2]) {
+    ok $_->has_leaves, "has_leaves (" . $_->title . ")";
+}
+for (@c[0, 1, 3]) {
+    ok! $_->has_leaves, "has_leaves (" . $_->title . ")";
+}
+
 done_testing;
