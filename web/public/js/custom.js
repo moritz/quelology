@@ -55,8 +55,12 @@ function update_medium(id, what) {
                 install_draggable(span);
                 var new_val = $(span.children('.data_' + what)[0]);
                 if ( span.attr('data-treeposition') == 'root') {
-                    $('#title_' + id).text($.trim(new_val.text()));
-                };
+                    if (what == 'title') {
+                        $('#title_' + id).text($.trim(new_val.text()));
+                    } else if (what == 'made_by') {
+                        $('#medium_' + id).parents('.whole_tree').find('.root_made_by').html(response);
+                    }
+                }
             }
         };
         spec["data"] = data;
