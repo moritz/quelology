@@ -109,6 +109,13 @@ sub short_title {
 sub has_leaves {
     my $self = shift;
     $self->l + 1 != $self->r;
+}
+
+sub tree_position {
+    my $self = shift;
+    $self->is_root           ? 'root'
+        : $self->has_leaves  ? 'branch'
+        :                      'leaf';
 
 }
 

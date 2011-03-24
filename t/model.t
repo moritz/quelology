@@ -63,4 +63,7 @@ for ($m, @c) {
 }
 ok $schema->m->by_id(23)->is_single, 'is single (+)';
 
+is join(' ', map $_->tree_position, $m, @c),
+    'root leaf leaf branch leaf', 'tree_position';
+
 done_testing;
