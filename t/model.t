@@ -52,11 +52,15 @@ ok $m->is_root, 'is_root on a root node';
 for (@c) {
     ok !$_->is_root, "is_root on a non-root node (". $_->title . ")";
 }
-for ($m, @c[2]) {
+for ($m, $c[2]) {
     ok $_->has_leaves, "has_leaves (" . $_->title . ")";
 }
 for (@c[0, 1, 3]) {
-    ok! $_->has_leaves, "has_leaves (" . $_->title . ")";
+    ok !$_->has_leaves, "has_leaves (" . $_->title . ")";
 }
+for ($m, @c) {
+    ok !$_->is_single, "is_single (" . $_->title . ")";
+}
+ok $schema->m->by_id(23)->is_single, 'is single (+)';
 
 done_testing;
