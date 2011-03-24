@@ -139,6 +139,9 @@ $(document).ready(function() {
     $('.shelf-droppable').droppable({
         drop: function(ent, ui) {
             var source_id = ui.draggable.attr('data-id');
+            if (!source_id) {
+                source_id = ui.draggable.parents('*[data-id]').attr('data-id');
+            }
             add_id_to_shelf(source_id);
         }
     });
