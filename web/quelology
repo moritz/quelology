@@ -754,13 +754,17 @@ __DATA__
     <ul>
         % for (@$media) {
             <li>
-                <input type="checkbox" name="<%= $_->id %>" />
+                % if (session 'logged_in') {
+                    <input type="checkbox" name="<%= $_->id %>" />
+                % }
                 <%= include small_medium  => (n => $_, edit => 0) %>
                 <%= include 'add_shelf_link', node => $_ =%>
             </li>
         % }
     </ul>
-    <input type="submit" value="Group together" />
+    % if (session 'logged_in') {
+        <input type="submit" value="Group together" />
+    % }
     </form>
 % }
 % if (!@$series && !@$media) {
