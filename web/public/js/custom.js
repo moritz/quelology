@@ -11,6 +11,19 @@ function add_id_to_shelf(source_id) {
     })
 }
 
+function recompute_medium(what, id) {
+    $.ajax({
+        type: 'POST',
+        url: '/recompute/' + what,
+        data: {
+            id: id
+        },
+        success: function(response) {
+            install_draggable($('#medium_' + id).replaceWith(response));
+        }
+    });
+}
+
 function update_medium(id, what) {
     var span = $('#medium_' + id);
     var cancel = span.html();
