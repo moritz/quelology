@@ -680,7 +680,7 @@ __DATA__
     <span class="data_made_by">
         <%= $n->made_by %>
         %== include 'edit_marker' => edit => stash('edit'), what => 'made_by', name => 'author'
-        % if (stash 'edit' && $n->has_leaves && !$n->asin) {
+        % if (stash('edit') && $n->has_leaves) {
             <a href="#" onclick="recompute_medium(<%= $n->id %>); return false">
                 <img src="/image/recompute.png" width="16" height="16"
                     alt="recompute author" title="recompute author" />
