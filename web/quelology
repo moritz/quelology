@@ -766,7 +766,7 @@ __DATA__
     src="/image/drop-target-small.png" width="16" height="16"
     id="drop_<%= $d->where %>_<%= $d->id %>" class="drop droppable"
     data-id="<%= $d->id %>" data-where="<%= $d->where %>"
-    alt="Drag a book with your mouse and drop it here to insert it here"
+    alt="Drag a book with your mouse and drop it here to insert it here; click here to create a new book or series in this position"
 />
 </a>
 
