@@ -60,4 +60,7 @@ $r->post_form_ok('/login/', { username => 'test', password => 'test123' })
 $r->get_ok('/edit/44')
     ->status_is(200, '/edit/$id is open after authentication');
 
+$r->get_ok('/nonexist/')
+    ->status_is(404, 'non-existing URL returns 404');
+
 done_testing;
