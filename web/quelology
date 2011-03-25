@@ -832,7 +832,7 @@ __DATA__
     <dt>Password</dt>
     <dd><input name="password" type="password"  /></dd>
     <dt></dt>
-    <dl><input type="submit" />
+    <dl><input type="submit" value="Log in" />
 </dl>
 </form>
 
@@ -858,7 +858,7 @@ with a gurantuee of continued existence, availability or fitness for any purpose
     <dd><input name="captcha" /></dd>
     <dt class="showmenot">Please leave the following field blank (spam protection)</dt>
     <dd class="showmenot"><input name="email" /></dd>
-    <dd><input type="submit" /></dd>
+    <dd><input type="submit" value="Create account" /></dd>
 </dl>
 </form>
 
