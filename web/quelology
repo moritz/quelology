@@ -533,6 +533,31 @@ __DATA__
     <%== include 'drop_tree', nodes => $n %>
 % }
 
+@@ attribution_link.html.ep
+% if ($a ->url) {
+    <a href="<%= $a->url %>" class="attribution"><%= $a->name %></a>
+% } else {
+    <%= $a->name %>
+% }
+
+@@ attributions.html.ep
+% my $a = $for->attributions;
+% my $c = $a->count;
+% if ($c) {
+    <p class="attribution">Book or series data kindly provided by
+    % if ($c == 1) {
+        %== include 'attribution_link', a => $a->first
+        </p>
+    % } else {
+        </p>
+        <ul class="attribution">
+        % while (my $i = $a->next) {
+            <li><%== include 'attribution_link', a => $i %></li>
+        %}
+        </ul>
+    % }
+% }
+
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
@@ -650,6 +675,7 @@ __DATA__
             View on amazon US
         </a>
     </p>
+    %== include 'attributions', for => $node
 </div>
 
 @@ small_medium_noimg.html.ep
