@@ -50,8 +50,7 @@ for (qw(/edit/44 /shelf/connect)) {
         ->status_is(403, "GET $_ is auth protected");
 }
 
-#for (qw(/lump/ /update/title /update/made_by /delete /dissolve /edit)) {
-given ('/edit') {
+for (qw(/lump/ /update/title /update/made_by /delete /dissolve /edit)) {
     $r->post_ok($_)
         ->status_is(403, "POST $_ is auth protected");
 }
