@@ -19,6 +19,7 @@ ok length($m->ISBN) == 10 || length($m->ISBN) == 13, 'ISBN is 10 or 13 chars lon
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
 
+
 # TODO: check the whole tree structure
 
 ok !$schema->resultset('UserLogin')->authenticate('test', 'wrong'),
@@ -30,6 +31,7 @@ ok my $t = $schema->resultset('UserLogin')->authenticate('test', 'test123'),
     'CAN authenticate with correct credentials';
 is $t->info->first->real_name, 'Test',             'real name';
 is $t->info->first->email,     'test@example.com', 'email';
+
 
 
 lives_ok {$t->update({password => 'newpw'}) } 'can update password';
@@ -65,5 +67,9 @@ ok $schema->m->by_id(23)->is_single, 'is single (+)';
 
 is join(' ', map $_->tree_position, $m, @c),
     'root leaf leaf branch leaf', 'tree_position';
+
+like $c[0]->attributions->first->name, qr/amazon/i, 'attribution name';
+like $c[0]->attributions->first->url,  qr{^https?://.*?amazon\.}i,
+    'attribution url';
 
 done_testing;

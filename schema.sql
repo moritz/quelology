@@ -36,3 +36,11 @@ CREATE TABLE user_info (
     real_name   VARCHAR(64),
     email       VARCHAR(255)
 );
+
+DROP TABLE IF EXISTS attribution CASCADE;
+CREATE TABLE attribution (
+    id          SERIAL          PRIMARY KEY,
+    medium_id   INTEGER         NOT NULL REFERENCES medium (id),
+    name        VARCHAR(64)     NOT NULL,
+    url         VARCHAR(255)
+);

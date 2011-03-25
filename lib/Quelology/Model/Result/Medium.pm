@@ -2,6 +2,8 @@ package Quelology::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
 use aliased Quelology::Model::DropPoint => 'DropPoint';
 use utf8;
+use strict;
+use warnings;
 
 __PACKAGE__->load_components(qw( Tree::NestedSet ));
 __PACKAGE__->table('medium');
@@ -28,6 +30,8 @@ __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Medium', 'root_id');
 __PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Medium', 'same_as');
+__PACKAGE__->has_many('attributions', 'Quelology::Model::Result::Attribution',
+                      'medium_id');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
