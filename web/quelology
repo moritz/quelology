@@ -395,6 +395,33 @@ post '/recompute/:what' => sub {
     );
 };
 
+post '/create' => sub {
+    my $self = shift;
+    for (qw/id where/) {
+        die "$_ not provided" unless $self->param($_);
+    }
+    my %d;
+    for (qw/title made_by/) {
+        $d{$_} = trim $self->param($_);
+    }
+    die "No title provided" unless length $d{title};
+    my $target = $schema->m->by_id($self->param('id'));
+    given ($self->param('where')) {
+        when ('before') { $target->create_left_sibling(\%d)  }
+        when ('after' ) { $target->create_right_sibling(\%d) }
+        when ('below' ) {
+            $target->attach_leftmost_child(
+                $schema->m->create(\%d)
+            );
+        }
+        default { die "Don't know how to attach in position '$_'" }
+    }
+    $self->render(
+        template => 'edit',
+        nodes    => [$target->root->thread_with_drop_points],
+    );
+};
+
 post '/delete' => sub {
     my $self = shift;
     my $node = $schema->m->by_id($self->param('id'));

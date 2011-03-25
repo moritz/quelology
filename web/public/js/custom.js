@@ -88,8 +88,54 @@ function delete_medium(id) {
 }
 
 function create_medium(id, where) {
-    // TODO: show dialog prompting for title and authors
-    // then send an ajaxy request
+    var drop_point = $('#drop_' + where + '_' + id);
+    var container  = $( drop_point.parents('li')[0] );
+    var cancel     = container.html();
+    var form       = $('<form>                      \
+        <label for="title">Title (*)</label>        \
+        <input name="title" />                      \
+        <label for="made_by">Authors</label>        \
+        <input name="made_by" value="&lt;*&gt;" />  \
+        <input type="submit" class="submit"         \
+            value="create new book or series" />    \
+        <input type="button" name="cancel"          \
+            class="cancel" value="Cancel" />        \
+        </form>                                     \
+        ');
+    form.find('input.cancel').click(function() {
+        container.html(cancel);
+    });
+    form.find('input.submit').click(function() {
+        // form extraction code from http://stackoverflow.com/questions/169506/obtain-form-input-fields-using-jquery
+        var data = {
+            where: where,
+            id:    id
+        };
+        form.find('input').each(function() {
+            data[this.name] = $(this).val();
+        });
+        if ($.trim(data['title']).length == 0) {
+            alert("Please enter a title");
+            return false;
+        }
+        var ajax_data = {
+            type: 'POST',
+            url: '/create',
+            success: function(response) {
+                var c = container.parents('div.whole_tree');
+                var r = $(response);
+                install_draggable(r);
+                c.replaceWith(response);
+            }
+        };
+        ajax_data['data'] = data;
+        $.ajax(ajax_data);
+        container.html(cancel);
+        container.append('Processing your request, please stand by...');
+        return false;
+    });
+    container.append(form);
+    return false;
 }
 
 function dissolve_tree(id) {
