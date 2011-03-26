@@ -1,6 +1,8 @@
 package Quelology::Model::Result::Medium;
 use parent qw/DBIx::Class::Core/;
 use aliased Quelology::Model::DropPoint => 'DropPoint';
+use Locales;
+
 use utf8;
 use strict;
 use warnings;
@@ -121,7 +123,13 @@ sub tree_position {
     $self->is_root           ? 'root'
         : $self->has_leaves  ? 'branch'
         :                      'leaf';
+}
 
+# TODO: initialize with configurable locale
+my $locales = Locales->new('en');
+
+sub language {
+    $locales->code2language(shift->lang);
 }
 
 sub translations {
