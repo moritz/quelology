@@ -2,6 +2,7 @@ package Quelology::Model::ResultSet::Medium;
 use strict;
 use 5.012;
 use Carp qw(confess);
+use ISBN::Country qw/isbn_extract/;
 
 use parent 'DBIx::Class::ResultSet';
 
@@ -47,6 +48,10 @@ sub _hash_from_xml_amazon {
         my $date = $book->publication_date // $book->ReleaseDate;
         my $year = (split /-/, $date)[0];
         $h->{publish_year} = $year if $year;
+    }
+    if ($h->{ISBN}) {
+        my $i = isbn_extract($h->{ISBN});
+        $h->{language} = $i->{lang}[0] if $i;
     }
 
     return $h;
