@@ -7,26 +7,26 @@ binmode STDOUT, ':encoding(UTF-8)';
 
 my $schema = schema;
 my @asins = (
-            # lord of the rings
+            # lord of the rings (0, 1, 2)
             qw(0007269706 0618129081 0007269722),
-            # demons by Peter V. Brett
+            # demons by Peter V. Brett (3, 4)
             qw(0345518705 0345503813),
-            # black magician
+            # black magician (5, 6, 7)
             qw(006057528X 0060575298 0060575301),
-            # traitor spy trilogy
+            # traitor spy trilogy (8, 9)
             qw(0316037834 0316037869),
-            # the Hobbit, Silmarillion, unfinished tales
+            # the Hobbit, Silmarillion, unfinished tales (10, ...)
             qw(0345296044 B0017PICLQ 0618154043),
-            # Kushiel's Dart, Chosen, Avatar
+            # Kushiel's Dart, Chosen, Avatar (13, ...)
             qw(0765342987 0765345048 0765347539),
-            # Kushiel's Scion, Justice, Mercy
+            # Kushiel's Scion, Justice, Mercy (16, ...)
             qw(044661002X 0446610143 044661016X),
-            # Naamah's Kiss, Curse, Blessing
+            # Naamah's Kiss, Curse, Blessing (19, ...)
             qw(0446198048 0446198056 0446198072),
             # Bartimaeus (just imported so there are a few 
-            # related but not yet linked books in the DB)
+            # related but not yet linked books in the DB (22 ... 26)
             qw(0786852550 1423123727 078683868X 142310420X 038560615X),
-            # Kushiel (German)
+            # Kushiel (German) (27 .. 29)
             qw(3802581202 3802581210 3802581229),
             # Knuth TAoCP (boxed set 1..4a, 1, 2, 3, 4a)
             # index 30 to 34
@@ -78,6 +78,12 @@ my $terre_dange = $schema->m
     ->create_root_with_children({title => "Terre d'Ange"}, @roots{ "Kushiel's Dart (Phedre)", "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
 
 $schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
+
+# install aliases
+my $diff = 27 -13;
+for (13..15) {
+    $schema->m->by_id($_ + $diff)->update({same_as => $_ });
+}
 
 # say '';
 # my $rs = $schema->m->root_nodes;
