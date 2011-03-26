@@ -156,9 +156,10 @@ sub calc_property {
 sub create_root_with_children {
     my ($self, $values, @children) = @_;
     my %v = %$values;
-    for (qw(made_by publisher)) {
+    for (qw(made_by publisher language)) {
         $v{$_} = $self->_join_sorted($values, $_, \@children);
     }
+    delete $v{language} if length($v{language}) != 2;
     my $new = $self->create(\%v);
     $new->attach_rightmost_child(@children);
     return $new;

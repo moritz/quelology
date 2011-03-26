@@ -20,7 +20,7 @@ is $m->language, 'en', 'ISBN-based language detection (en)';
 is $schema->m->by_id(30)->language, 'de', 'language detection (de)';
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
-
+is $root->language, 'en', 'language is propagated up to the root';
 
 # TODO: check the whole tree structure
 
