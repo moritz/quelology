@@ -20,6 +20,7 @@ __PACKAGE__->add_columns(qw/
     large_image
     publish_year
     same_as
+    language
     root_id
     l
     r
