@@ -7,8 +7,15 @@ use ISBN::Country qw/isbn_extract/;
 use parent 'DBIx::Class::ResultSet';
 
 sub by_id {
-    my $obj = shift->find(shift);
-    return $obj->alias_for // $obj;
+    my ($self, $id) = @_;
+    my $obj = $self->find($id);
+    die "No medium with id '$id' found" unless $obj;
+    my $a = $obj->alias_for;
+    return $obj unless $a;
+    if (defined($a->language) && defined($obj->langage) && $a->language eq $obj->language) {
+        return $a;
+    }
+    return $obj;
 }
 
 sub scalarify {
