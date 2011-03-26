@@ -81,7 +81,7 @@ $schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
 
 # install aliases
 my $diff = 27 -13;
-for (13..15) {
+for (14..16) {
     $schema->m->by_id($_ + $diff)->update({same_as => $_ });
 }
 

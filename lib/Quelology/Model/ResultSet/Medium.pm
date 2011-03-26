@@ -12,7 +12,7 @@ sub by_id {
     die "No medium with id '$id' found" unless $obj;
     my $a = $obj->alias_for;
     return $obj unless $a;
-    if (defined($a->language) && defined($obj->langage) && $a->language eq $obj->language) {
+    if (defined($a->language) && defined($obj->language) && $a->language eq $obj->language) {
         return $a;
     }
     return $obj;

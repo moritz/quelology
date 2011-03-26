@@ -124,4 +124,18 @@ sub tree_position {
 
 }
 
+sub translations {
+    my $self        = shift;
+    my $own_lang    = $self->language;
+    my $alias       = $self->alias_for;
+    my $target_id   = ($alias // $self)->id;
+    $self->result_source->resultset->search({
+        language    => { '<>', $own_lang },
+        -or => [
+            same_as     => $target_id,
+            id          => $target_id,
+        ],
+    });
+}
+
 1;

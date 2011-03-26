@@ -22,6 +22,16 @@ ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
 is $root->language, 'en', 'language is propagated up to the root';
 
+{
+    my $tr = $schema->m->by_id(30)->translations;
+    is $tr->count, 1, 'we know one translation of a Kushiel book';
+    is $tr->first->language, 'en', '... and it is English';
+
+    $tr = $schema->m->by_id(16)->translations;
+    is $tr->count, 1, 'translations symmetry (1)';
+    is $tr->first->language, 'de', 'symmetry (2)';
+}
+
 # TODO: check the whole tree structure
 
 ok !$schema->resultset('UserLogin')->authenticate('test', 'wrong'),
