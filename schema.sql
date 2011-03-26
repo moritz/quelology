@@ -10,7 +10,7 @@ CREATE TABLE medium (
     small_image     VARCHAR(255),
     medium_image    VARCHAR(255),
     large_image     VARCHAR(255),
-    language        CHAR(2),
+    lang            CHAR(2),
     publish_year    SMALLINT,
     root_id         INTEGER REFERENCES medium (id) ON DELETE CASCADE,
     same_as         INTEGER REFERENCES medium (id) ON DELETE CASCADE,

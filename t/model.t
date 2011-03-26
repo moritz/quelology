@@ -16,20 +16,20 @@ ok my $m = $schema->m->by_id(1), 'medium by id';
 like $m->title, qr/Lord of the Rings/, 'can access title';
 like $m->made_by, qr/Tolkien/, 'made_by';
 ok length($m->ISBN) == 10 || length($m->ISBN) == 13, 'ISBN is 10 or 13 chars long';
-is $m->language, 'en', 'ISBN-based language detection (en)';
-is $schema->m->by_id(30)->language, 'de', 'language detection (de)';
+is $m->lang, 'en', 'ISBN-based language detection (en)';
+is $schema->m->by_id(30)->lang, 'de', 'language detection (de)';
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
-is $root->language, 'en', 'language is propagated up to the root';
+is $root->lang, 'en', 'language is propagated up to the root';
 
 {
     my $tr = $schema->m->by_id(30)->translations;
     is $tr->count, 1, 'we know one translation of a Kushiel book';
-    is $tr->first->language, 'en', '... and it is English';
+    is $tr->first->lang, 'en', '... and it is English';
 
     $tr = $schema->m->by_id(16)->translations;
     is $tr->count, 1, 'translations symmetry (1)';
-    is $tr->first->language, 'de', 'symmetry (2)';
+    is $tr->first->lang, 'de', 'symmetry (2)';
 }
 
 # TODO: check the whole tree structure

@@ -20,7 +20,7 @@ __PACKAGE__->add_columns(qw/
     large_image
     publish_year
     same_as
-    language
+    lang
     root_id
     l
     r
@@ -126,11 +126,11 @@ sub tree_position {
 
 sub translations {
     my $self        = shift;
-    my $own_lang    = $self->language;
+    my $own_lang    = $self->lang;
     my $alias       = $self->alias_for;
     my $target_id   = ($alias // $self)->id;
     $self->result_source->resultset->search({
-        language    => { '<>', $own_lang },
+        lang    => { '<>', $own_lang },
         -or => [
             same_as     => $target_id,
             id          => $target_id,

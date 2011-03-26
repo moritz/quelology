@@ -12,7 +12,7 @@ sub by_id {
     die "No medium with id '$id' found" unless $obj;
     my $a = $obj->alias_for;
     return $obj unless $a;
-    if (defined($a->language) && defined($obj->language) && $a->language eq $obj->language) {
+    if (defined($a->lang) && defined($obj->lang) && $a->lang eq $obj->lang) {
         return $a;
     }
     return $obj;
@@ -58,7 +58,7 @@ sub _hash_from_xml_amazon {
     }
     if ($h->{ISBN}) {
         my $i = isbn_extract($h->{ISBN});
-        $h->{language} = $i->{lang}[0] if $i;
+        $h->{lang} = $i->{lang}[0] if $i;
     }
 
     return $h;
@@ -156,10 +156,10 @@ sub calc_property {
 sub create_root_with_children {
     my ($self, $values, @children) = @_;
     my %v = %$values;
-    for (qw(made_by publisher language)) {
+    for (qw(made_by publisher lang)) {
         $v{$_} = $self->_join_sorted($values, $_, \@children);
     }
-    delete $v{language} if length($v{language}) != 2;
+    delete $v{lang} if length($v{lang}) != 2;
     my $new = $self->create(\%v);
     $new->attach_rightmost_child(@children);
     return $new;
