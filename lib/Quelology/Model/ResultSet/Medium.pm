@@ -39,7 +39,11 @@ sub _hash_from_xml_amazon {
     if ($res->is_success) {
         # TODO: be more robust
         my ($book) = $res->properties;
-        $h->{ISBN} = $book->isbn if $book->isbn;
+        if ($book->isbn) {
+            $h->{ISBN} = $book->isbn;
+        } else {
+            $h->{ISBN} = $h->{asin} if $h->{asin} =~ /^\d/;
+        }
         my $date = $book->publication_date // $book->ReleaseDate;
         my $year = (split /-/, $date)[0];
         $h->{publish_year} = $year if $year;
