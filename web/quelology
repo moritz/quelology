@@ -702,6 +702,21 @@ __DATA__
             View on amazon US
         </a>
     </p>
+    % my $t = $node->translations;
+    % if ($t->count) {
+    <div class="translations">
+        <h3>Translations</h3>
+        <ul>
+            % while (my $n = $t->next) {
+                <li>
+                    <span class="language"><%= $n->language %></span>
+                    <a href="/m/<%= $n->id %>"><%= $n->title %></a>
+                </li>
+            % }
+        </ul>
+    </div>
+    % }
+
     %== include 'attributions', for => $node
 </div>
 
