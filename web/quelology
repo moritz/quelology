@@ -679,7 +679,7 @@ __DATA__
 <div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
 <h2><%= $node->title %></h2>
 % if (defined $node->medium_image) {
-  <p style="display: inline">
+  <p style="float:left">
     <% if (defined $node->large_image) { %>
         <a href="<%= $node->large_image %>">
     <% } %>

@@ -4,6 +4,10 @@ a img {
     border: none;
 }
 
+img {
+    padding: 2ex;
+}
+
 body {
     overflow: auto;
 }
@@ -64,6 +68,18 @@ ul.nav {
     margin-bottom: 1ex;
 }
 
+table td:first-child {
+    padding-left: 2px;
+}
+
+/*
 h1, h2, h3, h4, h5, h6 {
     margin-top: 0.5ex;
 }
+
+h1 { margin-top: 0.750 }
+h2 { margin-top: 0.869 }
+h3 { margin-top: 0.970 }
+h4 { margin-top: 1.178 }
+h5, h6 { margin-top: 1.269 }
+*/
