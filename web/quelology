@@ -678,46 +678,60 @@ __DATA__
 @@ medium.html.ep
 <div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
 <h2><%= $node->title %></h2>
-<% if (defined $node->made_by) { %>
-    <p>Author: <%= $node->made_by %></p>
-<% } %>
-<% if ($node->id != $node->root_id) { %>
-    <p>This is part of a <a href="/t/<%= $node->root_id %>">bigger series
-    (<%= $node->title %>)</a></p>
-<% } %>
-%== include add_shelf_link => (node => $node)
-<p>
-    <% if (defined $node->medium_image) { %>
-        <% if (defined $node->large_image) { %>
-            <a href="<%= $node->large_image %>">
-            <% } %>
-                <img src="<%= $node->medium_image %>"
-                    alt="Cover of <%= $node->title %>" />
-            <% if (defined $node->large_image) { %>
-                </a>
-            <% } %>
-        <% } %>
-        <br />
-        <a href="<%= $node->amazon_url %>">
-            View on amazon US
+% if (defined $node->medium_image) {
+  <p style="display: inline">
+    <% if (defined $node->large_image) { %>
+        <a href="<%= $node->large_image %>">
+    <% } %>
+    <img src="<%= $node->medium_image %>"
+            alt="Cover of <%= $node->title %>" />
+    <% if (defined $node->large_image) { %>
         </a>
-    </p>
+    <% } %>
+  </p>
+% }
+
+<div style="padding: 2ex">
+% if ($node->id != $node->root_id) {
+     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
+     (<%= $node->root->title %>)</a></p>
+% }
+<table>
+    % my %h = (made_by => 'Author', publisher => 'Publisher');
+    % for my $k (keys %h) {
+        % if (defined $node->$k) {
+            <tr>
+                <td>        <%= $h{$k}    %>         </td>
+                <td><strong><%= $node->$k %></strong></td>
+            </tr>
+        % }
+    % }
+</table>
+%== include add_shelf_link => (node => $node);
+
+     <p>
+         <a href="<%= $node->amazon_url %>">
+             View on amazon US
+         </a>
+     </p>
     % my $t = $node->translations;
     % if ($t->count) {
-    <div class="translations">
-        <h3>Translations</h3>
-        <ul>
-            % while (my $n = $t->next) {
-                <li>
-                    <span class="language"><%= $n->language %></span>
-                    <a href="/m/<%= $n->id %>"><%= $n->title %></a>
-                </li>
-            % }
-        </ul>
-    </div>
+        <div class="translations">
+            <h3>Translations</h3>
+            <ul>
+                % while (my $n = $t->next) {
+                    <li>
+                        <span class="language"><%= $n->language %></span>
+                        <a href="/m/<%= $n->id %>"><%= $n->title %></a>
+                    </li>
+                % }
+            </ul>
+        </div>
     % }
 
-    %== include 'attributions', for => $node
+     %== include 'attributions', for => $node
+</div>
+<br style="clear:left" />
 </div>
 
 @@ small_medium_noimg.html.ep
@@ -801,8 +815,10 @@ __DATA__
     % } else {
         <p id="placeholder">Personal book shelf - drag books here.</p>
     %}
-    <a href="/shelf/connect">Connect books on your shelf</a>
-    <a href="#" onclick="clear_shelf()" style="clear: left">Clear bookshelf</a>
+    <ul class="nav">
+        <li><a href="/shelf/connect">Connect books on your shelf</a></li>
+        <li><a href="#" onclick="clear_shelf()" style="clear: left">Clear bookshelf</a></li>
+    </ul>
 </div>
 
 @@ search.html.ep
@@ -919,95 +935,57 @@ responsible for whatever he writes.</p>
 @@ layouts/basic.html.ep
 <!doctype html><html>
     <head>
-        <title><%= $title %></title>
-        <style type="text/css"><!--
-            body {
-                padding: 0px;
-                margin: 0px;
-                height: 100%;
-            }
-            a img {
-                border: none;
-            }
-            .shelf-droppable, #footer {
-                background-color: #FFFF66;
-            }
-            #header {
-                padding: 0.5em;
-                margin: 0px;
-                min-height: 2em;
-            }
-            #left-column {
-                position: absolute;
-                width: 2em;
-                height: 100%;
-            }
-            #content {
-                margin: 1em;
-                margin-left: 3em;
-            }
-            #footer {
-                padding: 0.3em;
-                margin-left: 2em;
-            }
-            .flash {
-                font-weight: bold;
-                color: red;
-            }
-            .node {
-                border: 1px dotted black;
-                padding: 0.3em;
-                max-width: 20em;
-                margin: none;
-            }
-            .data_made_by {
-                font-weight: bold;
-            }
-            #shelf {
-                padding: 0.1em;
-            }
-            #shelf li {
-                float: left;
-                list-style-type: none;
-                padding: 1ex;
-            }
-            .showmenot {
-                display: none;
-            }
-  // --></style>
+    <title><%= $title %></title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <link href="/css/reset.css"  rel="stylesheet" type="text/css" />
+    <link href="/css/grid.css"   rel="stylesheet" type="text/css" />
+    <link href="/css/type.css"   rel="stylesheet" type="text/css" />
+    <!--[if IE]><link  href="/css/ie.css"         type="text/css" rel="stylesheet"><![endif]-->
+    <link href="/css/custom.css" rel="stylesheet"type="text/css" media="screen, projection" />
+
     <link rel="shortcut icon" href="/favicon.ico">
     <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
     <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
     <script type="text/javascript" src="/js/custom.js"></script>
     </head>
     <body>
+      <div class="main">
         <%== include 'edit_form' %>
         <div id="header" class="shelf-droppable droppable">
-            <p style="display: inline;"><a href="/">Home</a>
-            % if (session 'logged_in') {
-                Logged in as '<%= session 'user' %>'.
-                <a href="/logout/">Logout</a>.
-            % } else {
-                <a href="/login/">Log in</a>.
-            % }
-            </p>
             <form action="/search/" method="post">
             <p style="float:right"><input type="text" id="keyword" name="keyword" />
                <input type="submit" value="search" />
             </p>
             </form>
+            <h1>Quelology</h1>
+        </div>
+        <div id="left-column" class="shelf-droppable droppable dl10">
+
+            <h5>Navigation</h5>
+            <ul class="nav">
+                <li><a href="/">Home</a></li>
+                <li>
+                    % if (session 'logged_in') {
+                        Logged in as '<%= session 'user' %>'.
+                        <a href="/logout/">Logout</a>
+                    % } else {
+                        <a href="/login/">Log in or sign up</a>
+                    % }
+                </li>
+            </ul>
+            <h5>Your Bookshelf</h5>
             <%== shelf %>
         </div>
-        <div id="left-column" class="shelf-droppable droppable">
-        </div>
-        <div id="content">
+        <div id="content" class="ml10 fluid">
             % if (flash 'message' || stash 'message') {
                 <p class="flash"><%= flash('message') // stash('message') %></p>
             % }
             <%== content %>
         </div>
-    <div id="footer">
-        <a href="/imprint">Legal Details</a>
-    </div>
+        <br class="clear" />
+        <div id="footer">
+            <a href="/imprint">Legal Details</a>
+        </div>
+    </div> <!-- main -->
     </body>
 </html>

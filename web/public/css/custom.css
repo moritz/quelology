@@ -1,0 +1,71 @@
+/* custom CSS for quelology.org */
+
+a img {
+    border: none;
+}
+
+/*
+body {
+    background-image: url(/image/rgb/99CCFF.png);
+}
+*/
+
+.main {
+    background-color: white;
+    min-width: 30em;
+    max-width: 85em;
+}
+
+div #content {
+    padding: 3ex;
+}
+
+.shelf-droppable, #footer, #left-column {
+    background-color: #99CCFF;
+}
+#left-column {
+    padding: 1ex;
+}
+#header {
+    padding: 0.5em;
+    margin: 0px;
+    min-height: 2em;
+}
+#footer {
+    padding: 0.3em;
+}
+.flash {
+    font-weight: bold;
+    color: red;
+}
+.node {
+    border: 1px dotted black;
+    padding: 0.3em;
+    max-width: 35em;
+    margin: none;
+}
+.data_made_by {
+    font-weight: bolder;
+}
+#shelf {
+    padding: 0.1em;
+}
+
+h1 { line-height: 1; }
+
+.showmenot { display: none; }
+
+ul.nav {
+    margin: 0.7ex !important;
+}
+
+.nav li {
+    list-style-type: none;
+    padding-left: -3ex;
+    margin-left: 0;
+    margin-bottom: 1ex;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0.5ex;
+}
