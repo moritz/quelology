@@ -697,8 +697,8 @@ __DATA__
      (<%= $node->root->title %>)</a></p>
 % }
 <table>
-    % my %h = (made_by => 'Author', publisher => 'Publisher');
-    % for my $k (keys %h) {
+    % my %h = (made_by => 'Author', publisher => 'Publisher', ISBN => 'ISBN', publish_year => 'Publiciation year');
+    % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
         % if (defined $node->$k) {
             <tr>
                 <td>        <%= $h{$k}    %>         </td>
