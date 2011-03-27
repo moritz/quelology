@@ -4,11 +4,9 @@ a img {
     border: none;
 }
 
-/*
 body {
-    background-image: url(/image/rgb/99CCFF.png);
+    overflow: auto;
 }
-*/
 
 .main {
     background-color: white;
@@ -17,7 +15,7 @@ body {
 }
 
 div #content {
-    padding: 3ex;
+    padding: 1ex;
 }
 
 .shelf-droppable, #footer, #left-column {

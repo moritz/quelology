@@ -547,7 +547,7 @@ __DATA__
 </ul>
 
 @@ add_shelf_link.html.ep
-<span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to personal book shelf</a></span>
+<span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to your book shelf</a></span>
 
 @@ shelf/connect.html.ep
 % layout 'basic';
@@ -959,7 +959,8 @@ responsible for whatever he writes.</p>
             </form>
             <h1>Quelology</h1>
         </div>
-        <div id="left-column" class="shelf-droppable droppable dl10">
+        <div class="shelf-droppable droppable dl10">
+          <div id="left-column">
 
             <h5>Navigation</h5>
             <ul class="nav">
@@ -976,12 +977,15 @@ responsible for whatever he writes.</p>
             </ul>
             <h5>Your Bookshelf</h5>
             <%== shelf %>
+          </div>
         </div>
-        <div id="content" class="ml10 fluid">
+        <div class="ml10 fluid">
+          <div id="content">
             % if (flash 'message' || stash 'message') {
                 <p class="flash"><%= flash('message') // stash('message') %></p>
             % }
             <%== content %>
+          </div>
         </div>
         <br class="clear" />
         <div id="footer">
