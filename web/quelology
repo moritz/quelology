@@ -964,6 +964,7 @@ responsible for whatever he writes.</p>
             <h5>Navigation</h5>
             <ul class="nav">
                 <li><a href="/">Home</a></li>
+                <li><a href="/">About</a></li>
                 <li>
                     % if (session 'logged_in') {
                         Logged in as '<%= session 'user' %>'.
