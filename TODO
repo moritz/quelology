@@ -1,0 +1,27 @@
+small-scale TODO items (as opposed to larger scale ROADMAP),
+and copied&pasted feedback
+
+[ambrus] And maybe there should be a way to move all books
+of a subseries to another series at once, removing the first
+series. And an undo feature becasue this
+change is hard to undo.
+
+[ambrus] and I for one would prefer if drag-drop was
+always just a shortcut, so there was a way to do anything without drag-drop, eg. if there would be a cut button next to each node, and after you've cut any number of nodes, a paste button where you have the 
+[ambrus] blue plusses currently, plus a way to undo cutting.
+It's a bit hard for me to drag nodes to long distance.
+
+* add JS form validation and username availability checking to signup form
+
+* add scraper for http://www.isfdb.org/cgi-bin/pe.cgi?13661
+
+
+DONE
+[ambrus] It would be nice if there was a way to create a new
+empty series anywhere inside a series.
+
+[ambrus] Sometimes I can't start to drag a title until I reload the page.
+(fix: Add draggable() to all ajaxy-inserted things)
+
+* make most elements of a <li> draggable, not just the link/image
+

@@ -2,8 +2,6 @@ The following features are planned for Quelology:
 
 
 1) Initial feature phase:
-TODO:
-    * signup js goodies
 DONE:
     * signup
     * web unit tests
@@ -23,6 +21,8 @@ DONE:
 2) Big Redesign phase:
     * consistent design
     * easier tree editing
+
+2.5) Explaning texts about tree editing
 
 (go live for real)
 
