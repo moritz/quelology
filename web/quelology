@@ -987,7 +987,7 @@ responsible for whatever he writes.</p>
           </div>
         </div>
         <br class="clear" />
-        <div id="footer">
+        <div id="footer" class="shelf-droppable droppable">
             <a href="/imprint">Legal Details</a>
         </div>
     </div> <!-- main -->
