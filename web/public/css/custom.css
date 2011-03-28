@@ -14,6 +14,7 @@ body {
 
 .main {
     background-color: white;
+    width: 90%;
     min-width: 30em;
     max-width: 85em;
 }
