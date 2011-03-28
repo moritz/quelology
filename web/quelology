@@ -161,18 +161,15 @@ sub captcha_correct {
     my $a    = $self->param('captcha');
     $a =~ s/\D//g;
     unless ($a) {
-        $self->app->log->debug('No captcha answer found');
         return;
     }
     my $expected = $self->session->{captcha_answer};
     unless ($expected) {
-        $self->app->log->debug('No captcha session answer found');
         return;
     }
     if (sha1($a . $self->app->secret) eq $expected) {
         return 1;
     }
-    $self->app->log->debug('captcha mismatch');
     return;
 }
 
