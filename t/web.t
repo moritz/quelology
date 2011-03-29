@@ -19,14 +19,14 @@ my $r = $t->get_ok('/')
   ->text_like(title => qr/Quelology/)
   ;
 
-like $r->tx->res->dom->at('ul')->all_text,
+like $r->tx->res->dom->at('.series')->all_text,
      qr/Auserwählte/, 'ul content + utf-8';
 
 $r->get_ok('/m/45')
   ->status_is(200)
   ->text_like(title => qr/Terre d'Ange/)
   ->text_like(title => qr/Jacqueline Carey/)
-  ->text_like(h1    => qr/Terre d'Ange/)
+  ->text_like('#content h1' => qr/Terre d'Ange/)
   ;
 
 $r->get_ok('/details/14')

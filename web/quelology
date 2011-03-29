@@ -527,7 +527,7 @@ __DATA__
 
 <p><a href="/about">Learn more about quelology.org</a></p>
 <h2>List of Series</h2>
-<ul>
+<ul class="series">
 <% for my $n (@$threads) { %>
     <li>
     %== include small_medium_noimg => n => $n
