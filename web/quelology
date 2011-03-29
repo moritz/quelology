@@ -809,7 +809,7 @@ __DATA__
     %   }
         </ul>
     % } else {
-        <p id="placeholder">Personal book shelf - drag books here.</p>
+        <p id="placeholder">Personal book shelf - drag books here to group them.</p>
     %}
     <ul class="nav">
         <li><a href="/shelf/connect">Connect books on your shelf</a></li>
@@ -936,7 +936,7 @@ responsible for whatever he writes.</p>
     <link href="/css/reset.css"  rel="stylesheet" type="text/css" />
     <link href="/css/grid.css"   rel="stylesheet" type="text/css" />
     <link href="/css/type.css"   rel="stylesheet" type="text/css" />
-    <!--[if IE]><link  href="/css/ie.css"         type="text/css" rel="stylesheet"><![endif]-->
+    <!--[if IE]><link href="/css/ie.css"          type="text/css" rel="stylesheet"><![endif]-->
     <link href="/css/custom.css" rel="stylesheet"type="text/css" media="screen, projection" />
 
     <link rel="shortcut icon" href="/favicon.ico">
@@ -971,6 +971,7 @@ responsible for whatever he writes.</p>
                     % }
                 </li>
             </ul>
+            <br />
             <h5>Your Bookshelf</h5>
             <%== shelf %>
           </div>

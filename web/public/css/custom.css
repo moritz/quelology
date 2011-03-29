@@ -79,11 +79,15 @@ table td:first-child {
     padding-left: 2px;
 }
 
-/*
 h1, h2, h3, h4, h5, h6 {
-    margin-top: 0.5ex;
+    font-weight: bold;
 }
 
+#placeholder {
+    padding: 0.5ex;
+}
+
+/*
 h1 { margin-top: 0.750 }
 h2 { margin-top: 0.869 }
 h3 { margin-top: 0.970 }
