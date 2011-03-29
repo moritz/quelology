@@ -4,8 +4,14 @@ a img {
     border: none;
 }
 
+/*
 .medium_img {
     padding: 2ex;
+}
+*/
+
+img.medium_large {
+    padding-top: 2ex;
 }
 
 body {

@@ -680,7 +680,7 @@ __DATA__
     <% if (defined $node->large_image) { %>
         <a href="<%= $node->large_image %>">
     <% } %>
-    <img src="<%= $node->medium_image %>"
+    <img src="<%= $node->medium_image %>" class="medium_large"
             alt="Cover of <%= $node->title %>" />
     <% if (defined $node->large_image) { %>
         </a>
