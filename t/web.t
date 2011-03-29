@@ -29,6 +29,20 @@ $r->get_ok('/m/45')
   ->text_like('#content h1' => qr/Terre d'Ange/)
   ;
 
+$r->get_ok('/m/10')
+    ->status_is(200);
+
+
+my $table = $r->tx->res->dom->at('#content table');
+my %h = map trim($_->all_text), $table->find('td')->each;
+
+is $h{Language}, 'English',         'medium data language';
+is $h{ISBN},     '0316037869',      'medium data ISBN';
+is $h{Author},   'Trudi Canavan',   'medium data author';
+is $h{'Publication year'}, 2011,    'medium data pub year';
+is $h{Publisher}, 'Orbit',          'medium data pub publisher';
+
+
 $r->get_ok('/details/14')
     ->status_is(200)
     ->text_like(title => qr/Kushiel's Dart/)

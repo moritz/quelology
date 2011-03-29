@@ -129,7 +129,9 @@ sub tree_position {
 my $locales = Locales->new('en');
 
 sub language {
-    $locales->code2language(shift->lang);
+    my $lang = shift->lang;
+    return $locales->code2language($lang) if defined $lang;
+    return;
 }
 
 sub translations {
