@@ -68,11 +68,9 @@ for (qw(/lump/ /update/title /update/made_by /delete /dissolve /edit)) {
     $r->post_ok($_)
         ->status_is(403, "POST $_ is auth protected");
 }
-$r->get_ok('/edit/44');
-
 $r->post_form_ok('/login/', { username => 'test', password => 'test123' })
     ->status_is(302);
-$r->header_like(Location => qr{/edit/44$}, 'redirect to the last forbidden location');
+$r->header_like(Location => qr{/edit/44$}, 'redirect to the first forbidden location');
 
 $r->get_ok('/edit/44')
     ->status_is(200, '/edit/$id is open after authentication');
