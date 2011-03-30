@@ -8,9 +8,15 @@ my $schema = schema;
 my $rs = $schema->resultset('Medium')->root_nodes;
 
 while (my $node = $rs->next) {
-    say $node->title;
+    say '=' x 40;
+    dump_($node);
     for my $n ($node->descendants) {
-        say '   ' x $n->level, $n->title;
+        dump_($n);
     }
 }
 
+
+sub dump_ {
+    my $n = shift;
+    say join ':::', $n->id, $n->asin // '', $n->level, $n->title, $n->made_by;
+}
