@@ -308,7 +308,6 @@ get '/die' => sub { die 'DEBUG'; };
 under sub {
     my $self = shift;
     return 1 if $self->session->{logged_in};
-    use Data::Dumper;
     if (!exists $self->session->{goto_after_login}
             && $self->req->url !~ /\blog(in|out)\b/) {
         $self->app->log->debug('Setting goto_after_login to "' . $self->req->url . '"');
@@ -978,7 +977,7 @@ responsible for whatever he writes.</p>
         </div>
         <div class="ml10 fluid">
           <div id="content">
-            % if (flash 'message' || stash 'message') {
+            % if (flash('message') || stash('message')) {
                 <p class="flash"><%= flash('message') // stash('message') %></p>
             % }
             <%== content %>
