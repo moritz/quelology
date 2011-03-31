@@ -50,6 +50,25 @@ app->helper(shelf => sub {
     ));
 });
 
+app->helper(extract_nodes => sub {
+    my ($self, $n) = @_;;
+    my @r;
+    my $t;
+    $t = sub {
+        my $s = shift;
+        if (ref($s) eq 'ARRAY') {
+            for my $thing (@$s) {
+                $t->($thing);
+            }
+        } elsif ($s->isa('Quelology::Model::Result::Medium')) {
+            push @r, $s;
+        } else {
+        }
+    };
+    $t->($n);
+    return @r;
+});
+
 get '/' =>  sub {
     my $self = shift;
     my $t = '';
@@ -310,7 +329,6 @@ under sub {
     return 1 if $self->session->{logged_in};
     if (!exists $self->session->{goto_after_login}
             && $self->req->url !~ /\blog(in|out)\b/) {
-        $self->app->log->debug('Setting goto_after_login to "' . $self->req->url . '"');
         $self->session->{goto_after_login} = "" . $self->req->url;
     }
     create_captcha($self);
@@ -469,15 +487,24 @@ post '/edit' => sub {
             = map $self->param($_), qw/source_id target_id edit_where/;
     my $target = $schema->m->find($target_id);
     die "No target with id $target_id" unless $target;
+    my %requires_target = (
+        before  => 1,
+        after   => 1,
+        below   => 1,
+        alias   => 1,
+    );
+
     my $source = $schema->m->find($source_id);
-    die "No source with id $source_id" unless $source;
+    die "No source with id $source_id" if !$source && $requires_target{$where};
 
 #    warn "Moving $source_id $where $target_id\n";
 
     my $where_to_go = $target;
     push @{$self->session->{shelf_ids}}, $target_id;
 
-    if ( $target->is_root && $where ne 'below' ) {
+    if ($where eq 'alias') {
+        $source->add_alias($target);
+    } elsif ( $target->is_root && $where ne 'below' ) {
         my @children = $target;
         if ($where eq 'before') {
             unshift @children, $source;
@@ -506,8 +533,12 @@ post '/edit' => sub {
         $target->attach_leftmost_child($source);
         # remove $source from session
     }
+    elsif ($where eq 'delete') {
+        $where_to_go = $source->root;
+        $source->take_cutting;
+    }
     else {
-        die "Don't know what to do with position '$where' (allowed: before, after, below)";
+        die "Don't know what to do with position '$where' (allowed: before, after, below, alias, delete)";
     }
     clean_session($self);
     $self->redirect_to('/shelf/connect');
@@ -555,6 +586,7 @@ __DATA__
     <p>by <strong><%= $first_node->made_by; %></strong></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
+%== include html_only_edit => nodes => $nodes;
 
 @@ attribution_link.html.ep
 % if ($a ->url) {
@@ -670,6 +702,42 @@ __DATA__
 %   $prev_level = $current_level;
 % }
 %== '</ul>' x $prev_level;
+%# == include html_only_edit => nodes => $nodes;
+
+@@ html_only_edit.html.ep
+% use Data::Dumper;
+% my @ns = extract_nodes $nodes;
+% my $mc = @ns;
+% $mc    = 20 if $mc > 20;
+<form action="/edit" method="post">
+<p>
+    Take
+    <br />
+    <select name="source_id" size="<%= $mc %>">
+        % for (@ns) {
+            <option value="<%= $_->id %>"><%= $_->title %></option> 
+        % }
+    </select>
+    <br />
+    and 
+    <br />
+    <select name="edit_where" size="5">
+        <option value="before">move it before</option>
+        <option value="below">move it below</option>
+        <option value="after">move it after</option>
+        <option value="delete">remove it (ignore second book)</option>
+        <option value="alias">mark it as an alias or translation for</option>
+    </select>
+    <br />
+    <select name="target_id" size="<%= $mc %>">
+        % for (@ns) {
+            <option value="<%= $_->id %>"><%= $_->title %></option> 
+        % }
+    </select>
+    <br />
+    <input type="submit" value="Do it now" />
+</p>
+</form>
 
 @@ medium.html.ep
 <div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
