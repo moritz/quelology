@@ -32,6 +32,12 @@ is $root->lang, 'en', 'language is propagated up to the root';
     $tr = $schema->m->by_id(16)->translations;
     is $tr->count, 1, 'translations symmetry (1)';
     is $tr->first->lang, 'de', 'symmetry (2)';
+
+    my $en = $schema->m->by_id(14);
+    my $de = $schema->m->by_id(28);
+    $en->add_alias($de);
+    is $en->translations->first->lang, 'de', 'can install translation with add_alias';
+    is $de->translations->first->lang, 'en', '... and its symmetry prevails';
 }
 
 # TODO: check the whole tree structure

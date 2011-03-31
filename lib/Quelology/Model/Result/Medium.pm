@@ -86,10 +86,6 @@ sub thread_with_drop_points {
     }
     push @things, grep defined, reverse @todo;
 
-    # we can't add before or after root node yet.
-#    shift @things;
-#    pop @things;
-
     return @things;
 }
 
@@ -146,6 +142,21 @@ sub translations {
             id          => $target_id,
         ],
     });
+}
+
+sub add_alias {
+    my ($self, $other) = @_;
+    my $own_alias   = $self->same_as;
+    my $other_alias = $other->same_as;
+    if (defined $other_alias) {
+        if (defined $own_alias) {
+            die "Don't know how to join two aliased groups yet";
+        } else {
+            $self->update({same_as =>$other_alias});
+        }
+    } else {
+        $other->update({same_as => $own_alias // $self->id});
+    }
 }
 
 1;

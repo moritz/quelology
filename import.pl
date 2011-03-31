@@ -79,11 +79,8 @@ my $terre_dange = $schema->m
 
 $schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
 
-# install aliases
-my $diff = 27 -13;
-for (14..16) {
-    $schema->m->by_id($_ + $diff)->update({same_as => $_ });
-}
+# an alias for testing
+$schema->m->by_id(30)->update({same_as => 16});
 
 # say '';
 # my $rs = $schema->m->root_nodes;
