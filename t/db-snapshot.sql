@@ -89,7 +89,7 @@ ALTER SEQUENCE attribution_id_seq OWNED BY attribution.id;
 -- Name: attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('attribution_id_seq', 36, true);
+SELECT pg_catalog.setval('attribution_id_seq', 39, true);
 
 
 --
@@ -140,7 +140,7 @@ ALTER SEQUENCE medium_id_seq OWNED BY medium.id;
 -- Name: medium_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('medium_id_seq', 45, true);
+SELECT pg_catalog.setval('medium_id_seq', 48, true);
 
 
 --
@@ -289,6 +289,9 @@ COPY attribution (id, medium_id, name, url) FROM stdin;
 34	34	amazon	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850
 35	35	amazon	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048
 36	36	amazon	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587
+37	46	amazon	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890
+38	47	amazon	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X
+39	48	amazon	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475
 \.
 
 
@@ -342,6 +345,9 @@ COPY medium (id, asin, isbn, title, made_by, publisher, amazon_url, small_image,
 18	0446610143	0446610143	Kushiel's Justice	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51FgNHapbUL.jpg	en	2008	45	\N	13	14	2
 17	044661002X	044661002X	Kushiel's Scion	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51C8YGxxWuL.jpg	en	2007	45	\N	11	12	2
 32	0201896834	0201896834	Art of Computer Programming, Volume 1: Fundamental Algorithms	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L.jpg	en	1997	31	\N	2	3	1
+46	0756405890	0756405890	The Name of the Wind	Patrick Rothfuss	DAW Trade	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL.jpg	en	2009	46	\N	1	2	0
+47	360893815X	9783608938159	Der Name des Windes	Patrick Rothfuss	Klett Cotta Verlag	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL75_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL160_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L.jpg	de	2008	47	\N	1	2	0
+48	8499082475	8499082475	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	\N	\N	\N	jp	2011	48	\N	1	2	0
 \.
 
 

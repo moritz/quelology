@@ -105,3 +105,10 @@ for (qw/test admin root moritz/) {
         real_name   => ucfirst($_),
     });
 }
+
+say 'late imports';
+
+# IDs    46         47         48
+for ( qw(0756405890 360893815X 8499082475) ) {
+    $schema->resultset('Medium')->from_asin($_);
+}

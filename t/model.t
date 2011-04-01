@@ -40,6 +40,26 @@ is $root->lang, 'en', 'language is propagated up to the root';
     is $de->translations->first->lang, 'en', '... and its symmetry prevails';
 }
 
+{
+    # three languages
+    my $en = $schema->m->by_id(46);
+    my $de = $schema->m->by_id(47);
+    my $es = $schema->m->by_id(48);
+    $en->add_alias($de);
+    $de->add_alias($es);
+    is $en->translations->count, 2, 'Name of the Wind has two translations';
+    is $de->translations->count, 2, 'symmetry (1)';
+    is $es->translations->count, 2, 'symmetry (2)';
+    for ($en, $de, $es) {
+        $_->update({same_as => undef });
+    }
+    $en->add_alias($de);
+    $es->add_alias($en);
+    is $en->translations->count, 2, 'Name of the Wind has two translations';
+    is $de->translations->count, 2, 'symmetry (1)';
+    is $es->translations->count, 2, 'symmetry (2)';
+}
+
 # TODO: check the whole tree structure
 
 ok !$schema->resultset('UserLogin')->authenticate('test', 'wrong'),

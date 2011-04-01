@@ -33,6 +33,7 @@ __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Medium', 'root_id');
 __PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Medium', 'same_as');
+__PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Medium', 'same_as');
 __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::Attribution',
                       'medium_id');
 
@@ -148,11 +149,11 @@ sub add_alias {
     my ($self, $other) = @_;
     my $own_alias   = $self->same_as;
     my $other_alias = $other->same_as;
-    if (defined $other_alias) {
-        if (defined $own_alias) {
+    if (defined($other_alias) || $other->aliases->count) {
+        if (defined($own_alias) || $self->aliases->count ) {
             die "Don't know how to join two aliased groups yet";
         } else {
-            $self->update({same_as =>$other_alias});
+            $self->update({same_as => $other_alias // $other->id});
         }
     } else {
         $other->update({same_as => $own_alias // $self->id});
