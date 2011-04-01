@@ -52,7 +52,6 @@ my $contents = $r->tx->res->dom->at('#medium_16')->all_text;
 like $contents, qr/Kushiel's Avatar/, 'book title appears in output';
 like $contents, qr/Jacqueline Carey/, 'book author appears in output';
 like $contents, qr/view on amazon/i, 'Amazon link';
-$contents => $r->tx->res->dom->at('.translations');
 like $contents, qr/German/, 'has a German translations';
 
 for my $page (qw/about login imprint/) {
