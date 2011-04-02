@@ -43,19 +43,25 @@ sub dbh {
     $dbh;
 }
 
+use Memoize;
+memoize('amazon');
+memoize('amazon_net');
+
 sub amazon {
-    state $a = XML::Amazon::Cached->new(
+    my $locale = shift // config('amazon_locale') // 'us';
+     XML::Amazon::Cached->new(
         token => config('amazon_token'),
         sak   => config('amazon_secret_key'),
-        local => config('amazon_locale') // 'us',
+        local => $locale,
     );
 }
 
 sub amazon_net {
-    state $a = Net::Amazon->new(
+    my $locale = shift // config('amazon_locale') // 'us';
+    Net::Amazon->new(
         token       => config('amazon_token'),
         secret_key  => config('amazon_secret_key'),
-        locale      => config('amazon_locale'),
+        locale      => $locale,
         cache       => Cache::FileCache->new({ namespace => 'Net-Amazon' }),
     );
 }

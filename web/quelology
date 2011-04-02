@@ -15,6 +15,8 @@ use utf8;
 
 my $schema = schema;
 
+app->sessions->default_expiration(60 * 60 * 24);
+
 sub trim {
     my $s = $_[0];
     $s =~ s/\A\s+//;
@@ -74,7 +76,7 @@ get '/' =>  sub {
     my $t = '';
     $self->render(
         threads     => [$schema->m->threads],
-        singles     => [$schema->m->singles],
+        singles     => [$schema->m->singles->search(undef, {rows => 10})],
         template    => 'index',
         title       => 'Quelology - Semantic Relations Between Books',
     );
@@ -142,19 +144,27 @@ get '/t/:id' => sub {
 sub search {
     my $self = shift;
     my $keyword = trim $self->param('keyword');
-    my $res = Quelology::Config::amazon->search(
+    my $lang    = $self->param('lang') // 'us';
+    my $res = Quelology::Config::amazon($lang)->search(
                     keywords => $keyword,
                     type     => 'Books',
                );
     my ($series, $media) = $schema->m->websearch($keyword);
-    $self->render(
-        layout   => 'basic',
-        title    => "Search results for '$keyword'",
-        template => 'search',
-        series   => $series,
-        media    => $media,
-    );
-
+    if (defined $series) {
+        $self->render(
+            layout   => 'basic',
+            title    => "Search results for '$keyword'",
+            template => 'search',
+            series   => $series,
+            media    => $media,
+        );
+    } else {
+        $self->render(
+            layout   => 'basic',
+            title    => "No search results for '$keyword'",
+            template => 'no_search',
+        );
+    }
 }
 
 get '/logout/' => sub {
@@ -884,6 +894,11 @@ __DATA__
     </ul>
 </div>
 
+@@ no_search.html.ep
+<h2>Sorry, no search results</h2>
+<p>Your search did not produce any results. Please try it again with less
+specific terms, or with a different language.</p>
+
 @@ search.html.ep
 % if (@$series) {
     <h2>Series</h2>
@@ -1016,8 +1031,16 @@ responsible for whatever he writes.</p>
         <%== include 'edit_form' %>
         <div id="header" class="shelf-droppable droppable">
             <form action="/search/" method="post">
-            <p style="float:right"><input type="text" id="keyword" name="keyword" />
-               <input type="submit" value="search" />
+            <p style="float:right">
+                <input type="text" id="keyword" name="keyword" />
+                <select name="lang">
+                    <option value="us" selected="true">us</option>
+                    <option value="de">de</option>
+                    <option value="fr">fr</option>
+                    <option value="it">it</option>
+                    <option value="uk">uk</option>
+                </select>
+                <input type="submit" value="search" />
             </p>
             </form>
             <h1>Quelology</h1>

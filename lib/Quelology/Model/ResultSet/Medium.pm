@@ -71,7 +71,7 @@ sub websearch {
         keywords    => $keywords,
         type        => 'Books',
     );
-    die "Amazon search failed" unless $amazon->is_success;
+    return unless $amazon->is_success;
     my %root_seen;
     my @series;
     my @media;
