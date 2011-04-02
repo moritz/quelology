@@ -6,7 +6,7 @@ use Mojolicious::Lite;
 use Mojolicious::Session;
 use Mojo::ByteStream 'b';
 use lib 'lib';
-use lib '../lib';
+use lib "$ENV{QUELOLOGY_HOME}/lib";
 use Quelology::Config qw(schema config);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;

@@ -16,8 +16,11 @@ sub run_mode {
     $ENV{QUELOLOGY_RUNMODE} // $Quelology::RunMode // 'dev';
 }
 
+my $dir = $ENV{QUELOLOGY_HOME} || '.';
+$ENV{MOJO_HOME} //= "$dir/web/";
+
 my $conf = decode_json do {
-    open my $file, '<:encoding(UTF-8)', 'config.json';
+    open my $file, '<:encoding(UTF-8)', "$dir/config.json";
     my $content = do { local $/, <$file> };
     close $file;
     $content;
