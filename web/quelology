@@ -793,7 +793,7 @@ __DATA__
     % my $t = $node->translations;
     % if ($t->count) {
         <div class="translations">
-            <h3>Translations</h3>
+            <h3>Alternate versions and translations</h3>
             <ul>
                 % while (my $n = $t->next) {
                     <li>

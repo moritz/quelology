@@ -144,13 +144,15 @@ sub calc_property {
     my ($self, $what) = @_;
     my %freq;
     for my $c ($self->all) {
-        for (split /,\s+/, $c->$what) {
+        for (split /\s*,\s+/, $c->$what) {
             $freq{$_}++ if $_;
         }
     }
     my @things = reverse sort { $freq{$a} <=> $freq{$b} }
                               keys %freq;
-    return join ', ', @things;
+    my $s = join ', ', @things;
+    $s = substr($s, 0, 255) if length($s) > 255;
+    return $s;
 }
 
 sub create_root_with_children {
