@@ -609,7 +609,7 @@ __DATA__
 % my $a = $for->attributions;
 % my $c = $a->count;
 % if ($c) {
-    <p class="attribution">Book or series data kindly provided by
+    <p class="attribution"><%= $type %> data kindly provided by
     % if ($c == 1) {
         %== include 'attribution_link', a => $a->first
         </p>
@@ -634,6 +634,8 @@ __DATA__
 % }
 %== include add_shelf_link => (node => $node)
 %== include 'tree-part', node => $node
+
+%== include 'attributions', for => $node, type => "Series"
 
 @@ tree-part.html.ep
 %= include 'small_medium', n => $node
@@ -803,7 +805,7 @@ __DATA__
         </div>
     % }
 
-     %== include 'attributions', for => $node
+     %== include 'attributions', for => $node, type => "Book"
 </div>
 <br style="clear:left" />
 </div>
