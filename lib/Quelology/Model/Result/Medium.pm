@@ -149,6 +149,9 @@ sub add_alias {
     my ($self, $other) = @_;
     my $own_alias   = $self->same_as;
     my $other_alias = $other->same_as;
+    return if $self->id == $other->id;
+    return if defined($other_alias) && $other_alias == $self->id;
+    return if defined($own_alias)   && $own_alias   == $other->id;
     if (defined($other_alias) || $other->aliases->count) {
         if (defined($own_alias) || $self->aliases->count ) {
             die "Don't know how to join two aliased groups yet";
