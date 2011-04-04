@@ -163,4 +163,20 @@ sub add_alias {
     }
 }
 
+sub attribute {
+    my ($self, $url) = @_;
+    if ($url =~ /\b(amazon|isfdb)\./) {
+        $self->create_related('attributions',
+            {
+                name    => $1,
+                url     => $url,
+            },
+        );
+    } else {
+        die "Don't know how to extract attribution name from '$url'."
+            . " Please call ->create_related(attributions => { ... }) directly yourself.";
+    }
+
+}
+
 1;

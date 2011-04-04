@@ -87,12 +87,7 @@ sub websearch {
         } else {
             my $h = _hash_from_xml_amazon($_);
             my $r = $self->create($h);
-            $r->create_related('attributions',
-                {
-                    name    => 'amazon',
-                    url     => $h->{amazon_url},
-                },
-            );
+            $r->attribute($h->{amazon_url});
             push @media, $r;
         }
     }
@@ -109,12 +104,7 @@ sub from_asin {
         if ($m) {
             my $h = _hash_from_xml_amazon($m);
             $row = $self->create($h);
-            $row->create_related('attributions',
-                {
-                    name    => 'amazon',
-                    url     => $h->{amazon_url},
-                },
-            );
+            $row->attribute($h->{amazon_url});
         } else {
             confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
         }
