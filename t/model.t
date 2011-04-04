@@ -14,7 +14,7 @@ BEGIN { use_ok('Quelology::Config', 'schema') }
 ok my $schema = schema(), 'can get a schema';
 ok my $m = $schema->m->by_id(1), 'medium by id';
 like $m->title, qr/Lord of the Rings/, 'can access title';
-like $m->made_by, qr/Tolkien/, 'made_by';
+like $m->author, qr/Tolkien/, 'author';
 ok length($m->ISBN) == 10 || length($m->ISBN) == 13, 'ISBN is 10 or 13 chars long';
 is $m->lang, 'en', 'ISBN-based language detection (en)';
 is $m->language, 'English', 'human readable language';
@@ -82,7 +82,7 @@ ok  $schema->resultset('UserLogin')->authenticate('test', 'newpw'),
     'CAN authenticate with new credentials';
 
 $m = $schema->m->by_id(44);
-my $computed_authors = $m->children->calc_property('made_by');
+my $computed_authors = $m->children->calc_property('author');
 like $computed_authors, qr/J\.R\.R\. Tolkien/, 'calc_property returned Tolkien Senior';
 like $computed_authors, qr/Christopher Tolkien/, 'calc_property returned Tolkien Junior';
 like $computed_authors, qr/Alan Lee/, 'calc_property returned Alan Lee, whoever that might be';

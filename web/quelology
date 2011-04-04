@@ -88,7 +88,7 @@ sub title_for {
     my $title = sprintf '%s "%s" by %s',
                         (shift // ($node->is_leaf ? "Details for" : "Quelology for")),
                         $node->title,
-                        $node->made_by;
+                        $node->author;
 }
 
 get '/m/:id' => sub {
@@ -392,7 +392,7 @@ post '/lump/' => sub {
 post '/update/:what' => sub {
     my $self = shift;
     my $what = $self->param('what');
-    my %allowed = (title => 1, made_by => 1);
+    my %allowed = (title => 1, author => 1);
     die "Can't change '$what'" unless $allowed{$what};
     die "empty $what" unless $self->param($what);
     my $node = $schema->m->by_id($self->param('id'));
@@ -408,7 +408,7 @@ post '/update/:what' => sub {
 post '/recompute/:what' => sub {
     my $self = shift;
     my $what = $self->param('what');
-    my %allowed = (publisher => 1, made_by => 1);
+    my %allowed = (publisher => 1, author => 1);
     die "Can't change '$what'" unless $allowed{$what};
     my $id = $self->param('id');
     my $node = $schema->m->by_id($id);
@@ -426,7 +426,7 @@ post '/create' => sub {
         die "$_ not provided" unless $self->param($_);
     }
     my %d;
-    for (qw/title made_by/) {
+    for (qw/title author/) {
         $d{$_} = trim $self->param($_);
     }
     die "No title provided" unless length $d{title};
@@ -594,7 +594,7 @@ __DATA__
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
     <h2 id="title_<%= $first_node->id %>"><%= $first_node->title %></h2>
-    <p>by <strong><%= $first_node->made_by; %></strong></p>
+    <p>by <strong><%= $first_node->author; %></strong></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
 %== include html_only_edit => nodes => $nodes;
@@ -627,7 +627,7 @@ __DATA__
 @@ tree.html.ep
 % layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
-<p>by <strong><%= $node->made_by; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
+<p>by <strong><%= $node->author; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
@@ -672,7 +672,7 @@ __DATA__
 %>
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
-  <p>by <strong class="root_made_by"><%= $first_node->made_by; %></strong>,
+  <p>by <strong class="root_made_by"><%= $first_node->author; %></strong>,
   published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
   <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
     <img src="/image/dissolve.png" alt="" width="16" height="16" />
@@ -774,7 +774,7 @@ __DATA__
      <strong>(<%= $node->root->title %>)</strong></a></p>
 % }
 <table>
-    % my %h = (made_by => 'Author', publisher => 'Publisher', ISBN => 'ISBN', publish_year => 'Publication year', language => 'Language',);
+    % my %h = (author => 'Author', publisher => 'Publisher', ISBN => 'ISBN', publish_year => 'Publication year', language => 'Language',);
     % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
         % if (defined $node->$k) {
             <tr>
@@ -818,7 +818,7 @@ __DATA__
     </span>
     by
     <span class="data_made_by">
-        <%= $n->made_by %>
+        <%= $n->author %>
     </span>
     (id <%= $n->id %>)
 </span>
@@ -836,10 +836,10 @@ __DATA__
     </span>
     by
     <span class="data_made_by">
-        <%= $n->made_by %>
-        %== include 'edit_marker' => edit => stash('edit'), what => 'made_by', name => 'author'
+        <%= $n->author %>
+        %== include 'edit_marker' => edit => stash('edit'), what => 'author', name => 'author'
         % if (stash('edit') && $n->has_leaves) {
-            <a href="#" onclick="recompute_medium('made_by', <%= $n->id %>); return false">
+            <a href="#" onclick="recompute_medium('author', <%= $n->id %>); return false">
                 <img src="/image/recompute.png" width="16" height="16"
                     alt="recompute author" title="recompute author" />
             </a>

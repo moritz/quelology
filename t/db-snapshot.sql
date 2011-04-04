@@ -102,7 +102,7 @@ CREATE TABLE medium (
     asin character(10),
     isbn character varying(13),
     title character varying(255) NOT NULL,
-    made_by character varying(255),
+    author character varying(255),
     publisher character varying(255),
     amazon_url character varying(255),
     small_image character varying(255),
@@ -300,7 +300,7 @@ COPY attribution (id, medium_id, name, url, retrieved) FROM stdin;
 -- Data for Name: medium; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY medium (id, asin, isbn, title, made_by, publisher, amazon_url, small_image, medium_image, large_image, lang, publish_year, root_id, same_as, l, r, level) FROM stdin;
+COPY medium (id, asin, isbn, title, author, publisher, amazon_url, small_image, medium_image, large_image, lang, publish_year, root_id, same_as, l, r, level) FROM stdin;
 9	0316037834	9780316037839	The Ambassador's Mission	Trudi Canavan	Orbit	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51rcW1kFeGL.jpg	en	2010	38	\N	2	3	1
 10	0316037869	0316037869	The Rogue	Trudi Canavan	Orbit	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51UYVonc3lL.jpg	en	2011	38	\N	4	5	1
 6	006057528X	006057528X	The Magicians' Guild	Trudi Canavan	Harper Voyager	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51tN5SeF1wL.jpg	en	2004	39	\N	2	3	1

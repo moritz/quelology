@@ -57,7 +57,7 @@ function update_medium(id, what) {
                 if ( span.attr('data-treeposition') == 'root') {
                     if (what == 'title') {
                         $('#title_' + id).text($.trim(new_val.text()));
-                    } else if (what == 'made_by') {
+                    } else if (what == 'author') {
                         $('#medium_' + id).parents('.whole_tree').find('.root_made_by').html(response);
                     }
                 }
@@ -94,8 +94,8 @@ function create_medium(id, where) {
     var form       = $('<form>                      \
         <label for="title">Title (*)</label>        \
         <input name="title" />                      \
-        <label for="made_by">Authors</label>        \
-        <input name="made_by" value="&lt;*&gt;" />  \
+        <label for="author">Authors</label>        \
+        <input name="author" value="&lt;*&gt;" />  \
         <input type="submit" class="submit"         \
             value="create new book or series" />    \
         <input type="button" name="cancel"          \

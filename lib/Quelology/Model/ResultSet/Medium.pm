@@ -33,7 +33,7 @@ sub _hash_from_xml_amazon {
     my $h = {
         asin            => $m->asin,
         title           => unparen($m->title),
-        made_by         => scalarify($m->made_by),
+        author          => scalarify($m->author),
         publisher       => scalarify($m->publisher),
         amazon_url      => $m->url,
         small_image     => $m->image('s'),
@@ -148,7 +148,7 @@ sub calc_property {
 sub create_root_with_children {
     my ($self, $values, @children) = @_;
     my %v = %$values;
-    for (qw(made_by publisher lang)) {
+    for (qw(author publisher lang)) {
         $v{$_} = $self->_join_sorted($values, $_, \@children);
     }
     delete $v{lang} if length($v{lang}) != 2;

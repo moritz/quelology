@@ -14,7 +14,7 @@ __PACKAGE__->add_columns(qw/
     asin
     ISBN
     title
-    made_by
+    author
     publisher
     amazon_url
     small_image

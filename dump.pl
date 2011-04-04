@@ -18,5 +18,5 @@ while (my $node = $rs->next) {
 
 sub dump_ {
     my $n = shift;
-    say join ':::', $n->id, $n->asin // '', $n->level, $n->title, $n->made_by;
+    say join ':::', $n->id, $n->asin // '', $n->level, $n->title, $n->author;
 }

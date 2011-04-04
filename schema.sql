@@ -4,7 +4,7 @@ CREATE TABLE medium (
     asin            CHAR(10) UNIQUE,
     ISBN            VARCHAR(13),
     title           VARCHAR(255) NOT NULL,
-    made_by         VARCHAR(255),
+    author          VARCHAR(255),
     publisher       VARCHAR(255),
     amazon_url      VARCHAR(255),
     small_image     VARCHAR(255),
