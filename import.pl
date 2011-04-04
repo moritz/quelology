@@ -94,6 +94,8 @@ $schema->m->by_id(30)->update({same_as => 16});
 # }
 
 say 'User setup';
+# avoid ever-changing salts between different runs of this script:
+srand 0;
 
 for (qw/test admin root moritz/) {
     my $u = $schema->resultset('UserLogin')->create({
