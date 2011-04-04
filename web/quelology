@@ -1,17 +1,18 @@
 #!/usr/bin/env perl
-use 5.012;
-use warnings;
 
+use lib 'lib';
+use if $ENV{QUELOLOGY_HOME}, 'lib', "$ENV{QUELOLOGY_HOME}/lib";
+
+use 5.012;
 use Mojolicious::Lite;
 use Mojolicious::Session;
 use Mojo::ByteStream 'b';
-use lib 'lib';
-use lib "$ENV{QUELOLOGY_HOME}/lib";
 use Quelology::Config qw(schema config);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use Digest::SHA1 qw/sha1/;
 use utf8;
+use warnings;
 
 my $schema = schema;
 
