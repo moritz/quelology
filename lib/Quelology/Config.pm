@@ -56,6 +56,7 @@ sub amazon {
         token => config('amazon_token'),
         sak   => config('amazon_secret_key'),
         local => $locale,
+        associate => 'quelology-20',
     );
 }
 
