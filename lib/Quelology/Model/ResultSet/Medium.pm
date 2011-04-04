@@ -33,7 +33,7 @@ sub _hash_from_xml_amazon {
     my $h = {
         asin            => $m->asin,
         title           => unparen($m->title),
-        author          => scalarify($m->author),
+        author          => scalarify($m->made_by),
         publisher       => scalarify($m->publisher),
         amazon_url      => $m->url,
         small_image     => $m->image('s'),
