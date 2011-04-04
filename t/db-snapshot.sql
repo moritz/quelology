@@ -62,7 +62,8 @@ CREATE TABLE attribution (
     id integer NOT NULL,
     medium_id integer NOT NULL,
     name character varying(64) NOT NULL,
-    url character varying(255)
+    url character varying(255),
+    retrieved date DEFAULT ('now'::text)::date
 );
 
 
@@ -252,46 +253,46 @@ ALTER TABLE user_login ALTER COLUMN id SET DEFAULT nextval('user_login_id_seq'::
 -- Data for Name: attribution; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY attribution (id, medium_id, name, url) FROM stdin;
-1	1	amazon	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706
-2	2	amazon	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081
-3	3	amazon	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722
-4	4	amazon	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705
-5	5	amazon	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813
-6	6	amazon	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X
-7	7	amazon	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298
-8	8	amazon	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301
-9	9	amazon	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834
-10	10	amazon	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869
-11	11	amazon	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044
-12	12	amazon	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ
-13	13	amazon	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043
-14	14	amazon	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987
-15	15	amazon	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048
-16	16	amazon	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539
-17	17	amazon	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X
-18	18	amazon	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143
-19	19	amazon	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X
-20	20	amazon	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048
-21	21	amazon	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056
-22	22	amazon	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072
-23	23	amazon	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550
-24	24	amazon	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727
-25	25	amazon	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X
-26	26	amazon	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X
-27	27	amazon	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X
-28	28	amazon	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202
-29	29	amazon	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210
-30	30	amazon	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229
-31	31	amazon	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043
-32	32	amazon	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834
-33	33	amazon	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842
-34	34	amazon	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850
-35	35	amazon	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048
-36	36	amazon	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587
-37	46	amazon	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890
-38	47	amazon	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X
-39	48	amazon	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475
+COPY attribution (id, medium_id, name, url, retrieved) FROM stdin;
+1	1	amazon	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706	2011-04-04
+2	2	amazon	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081	2011-04-04
+3	3	amazon	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722	2011-04-04
+4	4	amazon	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705	2011-04-04
+5	5	amazon	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813	2011-04-04
+6	6	amazon	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	2011-04-04
+7	7	amazon	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298	2011-04-04
+8	8	amazon	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301	2011-04-04
+9	9	amazon	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	2011-04-04
+10	10	amazon	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	2011-04-04
+11	11	amazon	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044	2011-04-04
+12	12	amazon	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ	2011-04-04
+13	13	amazon	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043	2011-04-04
+14	14	amazon	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987	2011-04-04
+15	15	amazon	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048	2011-04-04
+16	16	amazon	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539	2011-04-04
+17	17	amazon	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	2011-04-04
+18	18	amazon	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	2011-04-04
+19	19	amazon	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X	2011-04-04
+20	20	amazon	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048	2011-04-04
+21	21	amazon	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056	2011-04-04
+22	22	amazon	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072	2011-04-04
+23	23	amazon	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550	2011-04-04
+24	24	amazon	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727	2011-04-04
+25	25	amazon	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X	2011-04-04
+26	26	amazon	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X	2011-04-04
+27	27	amazon	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X	2011-04-04
+28	28	amazon	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202	2011-04-04
+29	29	amazon	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210	2011-04-04
+30	30	amazon	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229	2011-04-04
+31	31	amazon	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043	2011-04-04
+32	32	amazon	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	2011-04-04
+33	33	amazon	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842	2011-04-04
+34	34	amazon	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850	2011-04-04
+35	35	amazon	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048	2011-04-04
+36	36	amazon	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587	2011-04-04
+37	46	amazon	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	2011-04-04
+38	47	amazon	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	2011-04-04
+39	48	amazon	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	2011-04-04
 \.
 
 
@@ -347,7 +348,7 @@ COPY medium (id, asin, isbn, title, made_by, publisher, amazon_url, small_image,
 32	0201896834	0201896834	Art of Computer Programming, Volume 1: Fundamental Algorithms	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L.jpg	en	1997	31	\N	2	3	1
 46	0756405890	0756405890	The Name of the Wind	Patrick Rothfuss	DAW Trade	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL.jpg	en	2009	46	\N	1	2	0
 47	360893815X	9783608938159	Der Name des Windes	Patrick Rothfuss	Klett Cotta Verlag	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL75_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL160_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L.jpg	de	2008	47	\N	1	2	0
-48	8499082475	8499082475	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	\N	\N	\N	jp	2011	48	\N	1	2	0
+48	8499082475	8499082475	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dwebservices-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	\N	\N	\N	es	2011	48	\N	1	2	0
 \.
 
 

@@ -43,5 +43,6 @@ CREATE TABLE attribution (
     id          SERIAL          PRIMARY KEY,
     medium_id   INTEGER         NOT NULL REFERENCES medium (id),
     name        VARCHAR(64)     NOT NULL,
-    url         VARCHAR(255)
+    url         VARCHAR(255),
+    retrieved   DATE            DEFAULT CURRENT_DATE
 );

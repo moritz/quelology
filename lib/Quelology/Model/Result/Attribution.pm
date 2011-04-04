@@ -18,6 +18,7 @@ __PACKAGE__->add_columns(
     url         => {
         data_type       => 'varchar',
     },
+    'retrieved',
 );
 
 __PACKAGE__->set_primary_key('id');
