@@ -1,11 +1,11 @@
-package Quelology::Model::Result::Attribution;
+package Quelology::Model::Result::TitleAttribution;
 use parent qw/DBIx::Class::Core/;
 use utf8;
 
-__PACKAGE__->table('attribution');
+__PACKAGE__->table('title_attribution');
 __PACKAGE__->add_columns(
     'id',
-    medium_id   => {
+    title_id   => {
         data_type       => 'integer',
         is_nullable     => 0,
         is_foreign_key  => 1,
@@ -22,6 +22,6 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key('id');
-__PACKAGE__->belongs_to('medium', 'Quelology::Model::Result::Title', 'medium_id');
+__PACKAGE__->belongs_to('title', 'Quelology::Model::Result::Title', 'title_id');
 
 1;

@@ -8,7 +8,7 @@ use strict;
 use warnings;
 
 __PACKAGE__->load_components(qw( Tree::NestedSet ));
-__PACKAGE__->table('medium');
+__PACKAGE__->table('title');
 __PACKAGE__->add_columns(qw/
     id
     asin
@@ -16,11 +16,6 @@ __PACKAGE__->add_columns(qw/
     title
     author
     publisher
-    amazon_url
-    small_image
-    medium_image
-    large_image
-    publish_year
     same_as
     lang
     root_id
@@ -34,8 +29,10 @@ __PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Title', 'root_id');
 __PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Title', 'same_as');
-__PACKAGE__->has_many('attributions', 'Quelology::Model::Result::Attribution',
-                      'medium_id');
+__PACKAGE__->has_many('attributions', 'Quelology::Model::Result::TitleAttribution', 'title_id');
+
+__PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication',
+                      'title_id');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
@@ -43,6 +40,11 @@ __PACKAGE__->tree_columns({
         right_column    => 'r',
         level_column    => 'level',
 });
+
+
+sub date {
+    shift->publications->get_column('date')->min;
+}
 
 sub thread_with_drop_points {
     my $self = shift;
