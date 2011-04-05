@@ -32,6 +32,10 @@ __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::TitleAttributio
 
 __PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication',
                       'title_id', { order_by => \'publication_date'});
+# need an unordered version to call ->min on it
+__PACKAGE__->has_many('publications_unordered',
+                      'Quelology::Model::Result::Publication',
+                      'title_id');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
@@ -43,7 +47,7 @@ __PACKAGE__->tree_columns({
 
 sub date {
     my $self = shift;
-    $self->publications->get_column('publication_date')->min;
+    $self->publications_unordered->get_column('publication_date')->min;
 }
 
 sub thread_with_drop_points {
