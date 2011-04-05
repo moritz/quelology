@@ -10,11 +10,6 @@ sub by_id {
     my ($self, $id) = @_;
     my $obj = $self->find($id);
     die "No publication with id '$id' found" unless $obj;
-    my $a = $obj->alias_for;
-    return $obj unless $a;
-    if (defined($a->lang) && defined($obj->lang) && $a->lang eq $obj->lang) {
-        return $a;
-    }
     return $obj;
 }
 

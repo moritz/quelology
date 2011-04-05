@@ -31,7 +31,7 @@ __PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::TitleAttribution', 'title_id');
 
 __PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication',
-                      'title_id');
+                      'title_id', { order_by => \'publication_date'});
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
@@ -42,7 +42,8 @@ __PACKAGE__->tree_columns({
 
 
 sub date {
-    shift->publications->get_column('date')->min;
+    my $self = shift;
+    $self->publications->get_column('publication_date')->min;
 }
 
 sub thread_with_drop_points {

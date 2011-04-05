@@ -32,7 +32,7 @@ sub clean_session {
     my @new;
     for (@{$self->session->{shelf_ids}}) {
         next if $seen{$_};
-        my $node = $schema->m->by_id($_);
+        my $node = $schema->t->by_id($_);
         next if $seen{$node->root_id};
         push @new, $node->root_id;
         $seen{$node->root_id} = 1;
@@ -47,7 +47,7 @@ app->helper(shelf => sub {
     my $self = shift;
     my @items = @{ $self->session->{shelf_ids} // [] };
     return b($self->render(
-        items   => [map($schema->m->by_id($_), @items)],
+        items   => [map($schema->t->by_id($_), @items)],
         partial => 1,
         template => 'small-shelf',
     ));
@@ -76,8 +76,8 @@ get '/' =>  sub {
     my $self = shift;
     my $t = '';
     $self->render(
-        threads     => [$schema->m->threads],
-        singles     => [$schema->m->singles->search(undef, {rows => 10})],
+        threads     => [$schema->t->threads],
+        singles     => [$schema->t->singles->search(undef, {rows => 10})],
         template    => 'index',
         title       => 'Quelology - Semantic Relations Between Books',
     );
@@ -91,9 +91,9 @@ sub title_for {
                         $node->author;
 }
 
-get '/m/:id' => sub {
+get '/t/:id' => sub {
     my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->t->by_id($self->param('id'));
     my $template = $node->is_leaf ? 'title' : 'tree';
     $self->render(
         layout  => 'basic',
@@ -103,12 +103,23 @@ get '/m/:id' => sub {
     );
 } => 'title';
 
+get '/title/:id/' => sub {
+    my $self = shift;
+    my $node = $schema->t->by_id($self->param('id'));
+    $self->render(
+        layout  => 'basic',
+        title   => title_for($node, 'Details for'),
+        node    => $node,
+        template => 'title',
+    );
+} => 'title' ;
+
 get '/publication/:id' => sub {
     my $self = shift;
     my $node = $schema->p->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
-        title   => title_for($node),
+        title   => title_for($node, 'Publication details for'),
         node    => $node,
         template => 'publication',
     );
@@ -134,7 +145,7 @@ get '/asin/:asin' => sub {
 
 get '/t/:id' => sub {
     my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->t->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
         title   => title_for($node),
@@ -150,7 +161,7 @@ sub search {
                     keywords => $keyword,
                     type     => 'Books',
                );
-    my ($series, $media) = $schema->m->websearch($keyword);
+    my ($series, $media) = $schema->t->websearch($keyword);
     if (defined $series) {
         $self->render(
             layout   => 'basic',
@@ -355,7 +366,7 @@ under sub {
 
 get '/edit/:id' => sub {
     my $self = shift;
-    my $root = $schema->m ->by_id($self->param('id'));
+    my $root = $schema->t ->by_id($self->param('id'));
     $self->render(
         template => 'edit',
         nodes    => [$root->thread_with_drop_points],
@@ -369,7 +380,7 @@ post '/lump/' => sub {
     my @nodes;
     for ($self->param) {
         next unless /^\d+$/;
-        push @nodes, $schema->m->by_id($_);
+        push @nodes, $schema->t->by_id($_);
     }
     if (@nodes < 2) {
         $self->flash(message => "Grouping less than two nodes is a no-op");
@@ -378,7 +389,7 @@ post '/lump/' => sub {
     }
     @nodes = sort { ($a->publish_year // 0) <=> ($b->publish_year // 0) } @nodes;
 
-    my $new_thread = $schema->m->create_root_with_children(
+    my $new_thread = $schema->t->create_root_with_children(
         { title => '<unnamed>' },
         @nodes,
     );
@@ -395,7 +406,7 @@ post '/update/:what' => sub {
     my %allowed = (title => 1, author => 1);
     die "Can't change '$what'" unless $allowed{$what};
     die "empty $what" unless $self->param($what);
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->t->by_id($self->param('id'));
     $node->update({$what => trim $self->param($what)});
     # TODO: return some JSON or HTML or so...
     $self->render(
@@ -411,7 +422,7 @@ post '/recompute/:what' => sub {
     my %allowed = (publisher => 1, author => 1);
     die "Can't change '$what'" unless $allowed{$what};
     my $id = $self->param('id');
-    my $node = $schema->m->by_id($id);
+    my $node = $schema->t->by_id($id);
     $node->update({ $what => $node->children->calc_property($what)});
     $self->render(
         template    => 'small_medium',
@@ -430,13 +441,13 @@ post '/create' => sub {
         $d{$_} = trim $self->param($_);
     }
     die "No title provided" unless length $d{title};
-    my $target = $schema->m->by_id($self->param('id'));
+    my $target = $schema->t->by_id($self->param('id'));
     given ($self->param('where')) {
         when ('before') { $target->create_left_sibling(\%d)  }
         when ('after' ) { $target->create_right_sibling(\%d) }
         when ('below' ) {
             $target->attach_leftmost_child(
-                $schema->m->create(\%d)
+                $schema->t->create(\%d)
             );
         }
         default { die "Don't know how to attach in position '$_'" }
@@ -449,7 +460,7 @@ post '/create' => sub {
 
 post '/delete' => sub {
     my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->t->by_id($self->param('id'));
     my $root = $node->root;
     $node->take_cutting;
     $self->render(
@@ -460,7 +471,7 @@ post '/delete' => sub {
 
 post '/dissolve' => sub {
     my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->t->by_id($self->param('id'));
     $node->dissolve();
     $self->render(text => '');
 };
@@ -478,7 +489,7 @@ get '/shelf/connect' => sub {
     for my $id (@{ $self->session->{shelf_ids} // [] }) {
         next if $seen{$id};
         push @nodes, [];
-        for ($schema->m->by_id($id)->thread_with_drop_points) {
+        for ($schema->t->by_id($id)->thread_with_drop_points) {
             if (ref($_) eq 'ARRAY') {
                 ++$seen{$_->[0]->id};
             }
@@ -496,7 +507,7 @@ post '/edit' => sub {
     my $self = shift;
     my ($source_id, $target_id, $where)
             = map $self->param($_), qw/source_id target_id edit_where/;
-    my $target = $schema->m->find($target_id);
+    my $target = $schema->t->find($target_id);
     die "No target with id $target_id" unless $target;
     my %requires_target = (
         before  => 1,
@@ -505,7 +516,7 @@ post '/edit' => sub {
         alias   => 1,
     );
 
-    my $source = $schema->m->find($source_id);
+    my $source = $schema->t->find($source_id);
     die "No source with id $source_id" if !$source && $requires_target{$where};
 
 #    warn "Moving $source_id $where $target_id\n";
@@ -525,7 +536,7 @@ post '/edit' => sub {
         } else {
             die "Don't know what to do with position '$where' (allowed: before, after, below)";
         }
-        $where_to_go = $schema->m->create_root_with_children(
+        $where_to_go = $schema->t->create_root_with_children(
             { title => '<unnamed>' },
             @children,
         );
@@ -633,13 +644,15 @@ __DATA__
     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
     (<%= $node->title %>)</a></p>
 % }
+<p>
 %== include add_shelf_link => (node => $node)
+</p>
 %== include 'tree-part', node => $node
 
 %== include 'attributions', for => $node, type => "Series"
 
 @@ tree-part.html.ep
-%= include 'small_medium', n => $node
+%= include 'small_medium_noimg', n => $node
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
@@ -654,7 +667,7 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        <%= include 'small_medium', n => $n =%>
+        <%= include 'small_medium_noimg', n => $n =%>
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
@@ -752,6 +765,57 @@ __DATA__
 </p>
 </form>
 
+@@ semantic_attrs.html.ep
+id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
+
+@@ title.html.ep
+<div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> >
+    <h2><%= $node->title %></h2>
+
+    <table>
+        % my %h = (author => 'Author', date => 'initial publication', language => 'Language',);
+        % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
+            % if (defined $node->$k) {
+                <tr>
+                    <td>        <%= $h{$k}    %>         </td>
+                    <td><strong><%= $node->$k %></strong></td>
+                </tr>
+            % }
+        % }
+    </table>
+    % if ($node->id != $node->root_id) {
+        <p>This is part of a <a href="/t/<%= $node->root_id %>">series
+        <strong>(<%= $node->root->title %>)</strong></a></p>
+    % }
+
+    % my $t = $node->translations;
+    % if ($t->count) {
+        <div class="translations">
+            <h3>Translations</h3>
+            <ul>
+                % while (my $n = $t->next) {
+                    <li>
+                        <span class="language"><%= $n->language %></span>
+                        <a href="/t/<%= $n->id %>"><%= $n->title %></a>
+                    </li>
+                % }
+            </ul>
+        </div>
+    % }
+
+    <h3>Publications</h3>
+    <ul>
+      % for my $p ($node->publications) {
+        <li>
+            <a href="/publication/<%= $p->id %>"><%= $p->title %></a>
+            (<%= $p->publication_date %>)
+        </li>
+      % }
+    </ul>
+
+    %== include 'attributions', for => $node, type => "Title"
+</div>
+
 @@ publication.html.ep
 <div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
 <h2><%= $node->title %></h2>
@@ -768,13 +832,8 @@ __DATA__
   </p>
 % }
 
-<div style="padding: 2ex">
-% if ($node->id != $node->root_id) {
-     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
-     <strong>(<%= $node->root->title %>)</strong></a></p>
-% }
 <table>
-    % my %h = (author => 'Author', publisher => 'Publisher', isbn => 'ISBN', publish_year => 'Publication year', language => 'Language',);
+    % my %h = (author => 'Author', publisher => 'Publisher', isbn => 'ISBN', publication_date => 'Publication date', language => 'Language',);
     % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
         % if (defined $node->$k) {
             <tr>
@@ -791,22 +850,8 @@ __DATA__
              View on amazon US
          </a>
      </p>
-    % my $t = $node->translations;
-    % if ($t->count) {
-        <div class="translations">
-            <h3>Alternate versions and translations</h3>
-            <ul>
-                % while (my $n = $t->next) {
-                    <li>
-                        <span class="language"><%= $n->language %></span>
-                        <a href="/m/<%= $n->id %>"><%= $n->title %></a>
-                    </li>
-                % }
-            </ul>
-        </div>
-    % }
 
-     %== include 'attributions', for => $node, type => "Book"
+     %== include 'attributions', for => $node, type => "Publication"
 </div>
 <br style="clear:left" />
 </div>
@@ -814,7 +859,7 @@ __DATA__
 @@ small_medium_noimg.html.ep
 <span id="medium_<%= $n->id %>" class="medium" data-id="<%= $n->id %>">
     <span class="data_title">
-    <a href="/m/<%= $n->id %>"><%= $n->title %></a>
+    <a href="/t/<%= $n->id %>"><%= $n->title %></a>
     </span>
     by
     <span class="data_made_by">
@@ -884,7 +929,7 @@ __DATA__
         <ul>
     %   for my $i (@$items) {
             <li class="draggable" id="shelfmedium_<%= $i->id %>" data-id="<%= $i->id %>">
-            <a href="/m/<%= $i->id%>" title="<%= $i->title %>"><%= $i->short_title %></a>
+            <a href="/t/<%= $i->id%>" title="<%= $i->title %>"><%= $i->short_title %></a>
             </li>
     %   }
         </ul>

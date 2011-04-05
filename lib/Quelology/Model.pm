@@ -3,7 +3,7 @@ use Carp qw(confess);
 
 use parent qw/DBIx::Class::Schema/;
 
-sub m {
+sub t {
     shift->resultset('Title');
 }
 
