@@ -1,4 +1,4 @@
-package Quelology::Model::ResultSet::Medium;
+package Quelology::Model::ResultSet::Title;
 use strict;
 use 5.012;
 use Carp qw(confess);

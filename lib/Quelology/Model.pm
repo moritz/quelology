@@ -4,7 +4,7 @@ use Carp qw(confess);
 use parent qw/DBIx::Class::Schema/;
 
 sub m {
-    shift->resultset('Medium');
+    shift->resultset('Title');
 }
 
 sub login {

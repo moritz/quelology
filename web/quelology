@@ -63,7 +63,7 @@ app->helper(extract_nodes => sub {
             for my $thing (@$s) {
                 $t->($thing);
             }
-        } elsif ($s->isa('Quelology::Model::Result::Medium')) {
+        } elsif ($s->isa('Quelology::Model::Result::Title')) {
             push @r, $s;
         } else {
         }

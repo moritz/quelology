@@ -33,7 +33,7 @@ my @asins = (
             qw(0321751043 0201896834 0201896842 0201896850 0201038048),
     );
 
-my @objs = map $schema->resultset('Medium')->from_asin($_), @asins;
+my @objs = map $schema->resultset('Title')->from_asin($_), @asins;
 #for (@objs) {
 #    say $_->title;
 #}
@@ -69,7 +69,7 @@ my $middleearth = $schema->m
             @objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
 
 # TODO: Add "Magician's Apprentice"
-#my $trudi = $schema->resultset('Medium')
+#my $trudi = $schema->resultset('Title')
 #        ->create({ title => '' });
 #$trudi->
 
@@ -112,5 +112,5 @@ say 'late imports';
 
 # IDs    46         47         48
 for ( qw(0756405890 360893815X 8499082475) ) {
-    $schema->resultset('Medium')->from_asin($_);
+    $schema->resultset('Title')->from_asin($_);
 }

@@ -5,7 +5,7 @@ use Quelology::Config qw(schema);
 
 my $schema = schema;
 
-my $rs = $schema->resultset('Medium')->root_nodes;
+my $rs = $schema->resultset('Title')->root_nodes;
 
 while (my $node = $rs->next) {
     say '=' x 40;

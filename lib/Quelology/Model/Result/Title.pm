@@ -1,4 +1,4 @@
-package Quelology::Model::Result::Medium;
+package Quelology::Model::Result::Title;
 use parent qw/DBIx::Class::Core/;
 use aliased Quelology::Model::DropPoint => 'DropPoint';
 use Locales;
@@ -31,9 +31,9 @@ __PACKAGE__->add_columns(qw/
 
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
-__PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Medium', 'root_id');
-__PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Medium', 'same_as');
-__PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Medium', 'same_as');
+__PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Title', 'root_id');
+__PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Title', 'same_as');
+__PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::Attribution',
                       'medium_id');
 
