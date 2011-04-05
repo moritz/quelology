@@ -65,6 +65,36 @@ sub _hash_from_xml_amazon {
     return $h;
 }
 
+sub websearch {
+    my ($self, $keywords) = @_;
+    my $amazon = Quelology::Config::amazon();
+    my $a_res  = $amazon->search(
+        keywords    => $keywords,
+        type        => 'Books',
+    );
+    return unless $amazon->is_success;
+    my %root_seen;
+    my @series;
+    my @media;
+    for ($a_res->collection) {
+        if (my ($r) = $self->search({asin => $_->asin})) {
+            if ($r->is_single) {
+                push @media, $r;
+            } else {
+                next if exists $root_seen{$r->root_id};
+                $root_seen{$r->root_id} = 1;
+                push @series, $r->root;
+            }
+        } else {
+            my $h = _hash_from_xml_amazon($_);
+            my $r = $self->create($h);
+            $r->attribute($h->{amazon_url});
+            push @media, $r;
+        }
+    }
+    return (\@series, \@media);
+}
+
 sub from_asin {
     my ($self, $asin) = @_;
     confess("No ASIN provided") unless defined($asin) && length $asin;

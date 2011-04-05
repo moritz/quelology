@@ -157,18 +157,14 @@ sub search {
     my $self = shift;
     my $keyword = trim $self->param('keyword');
     my $lang    = $self->param('lang') // 'us';
-    my $res = Quelology::Config::amazon($lang)->search(
-                    keywords => $keyword,
-                    type     => 'Books',
-               );
-    my ($series, $media) = $schema->t->websearch($keyword);
+    my ($series, $titles, $publications) = $schema->p->websearch($keyword);
     if (defined $series) {
         $self->render(
             layout   => 'basic',
             title    => "Search results for '$keyword'",
             template => 'search',
             series   => $series,
-            media    => $media,
+            media    => $titles,
         );
     } else {
         $self->render(

@@ -50,21 +50,21 @@ my %rels = (
 
 my %roots;
 
-my $lotr = $schema->m->from_asin('0618260587');
+my $lotr = $schema->t->from_asin('0618260587');
 $lotr->attach_rightmost_child(@objs[0, 1, 2]);
 $roots{'The Lord of the Rings'} = $lotr;
 
 while (my ($l, $r) = each %rels) {
     say "$l -> $r";
 
-    my $root = $schema->m->create_root_with_children(
+    my $root = $schema->t->create_root_with_children(
         { title => $l },
         @objs[@$r],
     );
     $roots{$l} = $root;
 }
 
-my $middleearth = $schema->m
+my $middleearth = $schema->t
         ->create_root_with_children({ title => 'Middle Earth' },
             @objs[11, 10], $roots{'The Lord of the Rings'}, $objs[12]);
 
@@ -74,16 +74,16 @@ my $middleearth = $schema->m
 #$trudi->
 
 
-my $terre_dange = $schema->m
+my $terre_dange = $schema->t
     ->create_root_with_children({title => "Terre d'Ange"}, @roots{ "Kushiel's Dart (Phedre)", "Kushiel's Scion (Imriel)", "Naamah's Gift (Moirin)"});
 
-$schema->m->by_id(31)->attach_rightmost_child(@objs[31..34]);
+$schema->t->by_id(31)->attach_rightmost_child(@objs[31..34]);
 
 # an alias for testing
-$schema->m->by_id(30)->update({same_as => 16});
+$schema->t->by_id(30)->update({same_as => 16});
 
 # say '';
-# my $rs = $schema->m->root_nodes;
+# my $rs = $schema->t->root_nodes;
 # $rs->reset;
 # 
 # while (my $node = $rs->next) {
