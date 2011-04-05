@@ -73,26 +73,29 @@ sub websearch {
         type        => 'Books',
     );
     return unless $amazon->is_success;
+    my (@series, @titles, @pubs);
     my %root_seen;
-    my @series;
-    my @media;
     for ($a_res->collection) {
         if (my ($r) = $self->search({asin => $_->asin})) {
-            if ($r->is_single) {
-                push @media, $r;
+            if (my $t = $r->title_obj) {
+                if ($t->is_single) {
+                    push @titles, $t;
+                } else {
+                    next if exists $root_seen{$t->root_id};
+                    $root_seen{$t->root_id} = 1;
+                    push @series, $t->root;
+                }
             } else {
-                next if exists $root_seen{$r->root_id};
-                $root_seen{$r->root_id} = 1;
-                push @series, $r->root;
+                push @pubs, $r;
             }
         } else {
             my $h = _hash_from_xml_amazon($_);
             my $r = $self->create($h);
             $r->attribute($h->{amazon_url});
-            push @media, $r;
+            push @pubs, $r;
         }
     }
-    return (\@series, \@media);
+    return (\@series, \@titles, \@pubs);
 }
 
 sub from_asin {

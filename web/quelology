@@ -164,7 +164,8 @@ sub search {
             title    => "Search results for '$keyword'",
             template => 'search',
             series   => $series,
-            media    => $titles,
+            titles   => $titles,
+            pubs     => $publications,
         );
     } else {
         $self->render(
@@ -954,11 +955,11 @@ specific terms, or with a different language.</p>
         % }
     </ul>
 % }
-% if (@$media) {
+% if (@$titles) {
     <h2>Single Books</h2>
     <form action="/lump/" method="post">
     <ul>
-        % for (@$media) {
+        % for (@$titles) {
             <li>
                 % if (session 'logged_in') {
                     <input type="checkbox" name="<%= $_->id %>" />
@@ -973,7 +974,7 @@ specific terms, or with a different language.</p>
     % }
     </form>
 % }
-% if (!@$series && !@$media) {
+% if (!@$series && !@$titles && !@$pubs) {
     <p>No search results, please try it with different search terms.</p>
 % }
 
