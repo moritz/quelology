@@ -28,6 +28,13 @@ sub unparen {
     $t;
 }
 
+sub _fixup_date {
+    my $date = shift;
+    my @d = split /-/, $date;
+    push @d, 01, 01;
+    join '-', @d[0..2];
+}
+
 sub _hash_from_xml_amazon {
     my $m = shift;
     my $h = {
@@ -52,7 +59,8 @@ sub _hash_from_xml_amazon {
         } else {
             $h->{isbn} = $h->{asin} if $h->{asin} =~ /^\d/;
         }
-        $h->{publication_date} = $book->publication_date // $book->ReleaseDate;
+        my $date = $book->publication_date // $book->ReleaseDate;
+        $h->{publication_date} = _fixup_date $date if $date;
     }
     if ($h->{isbn}) {
         my $i = isbn_extract($h->{isbn});

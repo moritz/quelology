@@ -57,12 +57,17 @@ sub from_asin {
 
 sub new_from_publication {
     my ($self, $pub) = @_;
-    $pub->create_related('title_obj', {
-            title       => $pub->title,
-            author      => $pub->author,
-            publisher   => $pub->publisher,
-            lang        => $pub->lang,
+    my $new;
+    $self->result_source->schema->txn_do(sub {
+        $new = $self->create({
+                title       => $pub->title,
+                author      => $pub->author,
+                publisher   => $pub->publisher,
+                lang        => $pub->lang,
+        });
+        $pub->update({title_id => $new->id});
     });
+    return $new;
 }
 
 sub _join_sorted {
