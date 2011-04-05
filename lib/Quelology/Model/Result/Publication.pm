@@ -11,7 +11,7 @@ __PACKAGE__->table('publication');
 __PACKAGE__->add_columns(qw/
     id
     asin
-    ISBN
+    isbn
     title
     author
     publisher

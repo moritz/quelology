@@ -48,16 +48,16 @@ sub _hash_from_xml_amazon {
         # TODO: be more robust
         my ($book) = $res->properties;
         if ($book->isbn) {
-            $h->{ISBN} = $book->isbn;
+            $h->{isbn} = $book->isbn;
         } else {
-            $h->{ISBN} = $h->{asin} if $h->{asin} =~ /^\d/;
+            $h->{isbn} = $h->{asin} if $h->{asin} =~ /^\d/;
         }
         my $date = $book->publication_date // $book->ReleaseDate;
         my $year = (split /-/, $date)[0];
         $h->{publish_year} = $year if $year;
     }
-    if ($h->{ISBN}) {
-        my $i = isbn_extract($h->{ISBN});
+    if ($h->{isbn}) {
+        my $i = isbn_extract($h->{isbn});
         $h->{lang} = $i->{lang}[0] if $i;
     }
 

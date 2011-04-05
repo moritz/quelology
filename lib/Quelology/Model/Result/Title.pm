@@ -12,7 +12,6 @@ __PACKAGE__->table('title');
 __PACKAGE__->add_columns(qw/
     id
     asin
-    ISBN
     title
     author
     publisher

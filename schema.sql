@@ -2,7 +2,7 @@ DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
     asin            CHAR(10) UNIQUE,
-    ISBN            VARCHAR(13),
+    isbn            VARCHAR(13),
     title           VARCHAR(255) NOT NULL,
     author          VARCHAR(255),
     publisher       VARCHAR(255),
@@ -22,7 +22,7 @@ DROP TABLE IF EXISTS publication CASCADE;
 CREATE TABLE publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
-    ISBN                VARCHAR(13),
+    isbn                VARCHAR(13),
     title               VARCHAR(255) NOT NULL,
     author              VARCHAR(255),
     publisher           VARCHAR(255),
