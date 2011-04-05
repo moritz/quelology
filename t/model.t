@@ -109,8 +109,9 @@ ok $schema->m->by_id(23)->is_single, 'is single (+)';
 is join(' ', map $_->tree_position, $m, @c),
     'root leaf leaf branch leaf', 'tree_position';
 
-like $c[0]->attributions->first->name, qr/amazon/i, 'attribution name';
-like $c[0]->attributions->first->url,  qr{^https?://.*?amazon\.}i,
+my $attr =$c[0]->publications->first->attributions->first;
+like $attr->name, qr/amazon/i, 'attribution name';
+like $attr->url,  qr{^https?://.*?amazon\.}i,
     'attribution url';
 
 done_testing;

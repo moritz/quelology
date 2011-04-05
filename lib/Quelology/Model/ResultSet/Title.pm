@@ -70,6 +70,27 @@ sub new_from_publication {
     return $new;
 }
 
+
+# TODO: test if ->all() interferes with the current position in a resultset
+#
+# called as $rs->calc_property('title'), it will compute a comma-separated
+# string of all the titles in $rs, sorted by frequency
+sub calc_property {
+    my ($self, $what) = @_;
+    my %freq;
+    for my $c ($self->all) {
+        for (split /\s*,\s+/, $c->$what) {
+            $freq{$_}++ if $_;
+        }
+    }
+    my @things = reverse sort { $freq{$a} <=> $freq{$b} }
+                              keys %freq;
+    my $s = join ', ', @things;
+    $s = substr($s, 0, 255) if length($s) > 255;
+    return $s;
+}
+
+
 sub _join_sorted {
     my ($self, $values, $what, $children) = @_;
     return $values->{$what} if exists $values->{$what};
