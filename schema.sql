@@ -2,7 +2,6 @@ DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
     asin            CHAR(10) UNIQUE,
-    isbn            VARCHAR(13),
     title           VARCHAR(255) NOT NULL,
     author          VARCHAR(255),
     publisher       VARCHAR(255),
@@ -26,6 +25,9 @@ CREATE TABLE publication (
     title               VARCHAR(255) NOT NULL,
     author              VARCHAR(255),
     publisher           VARCHAR(255),
+    lang                CHAR(2),
+    title_id            INTEGER REFERENCES title (id),
+
     amazon_url          VARCHAR(255),
     publication_date    DATE,
 
@@ -39,9 +41,8 @@ CREATE TABLE publication (
 
     large_image         VARCHAR(255),
     large_image_width   INTEGER,
-    large_image_height  INTEGER,
+    large_image_height  INTEGER
 
-    title_id            INTEGER REFERENCE title (id)
 );
 
 DROP TABLE IF EXISTS user_login CASCADE;
@@ -73,7 +74,7 @@ CREATE TABLE title_attribution (
 DROP TABLE IF EXISTS publication_attribution;
 CREATE TABLE publication_attribution (
     id              SERIAL          PRIMARY KEY,
-    publication_id  INTEGER         NOT NULL REFERENCES title (id),
+    publication_id  INTEGER         NOT NULL REFERENCES publication (id),
     name            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE

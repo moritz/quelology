@@ -6,7 +6,6 @@ use utf8;
 use strict;
 use warnings;
 
-__PACKAGE__->load_components(qw( Tree::NestedSet ));
 __PACKAGE__->table('publication');
 __PACKAGE__->add_columns(qw/
     id
@@ -35,7 +34,7 @@ __PACKAGE__->add_columns(qw/
 
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
-__PACKAGE__->belongs_to('title', 'Quelology::Model::Result::Title', 'title_id');
+__PACKAGE__->belongs_to('title_obj', 'Quelology::Model::Result::Title', 'title_id');
 
 __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::PublicationAttribution', 'publication_id');
 
