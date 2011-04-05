@@ -7,6 +7,10 @@ sub m {
     shift->resultset('Title');
 }
 
+sub p {
+    shift->resultset('Publication');
+}
+
 sub login {
     my ($self, $username, $password) = @_;
     my $user = $self->resultset('UserLogin')->find({name => $username});

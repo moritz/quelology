@@ -94,34 +94,34 @@ sub title_for {
 get '/m/:id' => sub {
     my $self = shift;
     my $node = $schema->m->by_id($self->param('id'));
-    my $template = $node->is_leaf ? 'medium' : 'tree';
+    my $template = $node->is_leaf ? 'title' : 'tree';
     $self->render(
         layout  => 'basic',
         title   => title_for($node),
         node    => $node,
         template => $template,
     );
-} => 'medium';
+} => 'title';
 
-get '/details/:id' => sub {
+get '/publication/:id' => sub {
     my $self = shift;
-    my $node = $schema->m->by_id($self->param('id'));
+    my $node = $schema->p->by_id($self->param('id'));
     $self->render(
         layout  => 'basic',
         title   => title_for($node),
         node    => $node,
-        template => 'medium',
+        template => 'publication',
     );
-} => 'details';
+} => 'publication';
 
 get '/asin/:asin' => sub {
     my $self = shift;
     my $node = eval {
-        $schema->m->from_asin($self->param('asin'));
+        $schema->p->from_asin($self->param('asin'));
     };
     if ($node) {
         $self->render(
-            template => 'medium',
+            template => 'publication',
             title    => title_for($node),
             node     => $node,
             layout   => 'basic',
@@ -752,7 +752,7 @@ __DATA__
 </p>
 </form>
 
-@@ medium.html.ep
+@@ publication.html.ep
 <div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
 <h2><%= $node->title %></h2>
 % if (defined $node->medium_image) {

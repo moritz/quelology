@@ -43,7 +43,7 @@ is $h{'Publication year'}, 2011,    'medium data pub year';
 is $h{Publisher}, 'Orbit',          'medium data pub publisher';
 
 
-$r->get_ok('/details/16')
+$r->get_ok('/publication/16')
     ->status_is(200)
     ->text_like(title => qr/Kushiel's Avatar/)
     ->text_like(title => qr/Jacqueline Carey/)
