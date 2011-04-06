@@ -6,6 +6,7 @@ use Test::More;
 use Test::Mojo;
 
 use lib 't/lib';
+use lib 'lib';
 use Quelology::Test::Setup;
 init_db();
 
