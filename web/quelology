@@ -1046,7 +1046,7 @@ responsible for whatever he writes.</p>
                 <input type="submit" value="search" />
             </p>
             </form>
-            <h1>Quelology</h1>
+            <h1>Quelology in TEST MODE -- all the data you enter will be lost!</h1>
         </div>
         <div class="shelf-droppable droppable dl10">
           <div id="left-column">
