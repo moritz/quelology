@@ -12,30 +12,30 @@ init_db();
 BEGIN { use_ok('Quelology::Config', 'schema') }
 
 ok my $schema = schema(), 'can get a schema';
-ok my $m = $schema->m->by_id(1), 'medium by id';
+ok my $m = $schema->t->by_id(1), 'medium by id';
 like $m->title, qr/Lord of the Rings/, 'can access title';
 like $m->author, qr/Tolkien/, 'author';
 my $isbn = $m->publications->first->isbn;
 ok length($isbn) == 10 || length($isbn) == 13, 'isbn is 10 or 13 chars long';
 is $m->lang, 'en', 'isbn-based language detection (en)';
 is $m->language, 'English', 'human readable language';
-is $schema->m->by_id(30)->lang, 'de', 'language detection (de)';
-is $schema->m->by_id(30)->language, 'German', 'human redable language';
+is $schema->t->by_id(30)->lang, 'de', 'language detection (de)';
+is $schema->t->by_id(30)->language, 'German', 'human redable language';
 ok my $root = $m->root, 'can get thread root';
 like $root->title, qr/middle earth/i, '...and it is the rigth one';
 is $root->lang, 'en', 'language is propagated up to the root';
 
 {
-    my $tr = $schema->m->by_id(30)->translations;
+    my $tr = $schema->t->by_id(30)->translations;
     is $tr->count, 1, 'we know one translation of a Kushiel book';
     is $tr->first->lang, 'en', '... and it is English';
 
-    $tr = $schema->m->by_id(16)->translations;
+    $tr = $schema->t->by_id(16)->translations;
     is $tr->count, 1, 'translations symmetry (1)';
     is $tr->first->lang, 'de', 'symmetry (2)';
 
-    my $en = $schema->m->by_id(14);
-    my $de = $schema->m->by_id(28);
+    my $en = $schema->t->by_id(14);
+    my $de = $schema->t->by_id(28);
     $en->add_alias($de);
     is $en->translations->first->lang, 'de', 'can install translation with add_alias';
     is $de->translations->first->lang, 'en', '... and its symmetry prevails';
@@ -43,9 +43,9 @@ is $root->lang, 'en', 'language is propagated up to the root';
 
 {
     # three languages
-    my $en = $schema->m->by_id(46);
-    my $de = $schema->m->by_id(47);
-    my $es = $schema->m->by_id(48);
+    my $en = $schema->t->by_id(46);
+    my $de = $schema->t->by_id(47);
+    my $es = $schema->t->by_id(48);
     $en->add_alias($de);
     $de->add_alias($es);
     is $en->translations->count, 2, 'Name of the Wind has two translations';
@@ -82,7 +82,7 @@ ok !$schema->resultset('UserLogin')->authenticate('test', 'test123'),
 ok  $schema->resultset('UserLogin')->authenticate('test', 'newpw'),
     'CAN authenticate with new credentials';
 
-$m = $schema->m->by_id(44);
+$m = $schema->t->by_id(44);
 my $computed_authors = $m->children->calc_property('author');
 like $computed_authors, qr/J\.R\.R\. Tolkien/, 'calc_property returned Tolkien Senior';
 like $computed_authors, qr/Christopher Tolkien/, 'calc_property returned Tolkien Junior';
@@ -104,7 +104,7 @@ for (@c[0, 1, 3]) {
 for ($m, @c) {
     ok !$_->is_single, "is_single (" . $_->title . ")";
 }
-ok $schema->m->by_id(23)->is_single, 'is single (+)';
+ok $schema->t->by_id(23)->is_single, 'is single (+)';
 
 is join(' ', map $_->tree_position, $m, @c),
     'root leaf leaf branch leaf', 'tree_position';
