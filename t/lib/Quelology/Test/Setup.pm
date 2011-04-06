@@ -2,6 +2,7 @@ package Quelology::Test::Setup;
 use strict;
 use warnings;
 use autodie qw/system/;
+use Quelology::Config qw/config/;
 
 BEGIN {
     $Quelology::RunMode = 'test';
@@ -12,7 +13,9 @@ use Exporter qw/import/;
 
 sub init_db {
     # TODO: read that info from the config file
-    system('psql quelology-test -h localhost -U quelology-dev < t/db-snapshot.sql > /dev/null 2>&1');
+    my ($user, $dbname, $host) = map config($_), qw/dbuser dbname dbhost/;
+
+    system("psql $dbname -h $host -U $user < t/db-snapshot.sql > /dev/null 2>&1");
 }
 
 1;
