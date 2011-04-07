@@ -182,7 +182,28 @@ sub attribute {
         die "Don't know how to extract attribution name from '$url'."
             . " Please call ->create_related(attributions => { ... }) directly yourself.";
     }
+}
 
+=head3 single_author
+
+If the invocant and all of its descendents all have the same one author, that
+author is returned, and C<undef> otherwise.
+
+=cut
+
+sub single_author {
+    my $self = shift;
+    my $sa = $self->author;
+    return if $sa =~ /, /;
+    my $all = $self->result_source->resultset->search({root_id => $self->id});
+    my $count = $all->search(undef, {
+            select => [
+                { count => { distinct => 'author' } }
+            ],
+            as => [ 'count' ]
+        })->get_column('count')->single;
+    return $sa if $count == 1;
+    return;
 }
 
 1;

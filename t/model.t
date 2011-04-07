@@ -114,4 +114,10 @@ like $attr->name, qr/amazon/i, 'attribution name';
 like $attr->url,  qr{^https?://.*?amazon\.}i,
     'attribution url';
 
+{
+    is $schema->t->by_id(45)->single_author, 'Jacqueline Carey',
+        'single_author (+)';
+    ok !defined($schema->t->by_id(44)->single_author), 'single_author (-)';
+}
+
 done_testing;
