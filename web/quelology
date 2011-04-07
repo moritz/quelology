@@ -613,6 +613,7 @@ __DATA__
 % } else {
     <%= $a->name %>
 % }
+(on <%= $a->retrieved %>)
 
 @@ attributions.html.ep
 % my $a = $for->attributions;
