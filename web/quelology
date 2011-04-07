@@ -634,7 +634,6 @@ __DATA__
 % }
 
 @@ tree.html.ep
-% layout 'basic';
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <strong><%= $node->author; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
@@ -645,7 +644,11 @@ __DATA__
 <p>
 %== include add_shelf_link => (node => $node)
 </p>
-%== include 'tree-part', node => $node
+% if (defined $node->single_author) { 
+    %== include 'tree-part', node => $node, surpress_author => 1
+% } else {
+    %== include 'tree-part', node => $node
+% }
 
 %== include 'attributions', for => $node, type => "Series"
 
@@ -665,7 +668,7 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        <%= include 'small_medium_noimg', n => $n =%>
+        %== include 'small_medium_noimg', n => $n, surpress_author => stash('surpress_author')
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
@@ -859,10 +862,12 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     <span class="data_title">
     <a href="/t/<%= $n->id %>"><%= $n->title %></a>
     </span>
-    by
-    <span class="data_made_by">
-        <%= $n->author %>
-    </span>
+    % unless (stash('surpress_author')) {
+        by
+        <span class="data_made_by">
+            <%= $n->author %>
+        </span>
+    % }
     (id <%= $n->id %>)
 </span>
 
