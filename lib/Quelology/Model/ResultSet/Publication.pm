@@ -89,6 +89,7 @@ sub websearch {
                 push @pubs, $r;
             }
         } else {
+            die "Got no title from amazon - bad sign" unless $_->title;
             my $h = _hash_from_xml_amazon($_);
             my $r = $self->create($h);
             $r->attribute($h->{amazon_url});
@@ -106,6 +107,7 @@ sub from_asin {
         my $a = Quelology::Config::amazon();
         my $m = $a->asin($asin);
         if ($m) {
+            die "Got no title from amazon - bad sign" unless $m->title;
             my $h = _hash_from_xml_amazon($m);
             $row = $self->create($h);
             $row->attribute($h->{amazon_url});
