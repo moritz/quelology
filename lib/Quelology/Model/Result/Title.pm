@@ -36,6 +36,10 @@ __PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication',
 __PACKAGE__->has_many('publications_unordered',
                       'Quelology::Model::Result::Publication',
                       'title_id');
+__PACKAGE__->has_many('author_titles',
+                      'Quelology::Model::Result::AuthorTitle',
+                      'title_id');
+__PACKAGE__->many_to_many(authors => author_titles => 'author');
 
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
