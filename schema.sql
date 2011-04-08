@@ -83,7 +83,8 @@ CREATE TABLE publication_attribution (
 DROP TABLE IF EXISTS author CASCADE;
 CREATE TABLE author (
     id              SERIAL          PRIMARY KEY,
-    name            VARCHAR(255),
+    -- TODO: figure out if that should really be UNIQUE 
+    name            VARCHAR(255)    NOT NULL UNIQUE,
     legal_name      VARCHAR(255),
     birthplace      VARCHAR(64),
     birthplace_lat  FLOAT,
@@ -106,4 +107,13 @@ CREATE TABLE author_link (
     author_id       INTEGER NOT NULL REFERENCES author (id),
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
+);
+
+DROP TABLE IF EXISTS author_attribution;
+CREATE TABLE author_attribution (
+    id              SERIAL          PRIMARY KEY,
+    author_id       INTEGER         NOT NULL REFERENCES author (id),
+    name            VARCHAR(64)     NOT NULL,
+    url             VARCHAR(255),
+    retrieved       DATE            DEFAULT CURRENT_DATE
 );

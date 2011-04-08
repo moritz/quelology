@@ -20,6 +20,8 @@ __PACKAGE__->add_columns(qw/
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->has_many('author_titles', 'Quelology::Model::Result::AuthorTitle',
                       'author_id');
+__PACKAGE__->has_many('attributions',
+                'Quelology::Model::Result::AuthorAttribution', 'author_id');
 __PACKAGE__->many_to_many('titles', 'author_titles', 'title');
 
 1;
