@@ -2,6 +2,8 @@
 
 use lib 'lib';
 use if $ENV{QUELOLOGY_HOME}, 'lib', "$ENV{QUELOLOGY_HOME}/lib";
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
 use 5.012;
 use Mojolicious::Lite;
@@ -555,7 +557,7 @@ post '/edit' => sub {
     $self->redirect_to('/shelf/connect');
 };
 
-app->start unless caller;
+app->start;
 $schema->storage->disconnect;
 1;
 
