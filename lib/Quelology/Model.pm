@@ -3,6 +3,10 @@ use Carp qw(confess);
 
 use parent qw/DBIx::Class::Schema/;
 
+sub a {
+    shift->resultset('Author');
+}
+
 sub t {
     shift->resultset('Title');
 }

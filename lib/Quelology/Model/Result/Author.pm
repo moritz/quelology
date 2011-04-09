@@ -8,6 +8,7 @@ use warnings;
 __PACKAGE__->table('author');
 __PACKAGE__->add_columns(qw/
     id
+    isfdb_id
     name
     legal_name
     birthplace
@@ -22,6 +23,8 @@ __PACKAGE__->has_many('author_titles', 'Quelology::Model::Result::AuthorTitle',
                       'author_id');
 __PACKAGE__->has_many('attributions',
                 'Quelology::Model::Result::AuthorAttribution', 'author_id');
+__PACKAGE__->has_many('links',
+                'Quelology::Model::Result::AuthorLink', 'author_id');
 __PACKAGE__->many_to_many('titles', 'author_titles', 'title');
 
 1;

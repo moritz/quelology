@@ -83,6 +83,8 @@ CREATE TABLE publication_attribution (
 DROP TABLE IF EXISTS author CASCADE;
 CREATE TABLE author (
     id              SERIAL          PRIMARY KEY,
+    -- for import from isfdb.org
+    isfdb_id        INTEGER         UNIQUE,
     -- TODO: figure out if that should really be UNIQUE 
     name            VARCHAR(255)    NOT NULL UNIQUE,
     legal_name      VARCHAR(255),

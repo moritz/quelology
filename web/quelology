@@ -176,6 +176,18 @@ sub search {
     }
 }
 
+get '/author/:id' => sub {
+    my $self = shift;
+    my $author = $schema->a->by_id($self->param('id'));
+    my $title = sprintf 'Author details for %s', $author->name;
+    $self->render(
+        title   => $title,
+        layout  => 'basic',
+        author  => $author,
+        template => 'author',
+    );
+};
+
 get '/logout/' => sub {
     my $self = shift;
     delete $self->session->{logged_in};
@@ -632,6 +644,33 @@ __DATA__
         </ul>
     % }
 % }
+
+@@ author.html.ep
+<h1><%= $author->name %></h1>
+<table>
+    % my @keys = qw/name legal_name birthplace birthdate deathdate/;
+    % my @names = ('Name', 'Legal name', 'Birth place', 'Birth date', 'Death date');
+    % for my $i (0..$#keys) {
+        % my $k = $keys[$i];
+        % if (defined $author->$k) {
+            <tr>
+                <td>        <%= $names[$i]  %>         </td>
+                <td><strong><%= $author->$k %></strong></td>
+            </tr>
+        % }
+    % }
+</table>
+% my @links = $author->links;
+% if (@links) {
+    <h3>Links</h3>
+    <ul>
+        % for my $l (@links) {
+        <li><a href="<%= $l->url %>"><%= $l->type %></a></li>
+        % }
+    </ul>
+% }
+
+%== include 'attributions', for => $author, type => 'Author'
 
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
