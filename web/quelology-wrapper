@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+use FindBin;
+
+chdir $FindBin::Bin or die "chdir failed: $!";
+$ENV{QUELOLOGY_HOME} = "$FindBin::Bin/../";
+$ENV{PERL5LIB}       = "$FindBin::Bin/../lib";
+$ENV{QUELOLOGY_RUNMODE} = 'prod';
+
+my @perls = qw{
+    /home/moritz/perl5/perlbrew/bin/perl
+    /home/moritz/perl5//bin/perl
+};
+for (@perls) {
+    if (-x $_) {
+        exec $_, 'quelology', @ARGV;
+        die "Cannot launch favorite perl!";
+    }
+}
+die "None of the preconfigured perls are available, OH NOEZ";
