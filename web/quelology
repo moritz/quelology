@@ -844,21 +844,18 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     % }
 
     <h3>Publications</h3>
-    <ul>
-      % for my $p ($node->publications) {
-        <li>
-            <a href="/publication/<%= $p->id %>"><%= $p->title %></a>
-            (<%= $p->publication_date %>)
-        </li>
-      % }
+    % for my $p ($node->publications) {
+        %== include 'publication', node => $p
+        <br style="clear:left" />
+    % }
     </ul>
 
     %== include 'attributions', for => $node, type => "Title"
 </div>
 
 @@ publication.html.ep
-<div class="node draggable" id="medium_<%= $node->id %>" data-id="<%= $node->id %>">
-<h2><%= $node->title %></h2>
+<div  id="pub_<%= $node->id %>" data-id="<%= $node->id %>">
+<h4><%= $node->title %></h4>
 % if (defined $node->medium_image) {
   <p style="float:left">
     <% if (defined $node->large_image) { %>
@@ -892,8 +889,6 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
      </p>
 
      %== include 'attributions', for => $node, type => "Publication"
-</div>
-<br style="clear:left" />
 </div>
 
 @@ small_medium_noimg.html.ep
