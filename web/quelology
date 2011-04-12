@@ -85,10 +85,9 @@ get '/' =>  sub {
 
 sub title_for {
     my $node = shift;
-    my $title = sprintf '%s "%s" by %s',
+    my $title = sprintf '%s "%s"',
                         (shift // ($node->is_leaf ? "Details for" : "Quelology for")),
-                        $node->title,
-                        $node->author;
+                        $node->title;
 }
 
 get '/t/:id' => sub {
