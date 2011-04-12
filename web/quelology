@@ -604,6 +604,33 @@ __DATA__
 <% } %>
 </ul>
 
+@@ single_author.html.ep
+<a href="/author/<%= $author->id %>"><%= $author->name %></a>
+
+@@ authors.html.ep
+% my @a     = $for->authors;
+% if (@a) {
+    % if (@a == 1) {
+        %== include 'single_author', author => $a[0]
+    % } elsif (@a == 2) {
+        %== include 'single_author', author => $a[0]
+        and
+        %== include 'single_author', author => $a[1]
+    % } else {
+        % my $last = pop @a;
+        % my $sl   = pop @a;
+        % for (@a) {
+            %== include 'single_author', author => $_
+            ,
+        %}
+        %== include 'single_author', author => $sl
+        and
+        %== include 'single_author', author => $last
+    % }
+%} else {
+    (no authors known)
+% }
+
 @@ add_shelf_link.html.ep
 <span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to your book shelf</a></span>
 
@@ -614,7 +641,7 @@ __DATA__
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
     <h2 id="title_<%= $first_node->id %>"><%= $first_node->title %></h2>
-    <p>by <strong><%= $first_node->author; %></strong></p>
+    <p>by <strong><%== include authors => for =>  $first_node %></strong></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
 %== include html_only_edit => nodes => $nodes;
@@ -672,13 +699,14 @@ __DATA__
 
 %== include 'attributions', for => $author, type => 'Author'
 
+
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
-<p>by <strong><%= $node->author; %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
+<p>by <strong><%== include authors => for => $node %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
-    (<%= $node->title %>)</a></p>
+    <strong>(<%= $node->title %>)</strong></a></p>
 % }
 <p>
 %== include add_shelf_link => (node => $node)
@@ -811,9 +839,10 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 @@ title.html.ep
 <div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> >
     <h2><%= $node->title %></h2>
+    <p>By <%== include authors => for => $node %></p>
 
     <table>
-        % my %h = (author => 'Author', date => 'initial publication', language => 'Language',);
+        % my %h = (date => 'initial publication', language => 'Language',);
         % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
             % if (defined $node->$k) {
                 <tr>
@@ -899,7 +928,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     % unless (stash('surpress_author')) {
         by
         <span class="data_made_by">
-            <%= $n->author %>
+            %== include authors => for => $n
         </span>
     % }
     (id <%= $n->id %>)
