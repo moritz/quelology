@@ -753,7 +753,7 @@ __DATA__
 %>
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
-  <p>by <strong class="root_made_by"><%= $first_node->author; %></strong>,
+  <p>by <strong class="root_made_by"><%== include authors => for => $first_node %></strong>,
   published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
   <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
     <img src="/image/dissolve.png" alt="" width="16" height="16" />
@@ -947,7 +947,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     </span>
     by
     <span class="data_made_by">
-        <%= $n->author %>
+        <%== include authors => for =>  $first_node %>
         %== include 'edit_marker' => edit => stash('edit'), what => 'author', name => 'author'
         % if (stash('edit') && $n->has_leaves) {
             <a href="#" onclick="recompute_medium('author', <%= $n->id %>); return false">
