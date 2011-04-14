@@ -13,7 +13,7 @@ __PACKAGE__->add_columns(qw/
     isbn
     title
     author
-    publisher
+    publisher_id
     amazon_url
     title_id
     publication_date
@@ -35,6 +35,7 @@ __PACKAGE__->add_columns(qw/
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('title_obj', 'Quelology::Model::Result::Title', 'title_id');
+__PACKAGE__->belongs_to('publisher', 'Quelology::Model::Result::Publisher', 'publisher_id');
 
 __PACKAGE__->has_many('attributions', 'Quelology::Model::Result::PublicationAttribution', 'publication_id');
 

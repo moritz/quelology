@@ -24,7 +24,8 @@ CREATE TABLE publication (
     isbn                VARCHAR(13),
     title               VARCHAR(255) NOT NULL,
     author              VARCHAR(255),
-    publisher           VARCHAR(255),
+    -- TODO: maybe make "NOT NULL"?
+    publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
     title_id            INTEGER REFERENCES title (id),
 
@@ -118,4 +119,18 @@ CREATE TABLE author_attribution (
     name            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
+);
+
+DROP TABLE IF EXISTS publisher CASCADE;
+CREATE TABLE publisher (
+    id              SERIAL          PRIMARY KEY,
+    name            VARCHAR(255)    NOT NULL UNIQUE
+);
+
+DROP TABLE IF EXISTS publisher_link;
+CREATE TABLE publisher_link (
+    id              SERIAL          PRIMARY KEY,
+    author_id       INTEGER NOT NULL REFERENCES publisher (id),
+    type            VARCHAR(64)     NOT NULL,
+    url             VARCHAR(255)    NOT NULL
 );
