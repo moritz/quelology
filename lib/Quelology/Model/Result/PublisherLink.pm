@@ -2,7 +2,7 @@ package Quelology::Model::Result::PublisherLink;
 use parent qw/DBIx::Class::Core/;
 use utf8;
 
-__PACKAGE__->table('author_link');
+__PACKAGE__->table('publisher_link');
 __PACKAGE__->add_columns(
     'id',
     publisher_id   => {
