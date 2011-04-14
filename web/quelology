@@ -76,7 +76,7 @@ get '/' =>  sub {
     my $self = shift;
     my $t = '';
     $self->render(
-        threads     => [$schema->t->threads],
+        threads     => [$schema->t->threads->search(undef, {rows => 20})],
         singles     => [$schema->t->singles->search(undef, {rows => 10})],
         template    => 'index',
         title       => 'Quelology - Semantic Relations Between Books',
@@ -604,7 +604,7 @@ __DATA__
 </ul>
 
 @@ single_author.html.ep
-<a href="/author/<%= $author->id %>"><%= $author->name %></a>
+<a href="/author/<%= $author->id %>" class="author"><%= $author->name %></a>
 
 @@ authors.html.ep
 % my @a     = $for->authors;
@@ -619,8 +619,7 @@ __DATA__
         % my $last = pop @a;
         % my $sl   = pop @a;
         % for (@a) {
-            %== include 'single_author', author => $_
-            ,
+            <%== include 'single_author', author => $_ %>,
         %}
         %== include 'single_author', author => $sl
         and
@@ -640,7 +639,7 @@ __DATA__
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
     <h2 id="title_<%= $first_node->id %>"><%= $first_node->title %></h2>
-    <p>by <strong><%== include authors => for =>  $first_node %></strong></p>
+    <p>by <%== include authors => for =>  $first_node %></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
 %== include html_only_edit => nodes => $nodes;
@@ -654,17 +653,17 @@ __DATA__
 (retrieved on <%= $a->retrieved %>)
 
 @@ attributions.html.ep
-% my $a = $for->attributions;
-% my $c = $a->count;
+% my $attr = $for->attributions;
+% my $c    = $attr->count;
 % if ($c) {
     <p class="attribution"><%= $type %> data kindly provided by
     % if ($c == 1) {
-        %== include 'attribution_link', a => $a->first
+        %== include 'attribution_link', a => $attr->first
         </p>
     % } else {
         </p>
         <ul class="attribution">
-        % while (my $i = $a->next) {
+        % while (my $i = $attr->next) {
             <li><%== include 'attribution_link', a => $i %></li>
         %}
         </ul>
@@ -701,7 +700,7 @@ __DATA__
 
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
-<p>by <strong><%== include authors => for => $node %></strong>, published by <strong><%= $node->publisher; %></strong>.</p>
+<p>by <%== include authors => for => $node %>, published by <%= $node->publisher; %>.</p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
@@ -752,7 +751,7 @@ __DATA__
 %>
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
-  <p>by <strong class="root_made_by"><%== include authors => for => $first_node %></strong>,
+  <p>by <span class="root_made_by"><%== include authors => for => $first_node %></span>,
   published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
   <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
     <img src="/image/dissolve.png" alt="" width="16" height="16" />

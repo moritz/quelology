@@ -4,11 +4,9 @@ a img {
     border: none;
 }
 
-/*
-.medium_img {
-    padding: 2ex;
+a.author {
+    font-weight: bold;
 }
-*/
 
 img.medium_large {
     padding-top: 2ex;
@@ -52,9 +50,6 @@ div #content {
     padding: 0.3em;
     max-width: 35em;
     margin: none;
-}
-.data_made_by {
-    font-weight: bolder;
 }
 #shelf {
     padding: 0.1em;

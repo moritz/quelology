@@ -131,7 +131,7 @@ CREATE TABLE publisher (
 DROP TABLE IF EXISTS publisher_link;
 CREATE TABLE publisher_link (
     id              SERIAL          PRIMARY KEY,
-    author_id       INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
+    publisher_id    INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
 );
