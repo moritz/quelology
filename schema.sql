@@ -58,7 +58,7 @@ CREATE TABLE user_login (
 DROP TABLE IF EXISTS user_info;
 CREATE TABLE user_info (
     id              SERIAL      PRIMARY KEY,
-    login_id        INTEGER     NOT NULL REFERENCES user_login (id),
+    login_id        INTEGER     NOT NULL REFERENCES user_login (id) ON DELETE CASCADE,
     real_name       VARCHAR(64),
     email           VARCHAR(255)
 );
@@ -66,7 +66,7 @@ CREATE TABLE user_info (
 DROP TABLE IF EXISTS title_attribution;
 CREATE TABLE title_attribution (
     id              SERIAL          PRIMARY KEY,
-    title_id        INTEGER         NOT NULL REFERENCES title (id),
+    title_id        INTEGER         NOT NULL REFERENCES title (id) ON DELETE CASCADE,
     name            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
@@ -75,7 +75,7 @@ CREATE TABLE title_attribution (
 DROP TABLE IF EXISTS publication_attribution;
 CREATE TABLE publication_attribution (
     id              SERIAL          PRIMARY KEY,
-    publication_id  INTEGER         NOT NULL REFERENCES publication (id),
+    publication_id  INTEGER         NOT NULL REFERENCES publication (id) ON DELETE CASCADE,
     name            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
@@ -99,15 +99,15 @@ CREATE TABLE author (
 DROP TABLE IF EXISTS author_title_map;
 CREATE TABLE author_title_map (
     id              SERIAL          PRIMARY KEY,
-    author_id       INTEGER NOT NULL REFERENCES author (id),
-    title_id        INTEGER NOT NULL REFERENCES title  (id),
+    author_id       INTEGER NOT NULL REFERENCES author (id) ON DELETE CASCADE,
+    title_id        INTEGER NOT NULL REFERENCES title  (id) ON DELETE CASCADE,
                     UNIQUE(author_id, title_id)
 );
 
 DROP TABLE IF EXISTS author_link;
 CREATE TABLE author_link (
     id              SERIAL          PRIMARY KEY,
-    author_id       INTEGER NOT NULL REFERENCES author (id),
+    author_id       INTEGER NOT NULL REFERENCES author (id) ON DELETE CASCADE,
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
 );
@@ -115,7 +115,7 @@ CREATE TABLE author_link (
 DROP TABLE IF EXISTS author_attribution;
 CREATE TABLE author_attribution (
     id              SERIAL          PRIMARY KEY,
-    author_id       INTEGER         NOT NULL REFERENCES author (id),
+    author_id       INTEGER         NOT NULL REFERENCES author (id) ON DELETE CASCADE,
     name            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
@@ -124,13 +124,14 @@ CREATE TABLE author_attribution (
 DROP TABLE IF EXISTS publisher CASCADE;
 CREATE TABLE publisher (
     id              SERIAL          PRIMARY KEY,
+    isfdb_id        INTEGER         UNIQUE,
     name            VARCHAR(255)    NOT NULL UNIQUE
 );
 
 DROP TABLE IF EXISTS publisher_link;
 CREATE TABLE publisher_link (
     id              SERIAL          PRIMARY KEY,
-    author_id       INTEGER NOT NULL REFERENCES publisher (id),
+    author_id       INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
 );

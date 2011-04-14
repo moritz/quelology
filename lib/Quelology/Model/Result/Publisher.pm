@@ -8,6 +8,7 @@ use warnings;
 __PACKAGE__->table('publisher');
 __PACKAGE__->add_columns(qw/
     id
+    isfdb_id
     name
     /);
 
