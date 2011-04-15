@@ -200,13 +200,24 @@ sub single_author {
     my $sa = $self->author;
     return if $sa =~ /, /;
     my $all = $self->result_source->resultset->search({root_id => $self->id});
-    my $count = $all->search(undef, {
+    my @author_ids = $all->search_related('author_titles', undef, {
             select => [
-                { count => { distinct => 'author' } }
+                { distinct => 'author_id' }
             ],
-            as => [ 'count' ]
-        })->get_column('count')->single;
-    return $sa if $count == 1;
+            rows    => 2,
+    });
+    if (@author_ids == 1) {
+        return $self->result_source->schema->a->by_id($author_ids[0]->author_id);
+    } else {
+        return;
+    }
+#    my $count = $all->search(undef, {
+#            select => [
+#                { count => { distinct => 'author' } }
+#            ],
+#            as => [ 'count' ]
+#        })->get_column('count')->single;
+#    return $sa if $count == 1;
     return;
 }
 

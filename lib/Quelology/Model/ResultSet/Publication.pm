@@ -44,8 +44,8 @@ sub _hash_from_xml_amazon {
     };
 
     # get more information through a different module
-    my $a = Quelology::Config::amazon_net();
-    my $res = $a->search(asin => $h->{asin});
+    my $am = Quelology::Config::amazon_net();
+    my $res = $am->search(asin => $h->{asin});
     if ($res->is_success) {
         # TODO: be more robust
         my ($book) = $res->properties;
@@ -104,8 +104,8 @@ sub from_asin {
     confess("No ASIN provided") unless defined($asin) && length $asin;
     my ($row) = $self->search({ asin => $asin });
     unless ($row) {
-        my $a = Quelology::Config::amazon();
-        my $m = $a->asin($asin);
+        my $am = Quelology::Config::amazon();
+        my $m = $am->asin($asin);
         if ($m) {
             die "Got no title from amazon - bad sign" unless $m->title;
             my $h = _hash_from_xml_amazon($m);

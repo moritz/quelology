@@ -200,23 +200,23 @@ my @captcha_qa = qw/one|1 four|2 nine|3 sixteen|4 twenty-five|5 thirty-six|6/;
 sub create_captcha {
     my $self = shift;
     my $ca = $captcha_qa[rand @captcha_qa];
-    my ($q, $a) = split /\|/, $ca;
+    my ($q, $ga) = split /\|/, $ca;
     $self->stash(captcha => "What's the square root of $q?");
-    $self->session->{captcha_answer} = sha1($a . $self->app->secret);
+    $self->session->{captcha_answer} = sha1($ga . $self->app->secret);
 }
 
 sub captcha_correct {
     my $self = shift;
-    my $a    = $self->param('captcha');
-    $a =~ s/\D//g;
-    unless ($a) {
+    my $ga   = $self->param('captcha');
+    $ga =~ s/\D//g;
+    unless ($ga) {
         return;
     }
     my $expected = $self->session->{captcha_answer};
     unless ($expected) {
         return;
     }
-    if (sha1($a . $self->app->secret) eq $expected) {
+    if (sha1($ga . $self->app->secret) eq $expected) {
         return 1;
     }
     return;
@@ -604,26 +604,24 @@ __DATA__
 </ul>
 
 @@ single_author.html.ep
-<a href="/author/<%= $author->id %>" class="author"><%= $author->name %></a>
+<a href="/author/<%= $author->id %>" class="author"><%= $author->name %></a><%= '' =%>
 
 @@ authors.html.ep
-% my @a     = $for->authors;
-% if (@a) {
+% if ($for && (my @a = $for->authors)) {
     % if (@a == 1) {
-        %== include 'single_author', author => $a[0]
+        <%== include 'single_author', author => $a[0] =%>
     % } elsif (@a == 2) {
-        %== include 'single_author', author => $a[0]
+        <%== include 'single_author', author => $a[0]  %>
         and
-        %== include 'single_author', author => $a[1]
+        <%== include 'single_author', author => $a[1] =%>
     % } else {
         % my $last = pop @a;
         % my $sl   = pop @a;
         % for (@a) {
-            <%== include 'single_author', author => $_ %>,
+            <%== include 'single_author', author => $_ =%>,
         %}
-        %== include 'single_author', author => $sl
-        and
-        %== include 'single_author', author => $last
+        <%== include 'single_author', author => $sl =%> and
+        <%== include 'single_author', author => $last =%>
     % }
 %} else {
     (no authors known)
