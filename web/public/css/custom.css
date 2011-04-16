@@ -82,6 +82,11 @@ h1, h2, h3, h4, h5, h6 {
     padding: 0.5ex;
 }
 
+.pager li {
+    display: inline;
+}
+
+
 /* type.css sets a bottom margin or 1.5em, which looks weird in tree view */
 ul, ol {
     margin: 0 1.5em;

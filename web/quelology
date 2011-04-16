@@ -11,8 +11,10 @@ use Quelology::Config qw(schema config);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use Digest::SHA1 qw/sha1/;
+use Locales;
 use utf8;
 use warnings;
+
 
 my $schema = schema;
 
@@ -90,7 +92,7 @@ sub title_for {
                     $node->title;
 }
 
-get '/t/:id' => sub {
+get '/t/:id' => [ id => qr/[0-9]+/ ] => sub {
     my $self = shift;
     my $node = $schema->t->by_id($self->param('id'));
     my $template = $node->is_leaf ? 'title' : 'tree';
@@ -102,7 +104,7 @@ get '/t/:id' => sub {
     );
 } => 'title';
 
-get '/title/:id/' => sub {
+get '/title/:id/' => [ id => qr/[0-9]+/ ] => sub {
     my $self = shift;
     my $node = $schema->t->by_id($self->param('id'));
     $self->render(
@@ -112,6 +114,33 @@ get '/title/:id/' => sub {
         template => 'title',
     );
 } => 'title' ;
+
+get '/title/:lang' => [ lang => qr/[a-z]{2}/ ] => \&get_lang;
+
+use constant LANG_PAGE_SIZE => 50;
+
+
+sub get_lang {
+    my $self        = shift;
+    my $lang        = $self->param('lang');
+    my $page        = $self->param('page') // 1;
+    my $language    = Locales->new->get_language_from_code($lang);
+    my $nodes       = $schema->t->search({ lang => $lang }, { rows => LANG_PAGE_SIZE, page => $page , order_by => \'title'});
+    my $url         = $self->req->url->path;
+    $url            =~ s{\d+/$}{};
+    $url           .= '/' unless substr($url, -1) eq '/';
+
+
+    $self->render(
+        layout      => 'basic',
+        title       => "Titles in $language language",
+        language    => $language,
+        nodes       => $nodes,
+        pager       => $nodes->pager,
+        template    => 'title-lang',
+        url         => $url,
+    );
+};
 
 get '/publication/:id' => sub {
     my $self = shift;
@@ -698,7 +727,11 @@ __DATA__
 
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
-<p>by <%== include authors => for => $node %>, published by <%= $node->publisher; %>.</p>
+<p>by <%== include authors => for => $node %>
+    % if (my $p = $node->publisher) {
+        <%= ', ' . $p->name =%>
+    % }
+</p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
     <p>This is part of a <a href="/t/<%= $node->root_id %>">series
@@ -877,6 +910,27 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
     %== include 'attributions', for => $node, type => "Title"
 </div>
+
+@@ title-lang.html.ep
+<h1><%= $title %></h1>
+%== include 'pager', pager => $pager, url => $url
+<ul>
+  % while (my $t = $nodes->next) {
+    <li><a href="/t/<%= $t->id %>"><%= $t->title %></a> by <%== include authors => for => $t %></li>
+  % }
+</ul>
+
+@@ pager.html.ep
+% unless ($pager->first_page == $pager->last_page) {
+  <ul class="pager">
+    % for ($pager->first_page .. $pager->last_page) {
+      <li><a href="<%= $url . $_ %>">
+        <%= $_ == $pager->current_page ? "«$_»" : $_ =%>
+      </li>
+    % }
+  </ul>
+% }
+
 
 @@ publication.html.ep
 <div  id="pub_<%= $node->id %>" data-id="<%= $node->id %>">
