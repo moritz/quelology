@@ -78,8 +78,8 @@ get '/' =>  sub {
     my $self = shift;
     my $t = '';
     $self->render(
-        threads     => [$schema->t->threads->search(undef, {rows => 20})],
-        singles     => [$schema->t->singles->search(undef, {rows => 10})],
+        threads     => [$schema->t->threads->search(undef, {rows => 20, order_by => \'random()'})],
+        singles     => [$schema->t->singles->search(undef, {rows => 10, order_by => \'random()'})],
         template    => 'index',
         title       => 'Quelology - Semantic Relations Between Books',
     );
@@ -615,7 +615,7 @@ __DATA__
 <p>Want to find a sequel or prequel to a book? Here is the right place!</p>
 
 <p><a href="/about">Learn more about quelology.org</a></p>
-<h2>List of Series</h2>
+<h2>Random selection of series</h2>
 <ul class="series">
 <% for my $n (@$threads) { %>
     <li>
@@ -623,7 +623,7 @@ __DATA__
     </li>
 <% } %>
 </ul>
-<h2>List of single nodes</h2>
+<h2>Random selection of single titles</h2>
 <ul>
 <% for my $n (@$singles) { %>
     <li>
