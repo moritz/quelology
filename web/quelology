@@ -910,14 +910,14 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         </div>
     % }
 
+    %== include 'attributions', for => $node, type => "Title"
+
     <h3>Publications</h3>
     % for my $p ($node->publications) {
         %== include 'publication', node => $p
         <br style="clear:left" />
     % }
     </ul>
-
-    %== include 'attributions', for => $node, type => "Title"
 </div>
 
 @@ title-lang.html.ep
@@ -961,12 +961,14 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 % }
 
 <table>
-    % my %h = (isbn => 'ISBN', publication_date => 'Publication date', language => 'Language',);
-    % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
+    % my @keys = qw/isbn publication_date language/;
+    % my @names = ('ISBN', 'Date', 'Language');
+    % for (0..$#keys) {
+        % my $k = $keys[$_];
         % if (defined $node->$k) {
             <tr>
-                <td>        <%= $h{$k}   =%>         </td>
-                <td><strong><%= $node->$k %></strong></td>
+                <td>        <%= $names[$_] =%>         </td>
+                <td><strong><%= $node->$k   %></strong></td>
             </tr>
         % }
     % }

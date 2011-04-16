@@ -99,7 +99,6 @@ sub langs {
         as          => [ qw/ count lang / ],
         order_by    => \'count DESC',
     });
-
 }
 
 sub root_nodes {
