@@ -85,6 +85,23 @@ sub create_root_with_children {
     return $new;
 }
 
+sub langs {
+    my $self = shift;
+    $self->search({
+        lang => { '<>' =>  undef }
+    },
+    {
+        select => [
+            { count    => 'lang' },
+            'lang'
+        ],
+        group_by    => 'lang',
+        as          => [ qw/ count lang / ],
+        order_by    => \'count DESC',
+    });
+
+}
+
 sub root_nodes {
     my $self = shift;
     $self->search({
@@ -101,5 +118,6 @@ sub singles {
     my $self = shift;
     $self->root_nodes->search({ r => { '=' => 2 }});
 }
+
 
 1;

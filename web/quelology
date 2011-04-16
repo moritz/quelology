@@ -82,6 +82,7 @@ get '/' =>  sub {
         singles     => [$schema->t->singles->search(undef, {rows => 10, order_by => \'random()'})],
         template    => 'index',
         title       => 'Quelology - Semantic Relations Between Books',
+        langs       => [$schema->t->langs],
     );
 } => 'index';
 
@@ -115,10 +116,10 @@ get '/title/:id/' => [ id => qr/[0-9]+/ ] => sub {
     );
 } => 'title' ;
 
-get '/title/:lang' => [ lang => qr/[a-z]{2}/ ] => \&get_lang;
+get '/title/:lang'       => [ lang => qr/[a-z]{2}/                     ] => \&get_lang;
+get '/title/:lang/:page' => [ lang => qr/[a-z]{2}/, page => qr/[0-9]+/ ] => \&get_lang;
 
 use constant LANG_PAGE_SIZE => 50;
-
 
 sub get_lang {
     my $self        = shift;
@@ -615,6 +616,18 @@ __DATA__
 <p>Want to find a sequel or prequel to a book? Here is the right place!</p>
 
 <p><a href="/about">Learn more about quelology.org</a></p>
+
+<h2>Browse titles by language</h2>
+<ul>
+% use Locales;
+% my $loc = Locales->new();
+% for my $lang (@$langs) {
+    % my ($l, $c) = map $lang->get_column($_), qw/lang count/;
+    <li><a href="/title/<%= $l %>"><%= $loc->get_language_from_code($l) // $l %> (<%= $c %> titles)</a></li>
+% } 
+
+</ul>
+
 <h2>Random selection of series</h2>
 <ul class="series">
 <% for my $n (@$threads) { %>
@@ -639,18 +652,14 @@ __DATA__
 % if ($for && (my @a = $for->authors)) {
     % if (@a == 1) {
         <%== include 'single_author', author => $a[0] =%>
-    % } elsif (@a == 2) {
-        <%== include 'single_author', author => $a[0]  %>
-        and
-        <%== include 'single_author', author => $a[1] =%>
     % } else {
         % my $last = pop @a;
         % my $sl   = pop @a;
         % for (@a) {
             <%== include 'single_author', author => $_ =%>,
         %}
-        <%== include 'single_author', author => $sl =%> and
-        <%== include 'single_author', author => $last =%>
+        <%== include 'single_author', author => $sl %> and
+        <%== include 'single_author', author => $last %>
     % }
 %} else {
     (no authors known)
@@ -922,13 +931,16 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
 @@ pager.html.ep
 % unless ($pager->first_page == $pager->last_page) {
-  <ul class="pager">
-    % for ($pager->first_page .. $pager->last_page) {
-      <li><a href="<%= $url . $_ %>">
-        <%= $_ == $pager->current_page ? "«$_»" : $_ =%>
-      </li>
-    % }
-  </ul>
+  <div>
+    Result pages:
+    <ul class="pager">
+      % for ($pager->first_page .. $pager->last_page) {
+        <li><a href="<%= $url . $_ %>">
+          <%== $_ == $pager->current_page ? "<strong>«$_»</strong>" : $_ =%>
+        </li>
+      % }
+    </ul>
+  </div>
 % }
 
 
@@ -949,14 +961,20 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 % }
 
 <table>
-    % my %h = (author => 'Author', publisher => 'Publisher', isbn => 'ISBN', publication_date => 'Publication date', language => 'Language',);
+    % my %h = (isbn => 'ISBN', publication_date => 'Publication date', language => 'Language',);
     % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
         % if (defined $node->$k) {
             <tr>
-                <td>        <%= $h{$k}    %>         </td>
+                <td>        <%= $h{$k}   =%>         </td>
                 <td><strong><%= $node->$k %></strong></td>
             </tr>
         % }
+    % }
+    % if (my $publisher = $node->publisher) {
+        <tr>
+            <td>Publisher</td>
+            <td><a href="/publisher/<%= $publisher->id %>"><%= $publisher->name %></td>
+        </tr>
     % }
 </table>
 %== include add_shelf_link => (node => $node);
