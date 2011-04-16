@@ -197,27 +197,19 @@ author is returned, and C<undef> otherwise.
 
 sub single_author {
     my $self = shift;
-    my $sa = $self->author;
-    return if $sa =~ /, /;
     my $all = $self->result_source->resultset->search({root_id => $self->id});
     my @author_ids = $all->search_related('author_titles', undef, {
             select => [
                 { distinct => 'author_id' }
             ],
+            as => [ 'author_id' ],
             rows    => 2,
     });
     if (@author_ids == 1) {
-        return $self->result_source->schema->a->by_id($author_ids[0]->author_id);
+        return $self->result_source->schema->a->by_id($author_ids[0]->get_column('author_id'));
     } else {
         return;
     }
-#    my $count = $all->search(undef, {
-#            select => [
-#                { count => { distinct => 'author' } }
-#            ],
-#            as => [ 'count' ]
-#        })->get_column('count')->single;
-#    return $sa if $count == 1;
     return;
 }
 
