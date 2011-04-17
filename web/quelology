@@ -154,6 +154,17 @@ get '/publication/:id' => sub {
     );
 } => 'publication';
 
+get '/publisher/:id' => sub  {
+    my $self      = shift;
+    my $publisher = $schema->resultset('Publisher')->by_id($self->param('id'));
+    $self->render(
+        layout      => 'basic',
+        title       => "Publisher details for " . $publisher->name,
+        p           => $publisher,
+        template    => 'publisher',
+    );
+};
+
 get '/asin/:asin' => sub {
     my $self = shift;
     my $node = eval {
@@ -721,18 +732,18 @@ __DATA__
         % }
     % }
 </table>
-% my @links = $author->links;
-% if (@links) {
+%== include links => links => [$author->links]
+%== include 'attributions', for => $author, type => 'Author'
+
+@@ links.html.ep
+% if (@$links) {
     <h3>Links</h3>
     <ul>
-        % for my $l (@links) {
-        <li><a href="<%= $l->url %>"><%= $l->type %></a></li>
+        % for my $l (@$links) {
+            <li><a href="<%= $l->url %>"><%= $l->type %></a></li>
         % }
     </ul>
 % }
-
-%== include 'attributions', for => $author, type => 'Author'
-
 
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
@@ -874,6 +885,9 @@ __DATA__
 @@ semantic_attrs.html.ep
 id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
+@@ title_link.html.ep
+<a href="/title/<%= $title->id %>" class="data_title"><%= $title->title %></a>
+
 @@ title.html.ep
 <div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> >
     <h2><%= $node->title %></h2>
@@ -903,7 +917,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
                 % while (my $n = $t->next) {
                     <li>
                         <span class="language"><%= $n->language %></span>
-                        <a href="/t/<%= $n->id %>"><%= $n->title %></a>
+                        %== include 'title_link', title => $n
                     </li>
                 % }
             </ul>
@@ -925,7 +939,9 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 %== include 'pager', pager => $pager, url => $url
 <ul>
   % while (my $t = $nodes->next) {
-    <li><a href="/t/<%= $t->id %>"><%= $t->title %></a> by <%== include authors => for => $t %></li>
+    <li>
+    %== include title_link => title => $t
+    by <%== include authors => for => $t %></li>
   % }
 </ul>
 
@@ -990,11 +1006,14 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
      %== include 'attributions', for => $node, type => "Publication"
 </div>
 
+@@ publisher.html.ep
+<h1><%= $p->name %></h1>
+%== include links => links => [$p->links]
+
+
 @@ small_medium_noimg.html.ep
 <span id="medium_<%= $n->id %>" class="medium" data-id="<%= $n->id %>">
-    <span class="data_title">
-    <a href="/t/<%= $n->id %>"><%= $n->title %></a>
-    </span>
+    %== include title_link => title => $n
     % unless (stash('surpress_author')) {
         by
         <span class="data_made_by">
