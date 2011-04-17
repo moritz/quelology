@@ -43,8 +43,10 @@ CREATE TABLE publication (
     large_image         VARCHAR(255),
     large_image_width   INTEGER,
     large_image_height  INTEGER
-
 );
+
+CREATE INDEX publication_title_id_idx on publication (title_id);
+CREATE INDEX publication_publisher_id_idx on publication (publisher_id);
 
 DROP TABLE IF EXISTS user_login CASCADE;
 CREATE TABLE user_login (
@@ -62,6 +64,7 @@ CREATE TABLE user_info (
     real_name       VARCHAR(64),
     email           VARCHAR(255)
 );
+CREATE INDEX user_info_login_id_idx on user_info (login_id);
 
 DROP TABLE IF EXISTS title_attribution;
 CREATE TABLE title_attribution (
@@ -71,6 +74,7 @@ CREATE TABLE title_attribution (
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
 );
+CREATE INDEX title_attributioin_title_id on title_attribution (title_id);
 
 DROP TABLE IF EXISTS publication_attribution;
 CREATE TABLE publication_attribution (
@@ -80,6 +84,7 @@ CREATE TABLE publication_attribution (
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
 );
+CREATE INDEX publication_attribution_publication_id on publication_attribution (publication_id);
 
 DROP TABLE IF EXISTS author CASCADE;
 CREATE TABLE author (
@@ -111,6 +116,7 @@ CREATE TABLE author_link (
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
 );
+CREATE INDEX author_link_author_id_idx ON author_link (author_id);
 
 DROP TABLE IF EXISTS author_attribution;
 CREATE TABLE author_attribution (
@@ -120,6 +126,7 @@ CREATE TABLE author_attribution (
     url             VARCHAR(255),
     retrieved       DATE            DEFAULT CURRENT_DATE
 );
+CREATE INDEX author_attribution_author_id on author_attribution (author_id);
 
 DROP TABLE IF EXISTS publisher CASCADE;
 CREATE TABLE publisher (
@@ -135,3 +142,4 @@ CREATE TABLE publisher_link (
     type            VARCHAR(64)     NOT NULL,
     url             VARCHAR(255)    NOT NULL
 );
+CREATE INDEX publisher_link_publisher_id_idx ON publisher_link (publisher_id);
