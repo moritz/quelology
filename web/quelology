@@ -221,9 +221,11 @@ get '/author/:id' => sub {
     my $author = $schema->a->by_id($self->param('id'));
     my $title = sprintf 'Author details for %s', $author->name;
     $self->render(
-        title   => $title,
-        layout  => 'basic',
-        author  => $author,
+        title    => $title,
+        layout   => 'basic',
+        author   => $author,
+        series   => [$author->series->search],
+        singles  => [$author->singles->search],
         template => 'author',
     );
 };
@@ -734,6 +736,16 @@ __DATA__
 </table>
 %== include links => links => [$author->links]
 %== include 'attributions', for => $author, type => 'Author'
+% if (@$series) {
+    <h2>Series by <%= $author->name %></h2>
+    % for (@$series) {
+        %== include 'tree-part', node => $_
+    % }
+% }
+% if (@$singles) {
+
+% }
+
 
 @@ links.html.ep
 % if (@$links) {

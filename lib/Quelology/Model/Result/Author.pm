@@ -27,4 +27,14 @@ __PACKAGE__->has_many('links',
                 'Quelology::Model::Result::AuthorLink', 'author_id');
 __PACKAGE__->many_to_many('titles', 'author_titles', 'title');
 
+sub series {
+    my $self = shift;
+    $self->search_related('author_titles')->search_related('title')->root_nodes->threads;
+}
+
+sub singles {
+    my $self = shift;
+    $self->search_related('author_titles')->search_related('title')->root_nodes->singles;
+}
+
 1;
