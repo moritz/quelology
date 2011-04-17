@@ -4,10 +4,6 @@ a img {
     border: none;
 }
 
-a.author {
-    font-weight: bold;
-}
-
 img.medium_large {
     padding-top: 2ex;
 }
@@ -25,6 +21,14 @@ body {
 
 div #content {
     padding: 1ex;
+}
+
+.data_title {
+    font-weight: bold;
+}
+
+.author {
+    font-style: italic;
 }
 
 .shelf-droppable, #footer, #left-column {
