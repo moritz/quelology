@@ -739,11 +739,15 @@ __DATA__
 % if (@$series) {
     <h2>Series by <%= $author->name %></h2>
     % for (@$series) {
-        %== include 'tree-part', node => $_
+        %== include 'tree-part', node => $_, surpress_author => $_->single_author
+        <br />
     % }
 % }
 % if (@$singles) {
-
+    <h2>Single titles by <%= $author->name %></h2>
+    % for (@$singles) {
+        %== include 'title_link', title => $_
+    % }
 % }
 
 
@@ -761,7 +765,7 @@ __DATA__
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <%== include authors => for => $node %>
     % if (my $p = $node->publisher) {
-        <%= ', ' . $p->name =%>
+        <%= ', published by' . $p->name =%>
     % }
 </p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
