@@ -103,8 +103,10 @@ sub langs {
 
 sub root_nodes {
     my $self = shift;
+    my $csa = $self->current_source_alias;
+    say $csa;
     $self->search({
-        id => { '=' => \'root_id' },
+        "$csa.id" => { '=' => \"$csa.root_id" },
     });
 }
 
