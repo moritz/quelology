@@ -104,7 +104,6 @@ sub langs {
 sub root_nodes {
     my $self = shift;
     my $csa = $self->current_source_alias;
-    say $csa;
     $self->search({
         "$csa.id" => { '=' => \"$csa.root_id" },
     });

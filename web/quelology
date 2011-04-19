@@ -1025,6 +1025,26 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 @@ publisher.html.ep
 <h1><%= $p->name %></h1>
 %== include links => links => [$p->links]
+% my $pubs = $p->publications_by_date
+% if ($pubs->count) {
+    <h2 id="publications_by">Publications by <%= $p->name %></h2>
+    <dl>
+        % my $prev_year = 0;
+        % my $year_from_date = sub {
+        %   return 0 unless $_[0];
+        %   (split '-', $_[0], 2)[0];
+        % };
+        % while (my $pub = $pubs->next ) {
+            % if ($year_from_date->($pub->year) != $prev_year) {
+                % $prev_year = $year_from_date->($pub->year)
+                </ul></dd><dt><%= $prev_year || '(date unknown)' %></dt>
+                <dd><ul>
+            % }
+                    <li><a href="/publication/<%= $pub->id %>"><%= $pub->title %></li></li>
+        % }
+        </ul></dd>
+    </dl>
+% }
 
 
 @@ small_medium_noimg.html.ep
