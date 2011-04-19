@@ -14,6 +14,7 @@ __PACKAGE__->add_columns(
     qw/
     type
     url
+    lang
     /,
 );
 
