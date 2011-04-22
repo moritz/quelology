@@ -24,13 +24,14 @@ __PACKAGE__->add_columns(qw/
 
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->add_unique_constraint(['asin']);
-__PACKAGE__->belongs_to('root', 'Quelology::Model::Result::Title', 'root_id');
-__PACKAGE__->belongs_to('alias_for', 'Quelology::Model::Result::Title', 'same_as');
-__PACKAGE__->has_many('aliases', 'Quelology::Model::Result::Title', 'same_as');
-__PACKAGE__->has_many('attributions', 'Quelology::Model::Result::TitleAttribution', 'title_id');
+__PACKAGE__->belongs_to('root',         'Quelology::Model::Result::Title', 'root_id');
+__PACKAGE__->belongs_to('alias_for',    'Quelology::Model::Result::Title', 'same_as');
+__PACKAGE__->has_many('aliases',        'Quelology::Model::Result::Title', 'same_as');
+__PACKAGE__->has_many('attributions',   'Quelology::Model::Result::TitleAttribution', 'title_id');
 
-__PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication',
+__PACKAGE__->has_many('publications',   'Quelology::Model::Result::Publication',
                       'title_id', { order_by => \'publication_date'});
+
 # need an unordered version to call ->min on it
 __PACKAGE__->has_many('publications_unordered',
                       'Quelology::Model::Result::Publication',

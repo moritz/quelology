@@ -762,9 +762,6 @@ __DATA__
 @@ tree.html.ep
 <h1 class="medium"><%= $node->title %></h1>
 <p>by <%== include authors => for => $node %>
-    % if (my $p = $node->publisher) {
-        <%= ', published by' . $p->name =%>
-    % }
 </p>
 <p><a href="/edit/<%= $node->id %>">Edit this series</a></p>
 % if ($node->id != $node->root_id) {
