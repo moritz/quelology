@@ -2,10 +2,8 @@
 
 use lib 'lib';
 use if $ENV{QUELOLOGY_HOME}, 'lib', "$ENV{QUELOLOGY_HOME}/lib";
-
 use 5.012;
 use Mojolicious::Lite;
-use Mojolicious::Session;
 use Mojo::ByteStream 'b';
 use Quelology::Config qw(schema config);
 use Carp qw(confess);
@@ -902,7 +900,11 @@ __DATA__
 id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
 @@ title_link.html.ep
-<a href="/title/<%= $title->id %>" class="data_title"><%= $title->title %></a>
+% if (stash('single')) {
+    <a href="/title/<%= $title->id %>" class="data_title"><%= $title->title %></a>
+% } else {
+    <a href="/t/<%= $title->id %>" class="data_title"><%= $title->title %></a>
+% }
 
 @@ title.html.ep
 <div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> >
@@ -1209,114 +1211,3 @@ with a gurantuee of continued existence, availability or fitness for any purpose
     <dd><input type="submit" value="Create account" /></dd>
 </dl>
 </form>
-
-
-@@ about.html.ep
-<h1>About quelology.org</h1>
-<p>The idea of quelology.org is to gather semantic data about book relations,
-and make it easily available to everybody who is interested in it.</p>
-<p>For now we store which books form a common sequel. Hence the name:
-<strong>Quel</strong>ology is the science of whether a book is a
-se<strong>quel</strong> or pre<strong>quel</strong>.</p>
-
-<h2>Planned features</h2>
-<p>In future we wawnt to store more relations between books:</p>
-<ul>
-    <li>What translations exist, what's the original language?
-        Who translated it?</li>
-    <li>Which language(s) is the book written in?</li>
-    <li>Which editions of the same book exist?</li>
-</ul>
-
-<h2>Project details, feedback</h2>
-
-<p>The Quelology is a project by <a href="http://perlgeek.de/">Moritz Lenz</a>.</p>
-<p>The source code is available on
-<a href="https://github.com/moritz/quelology/">github</a>.</p>
-<p>If you have any suggestions, bug reports, encouragements or even want to contribute, please send an email to <em>moritz at faui2k3 dot org</em>, including the moniker <code>[quelology]</code> in the subject.</p>
-
-
-@@ imprint.html.ep
-<h1>Legal Details</h1>
-<p>Responsible for this site in general is</p>
-<p>
-Moritz Lenz <br />
-Sperlingstr. 2 <br />
-91056 Erlange <br />
-Germany
-</p>
-<p>Please note that much of the content is user-generated,
-and belongs to whoever generated it. Each author is
-responsible for whatever he writes.</p>
-
-@@ layouts/basic.html.ep
-<!doctype html><html>
-    <head>
-    <title><%= $title %></title>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <link href="/css/reset.css"  rel="stylesheet" type="text/css" />
-    <link href="/css/grid.css"   rel="stylesheet" type="text/css" />
-    <link href="/css/type.css"   rel="stylesheet" type="text/css" />
-    <!--[if IE]><link href="/css/ie.css"          type="text/css" rel="stylesheet"><![endif]-->
-    <link href="/css/custom.css" rel="stylesheet"type="text/css" media="screen, projection" />
-
-    <link rel="shortcut icon" href="/favicon.ico">
-    <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>
-    <script type="text/javascript" src="/js/jquery-ui-1.8.6.custom.min.js"></script>
-    <script type="text/javascript" src="/js/custom.js"></script>
-    </head>
-    <body>
-      <div class="main">
-        <%== include 'edit_form' %>
-        <div id="header" class="shelf-droppable droppable">
-            <form action="/search/" method="post">
-            <p style="float:right">
-                <input type="text" id="keyword" name="keyword" />
-                <select name="lang">
-                    <option value="us" selected="true">us</option>
-                    <option value="de">de</option>
-                    <option value="fr">fr</option>
-                    <option value="it">it</option>
-                    <option value="uk">uk</option>
-                </select>
-                <input type="submit" value="search" />
-            </p>
-            </form>
-            <h1>Quelology</h1>
-        </div>
-        <div class="shelf-droppable droppable dl10">
-          <div id="left-column">
-
-            <h5>Navigation</h5>
-            <ul class="nav">
-                <li><a href="/">Home</a></li>
-                <li><a href="/">About</a></li>
-                <li>
-                    % if (session 'logged_in') {
-                        Logged in as '<%= session 'user' %>'.
-                        <a href="/logout/">Logout</a>
-                    % } else {
-                        <a href="/login/">Log in or sign up</a>
-                    % }
-                </li>
-            </ul>
-            <br />
-            <h5>Your Bookshelf</h5>
-            <%== shelf %>
-          </div>
-        </div>
-        <div class="ml10 fluid">
-          <div id="content">
-            % if (flash('message') || stash('message')) {
-                <p class="flash"><%= flash('message') // stash('message') %></p>
-            % }
-            <%== content %>
-          </div>
-        </div>
-        <br class="clear" />
-        <div id="footer" class="shelf-droppable droppable">
-            <a href="/imprint">Legal Details</a>
-        </div>
-    </div> <!-- main -->
-    </body>
-</html>

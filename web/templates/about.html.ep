@@ -1,0 +1,22 @@
+<h1>About quelology.org</h1>
+<p>The idea of quelology.org is to gather semantic data about book relations,
+and make it easily available to everybody who is interested in it.</p>
+<p>For now we store which books form a common sequel. Hence the name:
+<strong>Quel</strong>ology is the science of whether a book is a
+se<strong>quel</strong> or pre<strong>quel</strong>.</p>
+
+<h2>Planned features</h2>
+<p>In future we wawnt to store more relations between books:</p>
+<ul>
+    <li>What translations exist, what's the original language?
+        Who translated it?</li>
+    <li>Which language(s) is the book written in?</li>
+    <li>Which editions of the same book exist?</li>
+</ul>
+
+<h2>Project details, feedback</h2>
+
+<p>The Quelology is a project by <a href="http://perlgeek.de/">Moritz Lenz</a>.</p>
+<p>The source code is available on
+<a href="https://github.com/moritz/quelology/">github</a>.</p>
+<p>If you have any suggestions, bug reports, encouragements or even want to contribute, please send an email to <em>moritz at faui2k3 dot org</em>, including the moniker <code>[quelology]</code> in the subject.</p>
