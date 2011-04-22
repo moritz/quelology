@@ -101,6 +101,24 @@ sub langs {
     });
 }
 
+=head3 with_different_languages
+    
+    returns a resultset of titles that have publications in different
+    languages (which is a bad sign, because translations are supposed
+    to be handled on the titles layer, not on the publications layer).
+
+=cut
+
+sub with_different_languages {
+    shift->search_rs({
+        'publications.lang' => { '<>' => undef },
+    }, {
+        join        => 'publications',
+        distinct    => 1,
+        having      => \'count(distinct(publications.lang)) > 1',
+    });
+}
+
 sub root_nodes {
     my $self = shift;
     my $csa = $self->current_source_alias;
