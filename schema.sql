@@ -3,10 +3,9 @@ CREATE TABLE title (
     id SERIAL primary key,
     asin            CHAR(10) UNIQUE,
     title           VARCHAR(255) NOT NULL,
-    author          VARCHAR(255),
-    publisher       VARCHAR(255),
     lang            CHAR(2),
 
+    isfdb_id        INTEGER         UNIQUE,
     -- NestedSet columns:
     root_id         INTEGER REFERENCES title (id) ON DELETE CASCADE,
     same_as         INTEGER REFERENCES title (id) ON DELETE CASCADE,

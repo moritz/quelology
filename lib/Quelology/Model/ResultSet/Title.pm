@@ -76,7 +76,7 @@ sub _join_sorted {
 sub create_root_with_children {
     my ($self, $values, @children) = @_;
     my %v = %$values;
-    for (qw(author publisher lang)) {
+    for (qw(lang)) {
         $v{$_} = $self->_join_sorted($values, $_, \@children);
     }
     delete $v{lang} if length($v{lang}) != 2;

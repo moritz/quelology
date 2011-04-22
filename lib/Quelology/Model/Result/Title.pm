@@ -13,9 +13,8 @@ __PACKAGE__->add_columns(qw/
     id
     asin
     title
-    author
-    publisher
     same_as
+    isfdb_id
     lang
     root_id
     l
