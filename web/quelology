@@ -362,6 +362,17 @@ get '/about' => sub {
 get  '/search/:keyword' => \&search => 'search';
 post '/search/'         => \&search;
 
+get  '/help-needed/languages' => sub {
+    my $self   = shift;
+    my $titles = $schema->t->with_different_languages;
+    $self->render(
+        title       => 'Titles With Publications in Different Languages',
+        titles      => $titles,
+        template    => 'help-needed/languages',
+        layout      => 'basic',
+    );
+};
+
 get '/login/' => sub {
     my $self = shift;
     if ($self->session('logged_in')) {
@@ -1183,3 +1194,29 @@ specific terms, or with a different language.</p>
     <p>No search results, please try it with different search terms.</p>
 % }
 
+@@ help-needed/languages.html.ep
+<h1><%= $title %></h1>
+<p>
+    A title should only have publications in the same language as itself.
+    If a title is translated into another language, a title in that second
+    language should be created (how?), marked as a translation of the existing
+    title, and the publications in the new language should be moved to the new
+    title (how?).
+</p>
+<p>
+    Here is a list of titles that have publications in other languages:
+</p>
+<ul>
+  % while (my $t = $titles->next) {
+    <li><%= $t->lang %>, <%== include title_link => title => $t %>
+        <ul>
+            % for (sort {$a->lang cmp $b->lang } $t->publications) {
+                <li>
+                    <%= $_->lang %>, <%= $_->title %>
+                </li>
+            % }
+        </ul>
+    </li>
+  % }
+
+</ul>
