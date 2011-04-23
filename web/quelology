@@ -5,7 +5,7 @@ use if $ENV{QUELOLOGY_HOME}, 'lib', "$ENV{QUELOLOGY_HOME}/lib";
 use 5.012;
 use Mojolicious::Lite;
 use Mojo::ByteStream 'b';
-use Quelology::Config qw(schema config);
+use Quelology::Config qw(schema config run_mode);
 use Carp qw(confess);
 use List::MoreUtils qw/uniq/;
 use Digest::SHA1 qw/sha1/;
@@ -83,6 +83,14 @@ get '/' =>  sub {
         langs       => [$schema->t->langs],
     );
 } => 'index';
+
+get '/robots.txt' => sub {
+    my $self = shift;
+    my $template = (run_mode() =~ /^prod/) ? 'robotstxt_prod' : 'robotstxt_dev';
+    $self->render(
+        template    => $template,
+    );
+};
 
 sub title_for {
     my $node = shift;
@@ -974,6 +982,13 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
   </div>
 % }
 
+@@ robotstxt_prod.txt.ep
+User-agent: *
+Allow: /
+
+@@ robotstxt_dev.txt.ep
+User-agent: *
+Disallow: /
 
 @@ publication.html.ep
 <div  id="pub_<%= $node->id %>" data-id="<%= $node->id %>">
