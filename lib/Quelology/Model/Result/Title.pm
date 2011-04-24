@@ -213,4 +213,50 @@ sub single_author {
     return;
 }
 
+sub split_by_language {
+    my $self = shift;
+
+    # TODO: wrap in transaction
+    my @pubs = $self->publications(
+        {
+            lang => { '<>' => $self->lang }
+        },
+    );
+
+    return $self unless @pubs;
+
+    my @new_titles = $self;
+    my %lang;
+    push @{$lang{$_->lang}}, $_ for @pubs;
+
+    LANGS:
+    for my $l (keys %lang) {
+        my @p = @{$lang{$l}};
+        my $first = shift @p;
+        for (@p) {
+            if ($first->title ne $_->title) {
+                warn sprintf "Publications for %s in language $l differ in title (%s vs. %s), don't know how to split title off", $self->title, $first->title, $_->title;
+                next LANGS;
+            }
+        }
+
+        my $nt = $self->create_related('aliases', {
+            title   => $first->title,
+            lang    => $l,
+        });
+        for ($self->author_titles) {
+            $nt->create_related('author_titles', {
+                author_id   => $_->author_id,
+            });
+        }
+        for ($first, @p) {
+            $_->update({
+                title_id => $nt->id,
+            });
+        }
+        push @new_titles, $nt;
+    }
+    return @new_titles;
+}
+
 1;
