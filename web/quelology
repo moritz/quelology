@@ -757,9 +757,13 @@ __DATA__
 % }
 % if (@$singles) {
     <h2>Single titles by <%= $author->name %></h2>
+    <ul>
     % for (@$singles) {
+        <li>
         %== include 'title_link', title => $_
+        </li>
     % }
+    </ul>
 % }
 
 
