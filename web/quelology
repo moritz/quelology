@@ -1051,14 +1051,20 @@ Disallow: /
 % if ($pubs->count) {
     <h2 id="publications_by">Publications by <%= $p->name %></h2>
     <dl>
-        % my $prev_year = 0;
-        % my $year_from_date = sub {
+        % my $prev_year       = 0;
+        % my $first_iteration = 1;
+        % my $year_from_date  = sub {
         %   return 0 unless $_[0];
         %   (split '-', $_[0], 2)[0];
         % };
         % while (my $pub = $pubs->next ) {
-            % if ($year_from_date->($pub->year) != $prev_year) {
-                % $prev_year = $year_from_date->($pub->year);
+            % if ($first_iteration) {
+                % $prev_year       = $year_from_date->($pub->publication_date);
+                <dt><%= $prev_year || '(date unknown)' %></dt>
+                <dd><ul>
+                % $first_iteration = 0;
+            % } elsif ($year_from_date->($pub->publication_date) != $prev_year) {
+                % $prev_year = $year_from_date->($pub->publication_date);
                 </ul></dd><dt><%= $prev_year || '(date unknown)' %></dt>
                 <dd><ul>
             % }

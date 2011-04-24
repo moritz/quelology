@@ -15,9 +15,8 @@ __PACKAGE__->add_columns(qw/
 __PACKAGE__->set_primary_key('id');
 
 __PACKAGE__->has_many('publications', 'Quelology::Model::Result::Publication', 'publisher_id');
-__PACKAGE__->has_many('publications_by_date', 'Quelology::Model::Result::Publication', 'publisher_id', 
+__PACKAGE__->has_many('publications_by_date', 'Quelology::Model::Result::Publication', 'publisher_id',
     {
-        group_by => \'EXTRACT(YEAR FROM publication_date)',
         order_by => \'publication_date',
     },
 );
