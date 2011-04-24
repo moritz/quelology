@@ -977,10 +977,11 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     by <%== include authors => for => $t %></li>
   % }
 </ul>
+%== include 'pager', pager => $pager
 
 @@ pager.html.ep
 % unless ($pager->first_page == $pager->last_page) {
-  <div>
+  <div class="pager">
     Result pages:
     <ul class="pager">
       % for ($pager->first_page .. $pager->last_page) {
