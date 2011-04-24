@@ -652,6 +652,7 @@ __DATA__
 % } 
 
 </ul>
+<br />
 
 <h2>Random selection of series</h2>
 <ul class="series">
@@ -661,6 +662,8 @@ __DATA__
     </li>
 <% } %>
 </ul>
+<br />
+
 <h2>Random selection of single titles</h2>
 <ul>
 <% for my $n (@$singles) { %>
