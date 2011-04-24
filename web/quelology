@@ -133,9 +133,7 @@ sub get_lang {
     my $page        = $self->param('page') // 1;
     my $language    = Locales->new->get_language_from_code($lang);
     my $nodes       = $schema->t->search({ lang => $lang }, { rows => LANG_PAGE_SIZE, page => $page , order_by => \'title'});
-    my $url         = $self->req->url->path;
-    $url            =~ s{\d+/$}{};
-    $url           .= '/' unless substr($url, -1) eq '/';
+    my $url         = "/title/$lang/";
 
 
     $self->render(
@@ -145,7 +143,7 @@ sub get_lang {
         nodes       => $nodes,
         pager       => $nodes->pager,
         template    => 'title-lang',
-        url         => $url,
+        base_url    => $url,
     );
 };
 
@@ -967,7 +965,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
 @@ title-lang.html.ep
 <h1><%= $title %></h1>
-%== include 'pager', pager => $pager, url => $url
+%== include 'pager', pager => $pager
 <ul>
   % while (my $t = $nodes->next) {
     <li>
@@ -982,7 +980,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     Result pages:
     <ul class="pager">
       % for ($pager->first_page .. $pager->last_page) {
-        <li><a href="<%= $url . $_ %>">
+        <li><a href="<%= $base_url . $_ %>">
           <%== $_ == $pager->current_page ? "<strong>«$_»</strong>" : $_ =%>
         </li>
       % }
