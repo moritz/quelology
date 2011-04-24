@@ -950,6 +950,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
                     </li>
                 % }
             </ul>
+            <br />
         </div>
     % }
 
