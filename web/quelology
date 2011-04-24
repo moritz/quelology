@@ -945,7 +945,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
             <ul>
                 % while (my $n = $t->next) {
                     <li>
-                        <span class="language"><%= $n->language %></span>
+                        <span class="language"><%= $n->language %>:</span>
                         %== include 'title_link', title => $n
                     </li>
                 % }
@@ -1047,7 +1047,7 @@ Disallow: /
 @@ publisher.html.ep
 <h1><%= $p->name %></h1>
 %== include links => links => [$p->links]
-% my $pubs = $p->publications_by_date
+% my $pubs = $p->publications_by_date;
 % if ($pubs->count) {
     <h2 id="publications_by">Publications by <%= $p->name %></h2>
     <dl>
@@ -1058,7 +1058,7 @@ Disallow: /
         % };
         % while (my $pub = $pubs->next ) {
             % if ($year_from_date->($pub->year) != $prev_year) {
-                % $prev_year = $year_from_date->($pub->year)
+                % $prev_year = $year_from_date->($pub->year);
                 </ul></dd><dt><%= $prev_year || '(date unknown)' %></dt>
                 <dd><ul>
             % }
