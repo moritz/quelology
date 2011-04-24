@@ -207,10 +207,8 @@ sub single_author {
     });
     if (@author_ids == 1) {
         return $self->result_source->schema->a->by_id($author_ids[0]->get_column('author_id'));
-    } else {
-        return;
     }
-    return;
+    return undef;
 }
 
 sub split_by_language {
