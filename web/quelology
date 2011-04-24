@@ -760,7 +760,7 @@ __DATA__
     <ul>
     % for (@$singles) {
         <li>
-        %== include 'title_link', title => $_
+        %== include 'small_medium_noimg', n => $_, surpress_author => ($_->authors->count == 1)
         </li>
     % }
     </ul>
@@ -789,11 +789,7 @@ __DATA__
 <p>
 %== include add_shelf_link => (node => $node)
 </p>
-% if (defined $node->single_author) { 
-    %== include 'tree-part', node => $node, surpress_author => 1
-% } else {
-    %== include 'tree-part', node => $node
-% }
+%== include 'tree-part', node => $node, surpress_author => $node->single_author
 
 %== include 'attributions', for => $node, type => "Series"
 
