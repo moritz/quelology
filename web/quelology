@@ -768,6 +768,15 @@ __DATA__
     % }
     </ul>
 % }
+<br />
+
+<h2>Publishers which have published books by <%= $author->name %></h2>
+% my @pubs = $author->publishers;
+<ul>
+    % for (@pubs) {
+        <li><a href="/publisher/<%= $_->id %>"><%= $_->name %></a></li>
+    % }
+</ul>
 
 
 @@ links.html.ep
@@ -778,6 +787,7 @@ __DATA__
             <li><a href="<%= $l->url %>"><%= $l->type %></a></li>
         % }
     </ul>
+    <br />
 % }
 
 @@ tree.html.ep

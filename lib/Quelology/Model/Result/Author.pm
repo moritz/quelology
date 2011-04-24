@@ -37,4 +37,9 @@ sub singles {
     $self->search_related('author_titles')->search_related('title')->root_nodes->singles;
 }
 
+sub publishers {
+    my $self = shift;
+    $self->titles->search_related('publications')->search_related('publisher', undef,  { distinct => 1});
+}
+
 1;
