@@ -1,7 +1,6 @@
 DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
-    asin            CHAR(10) UNIQUE,
     title           VARCHAR(255) NOT NULL,
     lang            CHAR(2),
 

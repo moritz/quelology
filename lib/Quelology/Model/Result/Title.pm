@@ -11,7 +11,6 @@ __PACKAGE__->load_components(qw( Tree::NestedSet ));
 __PACKAGE__->table('title');
 __PACKAGE__->add_columns(qw/
     id
-    asin
     title
     same_as
     isfdb_id
@@ -23,7 +22,6 @@ __PACKAGE__->add_columns(qw/
     /);
 
 __PACKAGE__->set_primary_key('id');
-__PACKAGE__->add_unique_constraint(['asin']);
 __PACKAGE__->belongs_to('root',         'Quelology::Model::Result::Title', 'root_id');
 __PACKAGE__->belongs_to('alias_for',    'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('aliases',        'Quelology::Model::Result::Title', 'same_as');
