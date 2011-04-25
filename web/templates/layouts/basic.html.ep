@@ -39,6 +39,8 @@
             <ul class="nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/">About</a></li>
+                <li><a href="/title/unknown-lang">Titles with unknown
+                    language</a>
                 <li>
                     % if (session 'logged_in') {
                         Logged in as '<%= session 'user' %>'.

@@ -14,7 +14,9 @@ use utf8;
 use warnings;
 
 
-my $schema = schema;
+my $schema  = schema;
+$::Locales = Locales->new;
+my @global_langs = map [$_->get_column('lang'), $::Locales->get_language_from_code($_->get_column('lang')), $_->get_column('count')], $schema->t->langs;
 
 app->sessions->default_expiration(60 * 60 * 24);
 
@@ -125,7 +127,7 @@ get '/title/:id/' => [ id => qr/[0-9]+/ ] => sub {
 get '/title/:lang'       => [ lang => qr/[a-z]{2}/                     ] => \&get_lang;
 get '/title/:lang/:page' => [ lang => qr/[a-z]{2}/, page => qr/[0-9]+/ ] => \&get_lang;
 
-use constant LANG_PAGE_SIZE => 50;
+use constant LANG_PAGE_SIZE => 100;
 
 sub get_lang {
     my $self        = shift;
@@ -147,6 +149,23 @@ sub get_lang {
     );
 };
 
+get '/title/unknown-lang'       => [                    ] => \&unknown_lang;
+get '/title/unknown-lang/:page' => [ page => qr/[0-9]+/ ] => \&unknown_lang;
+
+sub unknown_lang {
+    my $self = shift;
+    my $page = $self->stash('page') // 1;
+    my $ul   = $schema->t->search({ lang => undef }, { rows => LANG_PAGE_SIZE, page => $page , order_by => \'title'});
+    $self->render(
+        ul          => $ul,
+        layout      => 'basic',
+        template    => 'title/unknown-lang',
+        base_url    => '/title/unknown-lang/',
+        pager       => $ul->pager,
+        title       => 'Titles with unknown language',
+        languages   => \@global_langs,
+    );
+}
 get '/publication/:id' => sub {
     my $self = shift;
     my $node = $schema->p->by_id($self->param('id'));
@@ -360,13 +379,13 @@ get '/about' => sub {
 get  '/search/:keyword' => \&search => 'search';
 post '/search/'         => \&search;
 
-get  '/help-needed/languages' => sub {
+get  '/title/different-languages' => sub {
     my $self   = shift;
     my $titles = $schema->t->with_different_languages;
     $self->render(
         title       => 'Titles With Publications in Different Languages',
         titles      => $titles,
-        template    => 'help-needed/languages',
+        template    => 'title/different-languages',
         layout      => 'basic',
     );
 };
@@ -428,6 +447,26 @@ under sub {
         status      => 403,
     );
     return;
+};
+
+post '/title/assign-lang' => sub {
+    my $self = shift;
+    my $updated = 0;
+    my $title_rs = $schema->t;
+    for my $p ($self->param) {
+        next unless $p =~ /^\d+$/;
+        my $new_lang = $self->param($p);
+        next if $new_lang eq 'unknown';
+        my $title = $title_rs->by_id($p);
+        $title->update({lang => $new_lang});
+        $updated++;
+    }
+    if ($updated) {
+        $self->flash(message => "Update the language of $updated titles");
+    } else {
+        $self->flash(message => "Update no titles - did you select a language?");
+    }
+    $self->redirect_to('/title/unknown-lang');
 };
 
 get '/edit/:id' => sub {
@@ -989,6 +1028,38 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 </ul>
 %== include 'pager', pager => $pager
 
+@@ title/unknown-lang.html.ep
+<h1><%= $title %></h1>
+%== include 'pager', pager => $pager
+% if (session('logged_in')) {
+    <form method="post" action="/title/assign-lang">
+        <br>
+        <input type="submit" value="Update languages selected below">
+        <br>
+% }
+<ul>
+  % while (my $t = $ul->next) {
+    <li>
+        % if (session('logged_in')) {
+            <select name="<%= $t->id %>">
+                <option value="unknown" selected="selected">(unknown)</option>
+            % for (@$languages) {
+                <option value="<%= $_->[0] %>"><%= $_->[1] %></option>
+            % }
+            </select>
+        % }
+        %== include small_medium_noimg => n => $t
+    </li>
+  % }
+</ul>
+% if (session('logged_in')) {
+        <br>
+        <input type="submit" value="Update languages selected above">
+        <br>
+    </form>
+% }
+%== include 'pager', pager => $pager
+
 @@ pager.html.ep
 % unless ($pager->first_page == $pager->last_page) {
   <div class="pager">
@@ -1213,7 +1284,7 @@ specific terms, or with a different language.</p>
     <p>No search results, please try it with different search terms.</p>
 % }
 
-@@ help-needed/languages.html.ep
+@@ title/different-languages.html.ep
 <h1><%= $title %></h1>
 <p>
     A title should only have publications in the same language as itself.
@@ -1227,11 +1298,12 @@ specific terms, or with a different language.</p>
 </p>
 <ul>
   % while (my $t = $titles->next) {
-    <li><%= $t->lang %>, <%== include title_link => title => $t %>
+    <li><%= $::Locales->get_language_from_code($t->lang) %>,
+            <%== include title_link => title => $t %>
         <ul>
             % for (sort {$a->lang cmp $b->lang } $t->publications) {
                 <li>
-                    <%= $_->lang %>, <%= $_->title %>
+                    <%= $::Locales->get_language_from_code($_->lang) %>, <%= $_->title %>
                 </li>
             % }
         </ul>
