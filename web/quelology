@@ -1068,7 +1068,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
       % for ($pager->first_page .. $pager->last_page) {
         <li><a href="<%= $base_url . $_ %>">
           <%== $_ == $pager->current_page ? "<strong>«$_»</strong>" : $_ =%>
-        </li>
+        </a></li>
       % }
     </ul>
   </div>
