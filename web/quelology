@@ -1036,6 +1036,8 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         <br>
         <input type="submit" value="Update languages selected below">
         <br>
+% } else {
+    <p>Please <a href="/login/">log in or crete an account</a> and classify these titles by language.</p>
 % }
 <ul>
   % while (my $t = $ul->next) {
