@@ -429,7 +429,8 @@ get '/shelf/small' => sub {
     render_shelf($self);
 } => 'shelf';
 
-get '/die' => sub { die 'DEBUG'; };
+get '/debug/die'        => sub { die 'DEBUG'; };
+get '/debug/runmode'    => sub { $self->render(text => $::runmode) };
 
 
 under sub {
