@@ -14,6 +14,7 @@ use utf8;
 use warnings;
 
 
+$::runmode = run_mode;
 my $schema  = schema;
 $::Locales = Locales->new;
 my @global_langs = map [$_->get_column('lang'), $::Locales->get_language_from_code($_->get_column('lang')), $_->get_column('count')], $schema->t->langs;
@@ -88,7 +89,7 @@ get '/' =>  sub {
 
 get '/robots.txt' => sub {
     my $self = shift;
-    my $template = (run_mode() =~ /^prod/) ? 'robotstxt_prod' : 'robotstxt_dev';
+    my $template = ($::runmode =~ /^prod/) ? 'robotstxt_prod' : 'robotstxt_dev';
     $self->render(
         template    => $template,
     );
@@ -1170,7 +1171,9 @@ Disallow: /
             %== include authors => for => $n
         </span>
     % }
-    (id <%= $n->id %>)
+    % unless ($::runmode =~ /^prod/) {
+        (id <%= $n->id %>)
+    % }
 </span>
 
 @@ small_medium.html.ep
