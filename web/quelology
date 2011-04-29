@@ -46,6 +46,12 @@ sub clean_session {
 app->secret( config('web_secret') );
 app->types->type(html => 'text/html; charset=utf-8');
 
+app->hook(before_dispatch => sub {
+    my $self = shift;
+    $self->app->log->error("HOST: " . $self->req->url->host);
+
+});
+
 app->helper(shelf => sub {
     my $self = shift;
     my @items = @{ $self->session->{shelf_ids} // [] };
@@ -430,7 +436,7 @@ get '/shelf/small' => sub {
 } => 'shelf';
 
 get '/debug/die'        => sub { die 'DEBUG'; };
-get '/debug/runmode'    => sub { $self->render(text => $::runmode) };
+get '/debug/runmode'    => sub { shift->render(text => $::runmode) };
 
 
 under sub {
