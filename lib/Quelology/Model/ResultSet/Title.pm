@@ -129,6 +129,16 @@ sub with_different_languages {
     );
 }
 
+sub authors {
+    my $self = shift;
+    $self->search_related('author_titles')->search_related('author', undef, { distinct => 1})
+}
+
+sub publications {
+    my $self = shift;
+    $self->search_related('publications');
+}
+
 sub root_nodes {
     my $self = shift;
     my $csa = $self->current_source_alias;

@@ -41,8 +41,21 @@ my $indexer  = KinoSearch::Index::Indexer->new(
 );
 
 my $qu = schema();
-my $titles = $qu->t->root_nodes;
+
 my $c = 0;
+my $authors = $qu->a;
+while (my $a = $authors->next) {
+    no warnings 'uninitialized';
+    $indexer->add_doc({
+        id      => $a->id,
+        type    => 'author',
+        data    => $a->name . '   ' . $a->legal_name,
+    });
+    $c++;
+}
+
+
+my $titles = $qu->t->root_nodes;
 while (my $t = $titles->next) {
     my $type      = $t->is_single ? 'title' : 'series';
     my $search_on = $t->is_single ? $t      : $qu->t->search({ root_id => $t->id });
@@ -59,4 +72,4 @@ while (my $t = $titles->next) {
     $c++;
 }
 $indexer->commit;
-say $c, ' titles/series indexes';
+say $c, ' titles/series/authors indexed';

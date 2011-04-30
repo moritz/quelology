@@ -255,4 +255,6 @@ sub split_by_language {
     return @new_titles;
 }
 
+sub all { shift }
+
 1;
