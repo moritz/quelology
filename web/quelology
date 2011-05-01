@@ -794,7 +794,9 @@ __DATA__
     % }
 </table>
 %== include links => links => [$author->links]
+<br />
 %== include 'attributions', for => $author, type => 'Author'
+<br />
 % if (@$series) {
     <h2>Series by <%= $author->name %></h2>
     % for (@$series) {
