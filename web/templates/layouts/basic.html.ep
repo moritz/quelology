@@ -20,13 +20,6 @@
             <form action="/search/" method="post">
             <p style="float:right">
                 <input type="text" id="keyword" name="keyword" />
-                <select name="lang">
-                    <option value="us" selected="true">us</option>
-                    <option value="de">de</option>
-                    <option value="fr">fr</option>
-                    <option value="it">it</option>
-                    <option value="uk">uk</option>
-                </select>
                 <input type="submit" value="search" />
             </p>
             </form>
