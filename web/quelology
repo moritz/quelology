@@ -793,7 +793,7 @@ __DATA__
         % }
     % }
 </table>
-%== include links => links => [$author->links]
+%== include links => links => [$author->links->search({ lang => ['en', undef] })]
 <br />
 %== include 'attributions', for => $author, type => 'Author'
 <br />
