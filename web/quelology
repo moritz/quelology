@@ -226,8 +226,8 @@ get '/t/:id' => sub {
 sub search {
     my $self = shift;
     my $keyword = trim $self->param('keyword');
-    my $lang    = $self->param('lang') // 'us';
-    my ($series, $titles, $publications) = $schema->p->websearch($keyword);
+#    my $lang    = $self->param('lang') // 'us';
+    my $result = $schema->search($keyword);
     if (defined $series) {
         $self->render(
             layout   => 'basic',
