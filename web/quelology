@@ -46,11 +46,11 @@ sub clean_session {
 app->secret( config('web_secret') );
 app->types->type(html => 'text/html; charset=utf-8');
 
-app->hook(before_dispatch => sub {
-    my $self = shift;
-    $self->app->log->error("HOST: " . $self->req->url->host);
-
-});
+# app->hook(before_dispatch => sub {
+#     my $self = shift;
+#     $self->app->log->error("HOST: " . $self->req->url->host);
+# 
+# });
 
 app->helper(shelf => sub {
     my $self = shift;
@@ -226,16 +226,13 @@ get '/t/:id' => sub {
 sub search {
     my $self = shift;
     my $keyword = trim $self->param('keyword');
-#    my $lang    = $self->param('lang') // 'us';
     my $result = $schema->search($keyword);
-    if (defined $series) {
+    if ($result->success) {
         $self->render(
             layout   => 'basic',
             title    => "Search results for '$keyword'",
             template => 'search',
-            series   => $series,
-            titles   => $titles,
-            pubs     => $publications,
+            result   => $result,
         );
     } else {
         $self->render(
@@ -882,9 +879,7 @@ __DATA__
 </form>
 
 @@ edit.html.ep
-<%
-    my $first_node = $nodes->[1][0];
-%>
+% my $first_node = $nodes->[1][0];
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
   <p>by <span class="root_made_by"><%== include authors => for => $first_node %></span>,
@@ -1196,7 +1191,7 @@ Disallow: /
     </span>
     by
     <span class="data_made_by">
-        <%== include authors => for =>  $first_node %>
+        <%== include authors => for =>  $n %>
         %== include 'edit_marker' => edit => stash('edit'), what => 'author', name => 'author'
         % if (stash('edit') && $n->has_leaves) {
             <a href="#" onclick="recompute_medium('author', <%= $n->id %>); return false">
@@ -1263,26 +1258,38 @@ Disallow: /
 specific terms, or with a different language.</p>
 
 @@ search.html.ep
-% if (@$series) {
+% if ($result->authors) {
+    <h2>Authors</h2>
+    <ul>
+        % for (@{$result->authors}) {
+            <li>
+                %== include single_author => author => $_;
+            </li>
+        % }
+    </ul>
+    <br />
+% }
+% if ($result->series) {
     <h2>Series</h2>
     <ul>
-        % for (@$series) {
+        % for (@{$result->series}) {
             <li>
                 %== include 'tree-part', node => $_
             </li>
         % }
     </ul>
+    <br />
 % }
-% if (@$titles) {
+% if ($result->titles) {
     <h2>Single Books</h2>
     <form action="/lump/" method="post">
     <ul>
-        % for (@$titles) {
+        % for (@{$result->titles}) {
             <li>
                 % if (session 'logged_in') {
                     <input type="checkbox" name="<%= $_->id %>" />
                 % }
-                <%= include small_medium  => (n => $_, edit => 0) %>
+                <%= include small_medium_noimg  => (n => $_, edit => 0) %>
                 <%= include 'add_shelf_link', node => $_ =%>
             </li>
         % }
@@ -1291,9 +1298,6 @@ specific terms, or with a different language.</p>
         <input type="submit" value="Group together" />
     % }
     </form>
-% }
-% if (!@$series && !@$titles && !@$pubs) {
-    <p>No search results, please try it with different search terms.</p>
 % }
 
 @@ title/different-languages.html.ep
