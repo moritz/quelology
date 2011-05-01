@@ -11,6 +11,10 @@ my $authors = schema->a;
 say $authors->count;
 while (my $a = $authors->next) {
     if (my ($l) = $a->search_related('links', {type => 'wikipedia', lang => 'en'})) {
+        if ($a->search_related('links', {type => 'wikipedia'})->count > 1) {
+            say 'skipping ' , $a->name, ', it already has >= 2 wiki links';
+            next;
+        }
         say $a->name, ' ', $l->url;
         my $langs =  $ua->get($l->url)->res->dom->at('#p-lang');
         next unless $langs;
