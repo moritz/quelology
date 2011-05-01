@@ -5,6 +5,12 @@ use Quelology::Config qw/schema/;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my $schema = schema;
+$schema->t->search({ 'me.lang' => undef, 'publications.lang' => 'en'},
+    {
+        join     => 'publications',
+    }
+)->update({ lang => 'en' });
+
 my $titles = $schema->t->with_different_languages;
 
 while (my $t = $titles->next) {
