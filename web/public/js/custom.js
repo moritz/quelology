@@ -169,6 +169,7 @@ function install_draggable(what) {
 
 $(document).ready(function() {
     install_draggable(document);
+    $('#keyword').focus();
     $('.droppable').droppable({
         drop: function (event, ui) {
             var source_id = ui.draggable.attr('data-id');
