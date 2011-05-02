@@ -46,6 +46,12 @@ sub clean_session {
 app->secret( config('web_secret') );
 app->types->type(html => 'text/html; charset=utf-8');
 
+app->hook(after_static_dispatch => sub {
+    if ($::runmode eq 'prod') {
+        shift->res->headers->add(Expires => Mojo::Date->new(time() + 8 * 3600)->to_string);
+    }
+});
+
 # app->hook(before_dispatch => sub {
 #     my $self = shift;
 #     $self->app->log->error("HOST: " . $self->req->url->host);
