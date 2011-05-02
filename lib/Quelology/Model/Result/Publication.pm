@@ -29,7 +29,8 @@ __PACKAGE__->add_columns(qw/
     large_image_width
     large_image_height
 
-
+    created
+    modified
     /);
 
 __PACKAGE__->set_primary_key('id');

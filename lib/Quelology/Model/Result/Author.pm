@@ -16,6 +16,8 @@ __PACKAGE__->add_columns(qw/
     birthplace_lon
     birthdate
     deathdate
+    created
+    modified
     /);
 
 __PACKAGE__->set_primary_key('id');

@@ -19,6 +19,8 @@ __PACKAGE__->add_columns(qw/
     l
     r
     level
+    created
+    modified
     /);
 
 __PACKAGE__->set_primary_key('id');

@@ -8,6 +8,8 @@ __PACKAGE__->table('user_login');
 __PACKAGE__->add_columns(qw/
     id
     name
+    created
+    modified
     /,
     salt => {
         data_type => "bytea",

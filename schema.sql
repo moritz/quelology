@@ -1,3 +1,14 @@
+-- trigger function from
+-- http://www.revsys.com/blog/2006/aug/04/automatically-updating-a-timestamp-column-in-postgresql/
+CREATE OR REPLACE FUNCTION update_modified_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.modified = now();
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+
 DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
@@ -10,8 +21,11 @@ CREATE TABLE title (
     same_as         INTEGER REFERENCES title (id) ON DELETE CASCADE,
     l               INTEGER NOT NULL DEFAULT(1),
     r               INTEGER NOT NULL DEFAULT(2),
-    level           INTEGER NOT NULL DEFAULT(1)
+    level           INTEGER NOT NULL DEFAULT(1),
+    created         TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified        TIMESTAMP NOT NULL DEFAULT NOW()
 );
+CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX title_root_id_idx on title (root_id);
 
@@ -40,8 +54,13 @@ CREATE TABLE publication (
 
     large_image         VARCHAR(255),
     large_image_width   INTEGER,
-    large_image_height  INTEGER
+    large_image_height  INTEGER,
+
+    created             TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified            TIMESTAMP NOT NULL DEFAULT NOW()
 );
+
+CREATE TRIGGER update_publication_modtime BEFORE UPDATE ON publication FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX publication_title_id_idx on publication (title_id);
 CREATE INDEX publication_publisher_id_idx on publication (publisher_id);
@@ -52,8 +71,11 @@ CREATE TABLE user_login (
     name    VARCHAR(64) UNIQUE,
     salt    BYTEA       NOT NULL,
     cost    INTEGER     NOT NULL,
-    pw_hash BYTEA       NOT NULL
+    pw_hash BYTEA       NOT NULL,
+    created             TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified            TIMESTAMP NOT NULL DEFAULT NOW()
 );
+CREATE TRIGGER update_user_login_modtime BEFORE UPDATE ON user_login FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 DROP TABLE IF EXISTS user_info;
 CREATE TABLE user_info (
@@ -96,8 +118,11 @@ CREATE TABLE author (
     birthplace_lat  FLOAT,
     birthplace_lon  FLOAT,
     birthdate       DATE,
-    deathdate       DATE
+    deathdate       DATE,
+    created         TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified        TIMESTAMP NOT NULL DEFAULT NOW()
 );
+CREATE TRIGGER update_author_modtime BEFORE UPDATE ON author FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 DROP TABLE IF EXISTS author_title_map;
 CREATE TABLE author_title_map (
