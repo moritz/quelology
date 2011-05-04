@@ -94,7 +94,7 @@ get '/' =>  sub {
         threads     => [$schema->t->threads->search(undef, {rows => 20, order_by => \'random()'})],
         singles     => [$schema->t->singles->search(undef, {rows => 10, order_by => \'random()'})],
         template    => 'index',
-        title       => 'Quelology - Semantic Relations Between Books',
+        title       => 'Quelology - Find Sequels and Translations of your books',
         langs       => [$schema->t->langs],
     );
 } => 'index';
