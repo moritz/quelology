@@ -769,7 +769,7 @@ __DATA__
 <p>Use drag and drop!</p>
 % for my $n (@$nodes) {
     % my $first_node = $n->[1][0];
-    <h2 id="title_<%= $first_node->id %>"><%= $first_node->title %></h2>
+    <h3 id="title_<%= $first_node->id %>"><%= $first_node->title %></h3>
     <p>by <%== include authors => for =>  $first_node %></p>
     <%== include 'drop_tree', nodes => $n %>
 % }
@@ -952,11 +952,11 @@ __DATA__
 %# == include html_only_edit => nodes => $nodes;
 
 @@ html_only_edit.html.ep
-% use Data::Dumper;
 % my @ns = extract_nodes $nodes;
 % my $mc = @ns;
 % $mc    = 20 if $mc > 20;
 <form action="/edit" method="post">
+<h3>Alternative edit interface</h3>
 <p>
     Take
     <br />
