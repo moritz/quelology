@@ -1216,7 +1216,6 @@ Disallow: /
     by
     <span class="data_made_by">
         <%== include authors => for =>  $n %>
-        %== include 'edit_marker' => edit => stash('edit'), what => 'author', name => 'author'
         % if (stash('edit') && $n->has_leaves) {
             <a href="#" onclick="recompute_medium('author', <%= $n->id %>); return false">
                 <img src="/image/recompute.png" width="16" height="16"
