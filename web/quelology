@@ -907,8 +907,7 @@ __DATA__
 % my $first_node = $nodes->[1][0];
 <div class="whole_tree" data-id="<%= $first_node->id %>">
   <h1 class="root_title" id="title_<%= $first_node->id %>"><%= $first_node->title %></h1>
-  <p>by <span class="root_made_by"><%== include authors => for => $first_node %></span>,
-  published by <span class="root_publisher"><%= $first_node->publisher; %></span>.
+  <p>by <span class="root_made_by"><%== include authors => for => $first_node %></span>.
   <a href="#" onclick="dissolve_tree(<%= $first_node->id %>); false">
     <img src="/image/dissolve.png" alt="" width="16" height="16" />
     Dissolve this series
@@ -1206,9 +1205,9 @@ Disallow: /
 @@ small_medium.html.ep
 <span id="medium_<%= $n->id %>" class="medium" data-treeposition="<%= $n->tree_position %>"
     data-id="<%= $n->id %>">
-    <% if ($n->small_image) { %>
-        <img src="<%= $n->small_image %>" alt="" class="medium_img" />
-    <% } %>
+%#    <% if ($n->small_image) { %>
+%#        <img src="<%= $n->small_image %>" alt="" class="medium_img" />
+%#    <% } %>
 
     <span class="data_title">
     <a href="/details/<%= $n->id %>"><%= $n->title %></a>
