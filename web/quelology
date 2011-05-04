@@ -1343,7 +1343,11 @@ wikipedia pages that have been written about them in different languages.</p>
     % }
 </table>
 
-<p>Note that only languages with two-letter language codes have considered, languages with three-letter codes and "simple" for simple English wikipedia entries are not accounted for.</p>
+<p>
+   Note that only languages with two-letter language codes have been
+   considered, languages with three-letter codes and "simple" for
+   simple English wikipedia entries are not counted.
+</p>
 
 @@ title/different-languages.html.ep
 <h1><%= $title %></h1>
