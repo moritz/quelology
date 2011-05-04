@@ -249,6 +249,23 @@ sub search {
     }
 }
 
+get '/trivia/authors-by-wiki-languages' => sub {
+    my $self    = shift;
+    my $authors = $schema->resultset('AuthorWikiLinkCount')->search(
+                   { link_count => { '>=' => 50 } },
+                   {
+                       order_by   => \'link_count DESC',
+                       prefetch => 'author',
+                   },
+               );
+    $self->render(
+        title    => 'Authors by number of Wikipedia page translations',
+        layout   => 'basic',
+        authors  => $authors,
+        template => 'trivia/authors-by-wiki-languages',
+    );
+};
+
 get '/author/:id' => sub {
     my $self = shift;
     my $author = $schema->a->by_id($self->param('id'));
@@ -1307,6 +1324,26 @@ specific terms, or with a different language.</p>
     % }
     </form>
 % }
+
+
+@@ trivia/authors-by-wiki-languages.html.ep
+<h1><%= $title %></h1>
+<p>The following table lists some authors we know about, and the number of
+wikipedia pages that have been written about them in different languages.</p>
+<table>
+    <tr>
+        <th># pages</th>
+        <th>Author</th>
+    </tr>
+    % while ( my $a = $authors->next ) {
+      <tr>
+        <td><%= $a->link_count %></td>
+        <td><%== include single_author => author => $a->author %></td>
+      </tr>
+    % }
+</table>
+
+<p>Note that only languages with two-letter language codes have considered, languages with three-letter codes and "simple" for simple English wikipedia entries are not accounted for.</p>
 
 @@ title/different-languages.html.ep
 <h1><%= $title %></h1>
