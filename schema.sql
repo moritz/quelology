@@ -143,6 +143,14 @@ CREATE TABLE author_link (
 );
 CREATE INDEX author_link_author_id_idx ON author_link (author_id);
 
+-- just a gimmick for useless statistics
+CREATE OR REPLACE VIEW author_wiki_link_count ( author_id, link_count )
+AS  SELECT   author_id, count(author_id)
+    FROM     author_link
+    WHERE    type = 'wikipedia'
+    GROUP BY author_id
+    ;
+
 DROP TABLE IF EXISTS author_attribution;
 CREATE TABLE author_attribution (
     id              SERIAL          PRIMARY KEY,
