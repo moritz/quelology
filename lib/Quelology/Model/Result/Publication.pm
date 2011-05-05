@@ -12,7 +12,6 @@ __PACKAGE__->add_columns(qw/
     asin
     isbn
     title
-    author
     publisher_id
     amazon_url
     title_id

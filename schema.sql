@@ -35,7 +35,6 @@ CREATE TABLE publication (
     asin                CHAR(10) UNIQUE,
     isbn                VARCHAR(13),
     title               VARCHAR(255) NOT NULL,
-    author              VARCHAR(255),
     -- TODO: maybe make "NOT NULL"?
     publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
