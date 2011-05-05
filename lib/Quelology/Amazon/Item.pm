@@ -21,7 +21,19 @@ sub new_from_dom {
 sub _dom2hash {
     my %h;
     for (map @{$_->children}, @_) {
-        $h{ $_->type } = $_->text unless @{ $_->children };
+        unless (@{ $_->children}) {
+            if (exists $h{ $_->type } ) {
+                $h { $_->type } .= ', ' . $_->text;
+#                no warnings 'uninitialized';
+#                if (ref($h{ $_->type}) eq 'ARRAY') {
+#                    push @{ $h{ $_->type } }, $_->text;
+#                } else {
+#                    $h{ $_->type } = [ $h{ $_->type }, $_->text ];
+#                }
+            } else {
+                $h{ $_->type } = $_->text;
+            }
+        }
     }
     %h;
 }

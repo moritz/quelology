@@ -29,7 +29,9 @@ sub asin {
         Operation   => 'ItemLookup',
         ItemId      => $opts{asin},
     );
-    return Quelology::Amazon::Item->new_from_dom($self->_do_request(\%req));
+    my $dom = $self->_do_request(\%req);
+#    say $dom->inner_xml;
+    return Quelology::Amazon::Item->new_from_dom($dom);
 }
 
 sub search {
