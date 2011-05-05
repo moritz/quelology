@@ -66,6 +66,47 @@ CREATE TRIGGER update_publication_modtime BEFORE UPDATE ON publication FOR EACH 
 CREATE INDEX publication_title_id_idx on publication (title_id);
 CREATE INDEX publication_publisher_id_idx on publication (publisher_id);
 
+
+DROP TABLE IF EXISTS raw_publication CASCADE;
+CREATE TABLE raw_publication (
+    id                  SERIAL primary key,
+    asin                CHAR(10) UNIQUE,
+    isbn                VARCHAR(13) UNIQUE,
+    title               VARCHAR(255) NOT NULL,
+    authors             VARCHAR(512),
+    publisher           VARCHAR(255),
+    lang                CHAR(2),
+
+    amazon_url          VARCHAR(255),
+    publication_date    DATE,
+
+    small_image         VARCHAR(255),
+    small_image_width   INTEGER,
+    small_image_height  INTEGER,
+
+    medium_image        VARCHAR(255),
+    medium_image_width  INTEGER,
+    medium_image_height INTEGER,
+
+    large_image         VARCHAR(255),
+    large_image_width   INTEGER,
+    large_image_height  INTEGER,
+
+    created             TIMESTAMP NOT NULL DEFAULT NOW(),
+    modified            TIMESTAMP NOT NULL DEFAULT NOW()
+);
+CREATE TRIGGER update_raw_publication_modtime BEFORE UPDATE ON raw_publication FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
+
+DROP TABLE IF EXISTS raw_publication_attribution;
+CREATE TABLE raw_publication_attribution (
+    id              SERIAL          PRIMARY KEY,
+    raw_publication_id  INTEGER         NOT NULL REFERENCES raw_publication (id) ON DELETE CASCADE,
+    name            VARCHAR(64)     NOT NULL,
+    url             VARCHAR(255),
+    retrieved       DATE            DEFAULT CURRENT_DATE
+);
+CREATE INDEX raw_publication_attribution_raw_publication_id on raw_publication_attribution (raw_publication_id);
+
 DROP TABLE IF EXISTS user_login CASCADE;
 CREATE TABLE user_login (
     id      SERIAL      PRIMARY KEY,
