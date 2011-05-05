@@ -23,7 +23,9 @@ CREATE TABLE title (
     r               INTEGER NOT NULL DEFAULT(2),
     level           INTEGER NOT NULL DEFAULT(1),
     created         TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified        TIMESTAMP NOT NULL DEFAULT NOW()
+    modified        TIMESTAMP NOT NULL DEFAULT NOW(),
+    CHECK(r > l),
+    CHECK((r - l) % 2 = 1)
 );
 CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
@@ -38,7 +40,7 @@ CREATE TABLE publication (
     -- TODO: maybe make "NOT NULL"?
     publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
-    title_id            INTEGER REFERENCES title (id),
+    title_id            INTEGER NOT NULL REFERENCES title (id),
 
     amazon_url          VARCHAR(255),
     publication_date    DATE,
