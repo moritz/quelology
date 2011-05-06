@@ -3,14 +3,13 @@ use 5.012;
 use warnings;
 use Exporter qw(import dbh);
 
-our @EXPORT_OK = qw(config schema amazon amazon_net dbh run_mode);
+our @EXPORT_OK = qw(config schema amazon dbh run_mode);
 use autodie;
 use JSON::XS qw(decode_json);
 
-use XML::Amazon::Cached;
-use Net::Amazon;
 use DBI;
 use Quelology::Model;
+use Quelology::Amazon;
 
 sub run_mode {
     $ENV{QUELOLOGY_RUNMODE} // $Quelology::RunMode // 'dev';
@@ -48,25 +47,13 @@ sub dbh {
 
 use Memoize;
 memoize('amazon');
-memoize('amazon_net');
+memoize('schema');
 
 sub amazon {
-    my $locale = shift // config('amazon_locale') // 'us';
-     XML::Amazon::Cached->new(
-        token => config('amazon_token'),
-        sak   => config('amazon_secret_key'),
-        local => $locale,
-        associate => 'quelology-20',
-    );
-}
-
-sub amazon_net {
-    my $locale = shift // config('amazon_locale') // 'us';
-    Net::Amazon->new(
-        token       => config('amazon_token'),
-        secret_key  => config('amazon_secret_key'),
-        locale      => $locale,
-        cache       => Cache::FileCache->new({ namespace => 'Net-Amazon' }),
+    Quelology::Amazon->new(
+        token   => config('amazon_token'),
+        secrit  => config('amazon_secret_key'),
+        locale  => 'us',
     );
 }
 

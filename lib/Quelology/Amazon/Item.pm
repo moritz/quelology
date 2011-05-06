@@ -63,6 +63,13 @@ sub _init_from_dom {
     }
 }
 
+sub detailpageurl {
+    my $self = shift;
+    $self->{detailpageurl} // "http://www.amazon.com/exec/obidos/ASIN/"
+                              . $self->{asin} . "/quelology-20";
+
+}
+
 # just so that it needn't be triggered by AUTOLOAD
 sub DESTROY {
 

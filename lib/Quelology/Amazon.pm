@@ -31,7 +31,11 @@ sub asin {
     );
     my $dom = $self->_do_request(\%req);
 #    say $dom->inner_xml;
-    return Quelology::Amazon::Item->new_from_dom($dom);
+    my $i = Quelology::Amazon::Item->new_from_dom($dom);
+    # it is both logical and annoying that amazon skips the ASIN
+    # in the response of requests for a particular ASIN. So fix it up:
+    $i->{asin} = $opts{asin};
+    return $i;
 }
 
 sub search {

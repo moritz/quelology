@@ -3,6 +3,9 @@ use strict;
 use 5.012;
 use Carp qw(confess);
 use ISBN::Country qw/isbn_extract/;
+use Locales;
+
+my $locales = Locales->new;
 
 use parent 'DBIx::Class::ResultSet';
 
@@ -30,37 +33,45 @@ sub _fixup_date {
     join '-', @d[0..2];
 }
 
+sub _isbn_to_lang {
+    my $i = isbn_extract(shift);
+    return $i->{lang}[0] if $i;
+    undef;
+}
+
+sub _guess_lang {
+    my $h = shift;
+    if ($h->languages) {
+        my $l = $h->languages;
+        my $guess = $l->{Published} // $l->{Unknown};
+        return $locales->get_code_from_language($guess) if defined $guess;
+        use Data::Dumper;
+        print Dumper $l;
+    }
+    _isbn_to_lang($h->isbn);
+}
+
 sub _hash_from_xml_amazon {
     my $m = shift;
     # TODO: handle publisher and author as relations
     my $h = {
-        asin            => $m->asin,
-        title           => unparen($m->title),
-        author          => scalarify($m->made_by),
-        amazon_url      => $m->url,
-        small_image     => $m->image('s'),
-        medium_image    => $m->image('m'),
-        large_image     => $m->image('l'),
+        asin                => $m->asin,
+        title               => $m->title,
+        isbn                => $m->isbn,
+        authors             => $m->author,
+        amazon_url          => $m->detailpageurl,
+        small_image         => $m->smallimage->{url},
+        small_image_width   => $m->smallimage->{width},
+        small_image_height  => $m->smallimage->{height},
+        medium_image        => $m->mediumimage->{url},
+        medium_image_width  => $m->mediumimage->{width},
+        medium_image_height => $m->mediumimage->{height},
+        large_image         => $m->largeimage->{url},
+        large_image_width   => $m->largeimage->{width},
+        large_image_height  => $m->largeimage->{height},
+        publication_date    => _fixup_date($m->publicationdate // $m->releasedate),
+        publisher           => $m->publisher,
     };
-
-    # get more information through a different module
-    my $am = Quelology::Config::amazon_net();
-    my $res = $am->search(asin => $h->{asin});
-    if ($res->is_success) {
-        # TODO: be more robust
-        my ($book) = $res->properties;
-        if ($book->isbn) {
-            $h->{isbn} = $book->isbn;
-        } else {
-            $h->{isbn} = $h->{asin} if $h->{asin} =~ /^\d/;
-        }
-        my $date = $book->publication_date // $book->ReleaseDate;
-        $h->{publication_date} = _fixup_date $date if $date;
-    }
-    if ($h->{isbn}) {
-        my $i = isbn_extract($h->{isbn});
-        $h->{lang} = $i->{lang}[0] if $i;
-    }
 
     return $h;
 }
@@ -72,7 +83,6 @@ sub websearch {
         keywords    => $keywords,
         type        => 'Books',
     );
-    return unless $amazon->is_success;
     my (@series, @titles, @pubs);
     my %root_seen;
     for ($a_res->collection) {
@@ -105,12 +115,12 @@ sub from_asin {
     my ($row) = $self->search({ asin => $asin });
     unless ($row) {
         my $am = Quelology::Config::amazon();
-        my $m = $am->asin($asin);
+        my $m = $am->asin(asin => $asin);
         if ($m) {
             die "Got no title from amazon - bad sign" unless $m->title;
             my $h = _hash_from_xml_amazon($m);
             $row = $self->create($h);
-            $row->attribute($h->{amazon_url});
+            $row->attribute($row->amazon_url);
         } else {
             confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
         }
@@ -134,4 +144,4 @@ sub _join_sorted {
     return join ', ', @things;
 }
 
-1;
+1; 
