@@ -6,7 +6,7 @@ use utf8;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my $c = 0;
-my $pubs = schema->p->search(undef, { rows => 100, order_by => \'RANDOM()' });
+my $pubs = schema->p->search(undef, { rows => 200, order_by => \'RANDOM()' });
 while (my $p = $pubs->next) {
     my $similar = amazon->search(keywords => '"' . $p->title . '"');
     say $p->title;
@@ -15,9 +15,12 @@ while (my $p = $pubs->next) {
         next if schema->p->find({ asin => $_->asin });
         next if schema->rp->find({ asin => $_->asin });
         next if length($_->title) > 255;
-        my $rp = schema->rp->import_from_amazon_item($_);
-        say '    ', $rp->title, ' ', $rp->publication_date;
-        $c++;
+        eval {
+            my $rp = schema->rp->import_from_amazon_item($_);
+            say '    ', $rp->title, ' ', $rp->publication_date;
+            $c++;
+        };
+        say $@ if $@;
     }
     sleep 1;
 }

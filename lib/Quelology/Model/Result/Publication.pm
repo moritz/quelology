@@ -17,6 +17,8 @@ __PACKAGE__->add_columns(qw/
     title_id
     publication_date
     lang
+    binding
+    pages
 
     small_image
     small_image_width

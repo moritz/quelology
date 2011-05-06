@@ -41,6 +41,10 @@ __PACKAGE__->has_many('author_titles',
                       'title_id');
 __PACKAGE__->many_to_many(authors => author_titles => 'author');
 
+__PACKAGE__->has_many('maybe_raw_publications',
+                      'Quelology::Model::Result::RawPublication',
+                      'maybe_title_id');
+
 __PACKAGE__->tree_columns({
         root_column     => 'root_id',
         left_column     => 'l',

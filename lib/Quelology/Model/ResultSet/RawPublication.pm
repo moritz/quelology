@@ -55,6 +55,21 @@ sub _guess_lang {
     _isbn_to_lang($h->isbn);
 }
 
+sub _frob_binding {
+    my $b = lc shift;
+    # TODO: get data from database somehow
+    my %known = (
+        paperback   => 1,
+        hardcover   => 1,
+        pamphlet    => 1,
+        digest      => 1,
+        ebook       => 1,
+        audio       => 1,
+        video       => 1,
+    );
+    $known{$b};
+}
+
 sub _hash_from_xml_amazon {
     my $m = shift;
     # TODO: handle publisher and author as relations
@@ -66,6 +81,8 @@ sub _hash_from_xml_amazon {
         amazon_url          => $m->detailpageurl,
         publication_date    => _fixup_date($m->publicationdate // $m->releasedate),
         publisher           => $m->publisher,
+        pages               => $m->numberofpages,
+        binding             => _frob_binding($m->binding),
     };
     for (qw/small medium large/) {
         my $method = $_ . 'image';

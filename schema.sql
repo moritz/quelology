@@ -8,11 +8,13 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+CREATE TYPE bookbinding AS ENUM('paperback', 'hardcover', 'pamphlet', 'digest',
+        'ebook', 'audio', 'video');
 
 DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
-    title           VARCHAR(255) NOT NULL,
+    title           VARCHAR(512) NOT NULL,
     lang            CHAR(2),
 
     isfdb_id        INTEGER         UNIQUE,
@@ -36,14 +38,18 @@ CREATE TABLE publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
     isbn                VARCHAR(13),
-    title               VARCHAR(255) NOT NULL,
+    title               VARCHAR(512) NOT NULL,
     -- TODO: maybe make "NOT NULL"?
     publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
-    title_id            INTEGER NOT NULL REFERENCES title (id),
+    -- cannot make NOT NULL because of how import from isfdb
+    -- works. TODO: fixup later
+    title_id            INTEGER REFERENCES title (id),
 
     amazon_url          VARCHAR(255),
     publication_date    DATE,
+    binding             bookbinding,
+    pages               INTEGER,
 
     small_image         VARCHAR(255),
     small_image_width   INTEGER,
@@ -72,13 +78,17 @@ CREATE TABLE raw_publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
     isbn                VARCHAR(13) UNIQUE,
-    title               VARCHAR(255) NOT NULL,
+    title               VARCHAR(512) NOT NULL,
     authors             VARCHAR(512),
     publisher           VARCHAR(255),
     lang                CHAR(2),
 
+    maybe_title_id      INTEGER REFERENCES title (id),
+
     amazon_url          VARCHAR(255),
     publication_date    DATE,
+    binding             bookbinding,
+    pages               INTEGER,
 
     small_image         VARCHAR(255),
     small_image_width   INTEGER,
