@@ -29,8 +29,12 @@ sub unparen {
 sub _fixup_date {
     my $date = shift;
     my @d = split /-/, $date;
-    push @d, 01, 01;
-    join '-', @d[0..2];
+    push @d, qw/01 01/;
+    my $d = join '-', @d[0..2];
+    if ($d =~ /^\d{4}-\d\d-\d\d$/) {
+        return $d;
+    }
+    undef;
 }
 
 sub _isbn_to_lang {
@@ -60,18 +64,17 @@ sub _hash_from_xml_amazon {
         isbn                => $m->isbn,
         authors             => $m->author,
         amazon_url          => $m->detailpageurl,
-        small_image         => $m->smallimage->{url},
-        small_image_width   => $m->smallimage->{width},
-        small_image_height  => $m->smallimage->{height},
-        medium_image        => $m->mediumimage->{url},
-        medium_image_width  => $m->mediumimage->{width},
-        medium_image_height => $m->mediumimage->{height},
-        large_image         => $m->largeimage->{url},
-        large_image_width   => $m->largeimage->{width},
-        large_image_height  => $m->largeimage->{height},
         publication_date    => _fixup_date($m->publicationdate // $m->releasedate),
         publisher           => $m->publisher,
     };
+    for (qw/small medium large/) {
+        my $method = $_ . 'image';
+        if ($m->$method) {
+            $h->{$_ . '_image'}        = $m->$method->{url};
+            $h->{$_ . '_image_width'}  = $m->$method->{width};
+            $h->{$_ . '_image_height'} = $m->$method->{height};
+        }
+    }
 
     return $h;
 }
@@ -109,25 +112,32 @@ sub websearch {
     return (\@series, \@titles, \@pubs);
 }
 
-sub from_asin {
+sub by_asin {
     my ($self, $asin) = @_;
     confess("No ASIN provided") unless defined($asin) && length $asin;
     my ($row) = $self->search({ asin => $asin });
-    unless ($row) {
-        my $am = Quelology::Config::amazon();
-        my $m = $am->asin(asin => $asin);
-        if ($m) {
-            die "Got no title from amazon - bad sign" unless $m->title;
-            my $h = _hash_from_xml_amazon($m);
-            $row = $self->create($h);
-            $row->attribute($row->amazon_url);
-        } else {
-            confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
-        }
-    }
-    # get the current ID from the database, so that relations work
+    die "ASIN <$asin> not in DB" unless $row;
+    $row;
+}
+
+sub import_from_amazon_item {
+    my ($self, $ai) = @_;
+    my $row = $self->create(_hash_from_xml_amazon($ai));
     $row->discard_changes;
-    return $row;
+    $row->attribute($row->amazon_url);
+    $row;
+}
+
+sub import_by_asin {
+    my ($self, $asin) = @_;
+    my $am = Quelology::Config::amazon();
+    my $m = $am->asin(asin => $asin);
+    my $row;
+    if ($m) {
+        return $self->import_from_amazon_item($m);
+    } else {
+        confess "Failed to retrieve medium with asin '$asin': neither in DB nor in amazon";
+    }
 }
 
 sub _join_sorted {
