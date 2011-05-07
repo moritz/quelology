@@ -197,11 +197,11 @@ sub titles_with_unconfirmed_pubs {
                      page       => $page,
                      order_by   => \'me.title',
                      distinct   => 1,
-                     having     => \'COUNT(maybe_raw_publications.id) >= 1)',
+                     having     => \'COUNT(maybe_raw_publications.id) >= 1',
                  },
              );
     $self->render(
-        title    => "Titles with unconfirmed publications, page $page",
+        title    => "Titles with Unconfirmed Publications (page $page)",
         template => 'title/unconfirmed-pubs',
         layout   => 'basic',
         titles   => $titles,
@@ -1322,7 +1322,7 @@ Disallow: /
                 </ul></dd><dt><%= $prev_year || '(date unknown)' %></dt>
                 <dd><ul>
             % }
-                    <li><a href="/publication/<%= $pub->id %>"><%= $pub->title %></li></li>
+                    <li><a href="/publication/<%= $pub->id %>"><%= $pub->title %></a></li>
         % }
         </ul></dd>
     </dl>
