@@ -140,6 +140,8 @@ get '/title/:id/' => [ id => qr/[0-9]+/ ] => sub {
 get '/title/:lang'       => [ lang => qr/[a-z]{2}/                     ] => \&get_lang;
 get '/title/:lang/:page' => [ lang => qr/[a-z]{2}/, page => qr/[0-9]+/ ] => \&get_lang;
 
+
+
 use constant LANG_PAGE_SIZE => 100;
 
 sub get_lang {
@@ -179,6 +181,35 @@ sub unknown_lang {
         languages   => \@global_langs,
     );
 }
+
+get '/title/unconfirmed-pubs', \&titles_with_unconfirmed_pubs;
+get '/title/unconfirmed-pubs/:page', [ page => qr/[0-9]+/], \&titles_with_unconfirmed_pubs;
+
+sub titles_with_unconfirmed_pubs {
+    my $self   = shift;
+    my $page   = $self->param('page') // 1;
+    # TODO: this query is wrong. It returns far too many rows.
+    my $titles = $schema->t->search(
+                undef,
+                 {
+                     join       => 'maybe_raw_publications',
+                     rows       => 100,
+                     page       => $page,
+                     order_by   => \'me.title',
+                     distinct   => 1,
+                     having     => \'COUNT(maybe_raw_publications.id) >= 1)',
+                 },
+             );
+    $self->render(
+        title    => "Titles with unconfirmed publications, page $page",
+        template => 'title/unconfirmed-pubs',
+        layout   => 'basic',
+        titles   => $titles,
+        base_url => "/title/unconfirmed-pubs/",
+        pager    => $titles->pager,
+    );
+}
+
 get '/publication/:id' => sub {
     my $self = shift;
     my $node = $schema->p->by_id($self->param('id'));
@@ -635,7 +666,7 @@ post '/raw_publication/confirm' => sub {
     } else {
         $self->flash(message => "Nothing updated, did you chose 'Yes' or 'No' for some publications?");
     }
-    $self->redirect_to("/t/$title_id");
+    $self->redirect_to("/title/$title_id");
 
 };
 
@@ -992,7 +1023,7 @@ __DATA__
     <br />
     <select name="source_id" size="<%= $mc %>">
         % for (@ns) {
-            <option value="<%= $_->id %>"><%= $_->title %></option> 
+            <option value="<%= $_->id %>"><%= $_->title %></option>
         % }
     </select>
     <br />
@@ -1083,6 +1114,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         % }
         % for my $rp (@rp) {
             %== include 'raw_publication', node => $rp, title => $node
+            <br />
         % }
         % if (session('logged_in')) {
             <input type="submit" value="classify publications">
@@ -1136,6 +1168,16 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         <br>
     </form>
 % }
+%== include 'pager', pager => $pager
+
+@@ title/unconfirmed-pubs.html.ep
+<h1><%= $title %></h1>
+%== include 'pager', pager => $pager
+<ul>
+    % while (my $t = $titles->next) {
+        <li><%== include title_link => title => $t, single => 1  %></li>
+    % }
+</ul>
 %== include 'pager', pager => $pager
 
 @@ pager.html.ep
@@ -1235,8 +1277,8 @@ Disallow: /
 % }
 
 <table>
-    % my @keys = qw/isbn publication_date language pages binding publisher/;
-    % my @names = ('ISBN', 'Date', 'Language', 'Pages', 'Binding', 'Publisher');
+    % my @keys = qw/authors isbn publication_date language pages binding publisher/;
+    % my @names = ('Author(s)', 'ISBN', 'Date', 'Language', 'Pages', 'Binding', 'Publisher');
     % for (0..$#keys) {
         % my $k = $keys[$_];
         % if (defined $node->$k) {
