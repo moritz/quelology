@@ -67,7 +67,8 @@ sub _frob_binding {
         audio       => 1,
         video       => 1,
     );
-    $known{$b};
+    return $b if $known{$b};
+    undef;
 }
 
 sub _hash_from_xml_amazon {

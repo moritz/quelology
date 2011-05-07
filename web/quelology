@@ -609,6 +609,36 @@ post '/dissolve' => sub {
     $self->render(text => '');
 };
 
+post '/raw_publication/confirm' => sub {
+    my $self     = shift;
+    my $title_id = $self->param('title');
+    my $title    = $schema->t->by_id($title_id);
+    my $rp_rs    = $schema->rp;
+    my $count    = 0;
+    for ($self->param) {
+        next unless /^rp_(\d+)$/;
+        my $id = $1;
+        my $val = $self->param($_);
+        next if $val eq 'noop';
+        if ($val eq 'yes') {
+            $rp_rs->find($id)->cook($title);
+            $count++;
+        } elsif ($val eq 'no') {
+            $rp_rs->find($id)->update({ maybe_title_id => undef });
+            $count++;
+        } else {
+            die "Don't know what to do with action '$val'";
+        }
+    }
+    if ($count) {
+        $self->flash(message => "Updated $count publications, thank you!");
+    } else {
+        $self->flash(message => "Nothing updated, did you chose 'Yes' or 'No' for some publications?");
+    }
+    $self->redirect_to("/t/$title_id");
+
+};
+
 
 $SIG{INT} = sub {
     $schema->storage->disconnect;
@@ -1040,7 +1070,26 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         %== include 'publication', node => $p
         <br style="clear:left" />
     % }
-    </ul>
+    % my @rp = $node->maybe_raw_publications;
+    % if (@rp) {
+        <h3>Unconfirmed Publications</h3>
+        <p>Please help improving our data by telling us if these publications
+           below actually belong to this title.</p>
+        % if (session('logged_in')) {
+            <form action="/raw_publication/confirm" method="post">
+            <input type="hidden" name="title" value="<%= $node->id %>">
+        % } else {
+            <p><a href="/login/">Log in or create an account</a> to contribute!</p>
+        % }
+        % for my $rp (@rp) {
+            %== include 'raw_publication', node => $rp, title => $node
+        % }
+        % if (session('logged_in')) {
+            <input type="submit" value="classify publications">
+            </form>
+        % }
+
+    % }
 </div>
 
 @@ title-lang.html.ep
@@ -1128,8 +1177,8 @@ Disallow: /
 % }
 
 <table>
-    % my @keys = qw/isbn publication_date language/;
-    % my @names = ('ISBN', 'Date', 'Language');
+    % my @keys = qw/isbn publication_date language pages binding/;
+    % my @names = ('ISBN', 'Date', 'Language', 'Pages', 'Binding');
     % for (0..$#keys) {
         % my $k = $keys[$_];
         % if (defined $node->$k) {
@@ -1148,6 +1197,56 @@ Disallow: /
 </table>
 %== include add_shelf_link => (node => $node);
 
+     <p>
+         <a href="<%= $node->amazon_url %>">
+             View on amazon US
+         </a>
+     </p>
+
+     %== include 'attributions', for => $node, type => "Publication"
+</div>
+
+@@ raw_publication.html.ep
+<div  id="rawpub_<%= $node->id %>" data-id="<%= $node->id %>">
+<h4><%= $node->title %></h4>
+% if (session('logged_in')) {
+    <p>Is this a publication of <%= $title->title %>?
+    <br>
+    <select name="rp_<%= $node->id %>" size=3>
+        <option value="noop" selected="selected">Don't know</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+    </select>
+    </p>
+% }
+% if (defined $node->medium_image) {
+  <p style="float:left">
+    <% if (defined $node->large_image) { %>
+        <a href="<%= $node->large_image %>">
+    <% } %>
+    <img src="<%= $node->medium_image %>" class="medium_large"
+         width="<%= $node->medium_image_width %>"
+         height="<%= $node->medium_image_height %>"
+         alt="Cover of <%= $node->title %>" />
+    <% if (defined $node->large_image) { %>
+        </a>
+    <% } %>
+  </p>
+% }
+
+<table>
+    % my @keys = qw/isbn publication_date language pages binding publisher/;
+    % my @names = ('ISBN', 'Date', 'Language', 'Pages', 'Binding', 'Publisher');
+    % for (0..$#keys) {
+        % my $k = $keys[$_];
+        % if (defined $node->$k) {
+            <tr>
+                <td>        <%= $names[$_] =%>         </td>
+                <td><strong><%= $node->$k   %></strong></td>
+            </tr>
+        % }
+    % }
+</table>
      <p>
          <a href="<%= $node->amazon_url %>">
              View on amazon US

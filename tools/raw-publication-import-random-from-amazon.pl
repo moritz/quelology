@@ -6,17 +6,19 @@ use utf8;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my $c = 0;
-my $pubs = schema->p->search(undef, { rows => 200, order_by => \'RANDOM()' });
-while (my $p = $pubs->next) {
-    my $similar = amazon->search(keywords => '"' . $p->title . '"');
-    say $p->title;
+my $pubs = schema->t->search(undef, { rows => 500, order_by => \'RANDOM()' });
+while (my $t = $pubs->next) {
+    my $authors = join ' ', map $_->name, $t->authors;
+    my $similar = amazon->search(keywords => '"' . $t->title . '" ' . $authors);
+    say $t->title;
     for (@{ $similar->items }) {
-        next if $p->asin eq $_->asin;
         next if schema->p->find({ asin => $_->asin });
         next if schema->rp->find({ asin => $_->asin });
         next if length($_->title) > 255;
+        next unless $_->medium_image;
         eval {
             my $rp = schema->rp->import_from_amazon_item($_);
+            $rp->update({maybe_title_id => $t->id });
             say '    ', $rp->title, ' ', $rp->publication_date;
             $c++;
         };

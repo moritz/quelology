@@ -25,9 +25,9 @@ CREATE TABLE title (
     r               INTEGER NOT NULL DEFAULT(2),
     level           INTEGER NOT NULL DEFAULT(1),
     created         TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified        TIMESTAMP NOT NULL DEFAULT NOW(),
-    CHECK(r > l),
-    CHECK((r - l) % 2 = 1)
+    modified        TIMESTAMP NOT NULL DEFAULT NOW()
+--    CHECK(r > l)
+--    CHECK((r - l) % 2 = 1)
 );
 CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
@@ -83,7 +83,7 @@ CREATE TABLE raw_publication (
     publisher           VARCHAR(255),
     lang                CHAR(2),
 
-    maybe_title_id      INTEGER REFERENCES title (id),
+    maybe_title_id      INTEGER REFERENCES title (id) ON DELETE CASCADE,
 
     amazon_url          VARCHAR(255),
     publication_date    DATE,
