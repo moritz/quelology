@@ -52,7 +52,9 @@ sub _guess_lang {
         use Data::Dumper;
         print Dumper $l;
     }
-    _isbn_to_lang($h->isbn);
+    my $is = $h->isbn // $h->asin;
+    _isbn_to_lang($is) if $is;
+    undef;
 }
 
 sub _frob_binding {
@@ -84,6 +86,7 @@ sub _hash_from_xml_amazon {
         publisher           => $m->publisher,
         pages               => $m->numberofpages,
         binding             => _frob_binding($m->binding),
+        lang                => _guess_lang($m),
     };
     for (qw/small medium large/) {
         my $method = $_ . 'image';

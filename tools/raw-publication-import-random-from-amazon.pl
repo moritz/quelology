@@ -18,7 +18,7 @@ while (my $t = $pubs->next) {
         next unless $_->mediumimage;
         eval {
             my $rp = schema->rp->import_from_amazon_item($_);
-            $rp->update({maybe_title_id => $t->id });
+            $rp->update({maybe_title_id => $t->id }) if $t->lang eq $rp->lang;
             say '    ', $rp->title, ' ', $rp->publication_date;
             $c++;
         };
