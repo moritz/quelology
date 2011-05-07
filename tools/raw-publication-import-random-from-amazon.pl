@@ -15,7 +15,7 @@ while (my $t = $pubs->next) {
         next if schema->p->find({ asin => $_->asin });
         next if schema->rp->find({ asin => $_->asin });
         next if length($_->title) > 255;
-        next unless $_->medium_image;
+        next unless $_->mediumimage;
         eval {
             my $rp = schema->rp->import_from_amazon_item($_);
             $rp->update({maybe_title_id => $t->id });
