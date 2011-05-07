@@ -32,8 +32,6 @@
             <ul class="nav">
                 <li><a href="/">Home</a></li>
                 <li><a href="/">About</a></li>
-                <li><a href="/title/unknown-lang">Titles with unknown
-                    language</a>
                 <li>
                     % if (session 'logged_in') {
                         Logged in as '<%= session 'user' %>'.
@@ -44,6 +42,13 @@
                 </li>
             </ul>
             <br />
+            <h5>Help needed</h5>
+            <ul class="nav">
+                <li><a href="/title/unknown-lang">Titles with unknown language</a>
+                <li><a href="/title/unconfirmed-pubs/1">Titles with
+                    unconfirmed publications</a></li>
+            </ul>
+            <br>
             <h5>Your Bookshelf</h5>
             <%== shelf %>
           </div>
