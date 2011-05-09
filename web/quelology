@@ -12,6 +12,7 @@ use Digest::SHA1 qw/sha1/;
 use Locales;
 use utf8;
 use warnings;
+use constant PAGE_SIZE => 100;
 
 
 $::runmode = run_mode;
@@ -142,14 +143,13 @@ get '/title/:lang/:page' => [ lang => qr/[a-z]{2}/, page => qr/[0-9]+/ ] => \&ge
 
 
 
-use constant LANG_PAGE_SIZE => 100;
 
 sub get_lang {
     my $self        = shift;
     my $lang        = $self->param('lang');
     my $page        = $self->param('page') // 1;
     my $language    = Locales->new->get_language_from_code($lang);
-    my $nodes       = $schema->t->search({ lang => $lang }, { rows => LANG_PAGE_SIZE, page => $page , order_by => \'title'});
+    my $nodes       = $schema->t->search({ lang => $lang }, { rows => PAGE_SIZE, page => $page , order_by => \'title'});
     my $url         = "/title/$lang/";
 
 
@@ -170,7 +170,13 @@ get '/title/unknown-lang/:page' => [ page => qr/[0-9]+/ ] => \&unknown_lang;
 sub unknown_lang {
     my $self = shift;
     my $page = $self->stash('page') // 1;
-    my $ul   = $schema->t->search({ lang => undef }, { rows => LANG_PAGE_SIZE, page => $page , order_by => \'title'});
+    my $ul   = $schema->t->search({ lang => undef }, {
+            rows => PAGE_SIZE,
+            page => $page,
+            order_by => 'title',
+            # TODO: test this prefetch
+            prefetch => {author_titles => 'author' },
+    });
     $self->render(
         ul          => $ul,
         layout      => 'basic',
@@ -198,6 +204,7 @@ sub titles_with_unconfirmed_pubs {
                      order_by   => \'me.title',
                      distinct   => 1,
                      having     => \'COUNT(maybe_raw_publications.id) >= 1',
+                     prefetch   => 'author_titles',
                  },
              );
     $self->render(

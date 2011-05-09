@@ -6,7 +6,8 @@ use parent 'DBIx::Class::ResultSet';
 
 sub by_id {
     my ($self, $id) = @_;
-    my $obj = $self->find($id);
+    # TODO: benchmark with and without prefetch
+    my ($obj) = $self->search({ "me.id" => $id }, { prefetch => 'author_titles'});
     die "No title with id '$id' found" unless $obj;
     return $obj;
 }
