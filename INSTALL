@@ -43,6 +43,7 @@ with contents like that (and replace <password> with the actual
 database password:
 
 {
+    "web_secret": "<long, random string goes here>",
     "dev": {
         "dbname": "quelology-dev",
         "dbhost": "localhost",
