@@ -1,0 +1,12 @@
+Dependencies:
+    perl 5.12.0 or later
+    DBIx::Class::Tree::NestedSet from https://github.com/moritz/DBIx-Class-Tree-NestedSet
+    ISBN::Country from https://github.com/moritz/ISBN-Country
+    DBD::Pg
+    Mojolicious
+    Locales
+    JSON::XS
+    Crypt::Eksblowfish::Bcrypt
+    KinoSearch
+
+A postgresql database
