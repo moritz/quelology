@@ -9,4 +9,108 @@ Dependencies:
     Crypt::Eksblowfish::Bcrypt
     KinoSearch
 
-A postgresql database
+A postgresql database server, and ideally three databases, one each for
+development, testing and production.
+
+For example under Debian, you'd install
+
+    aptitude install postgresql-8.4 postgresql-client-8.4
+
+And then create the databases:
+
+    su - postgres
+
+    # create a database user:
+    createuser -S -D -R -P quelology_db
+    # you will be asked for a password. Enter one and write it down somewhere
+
+    # create the actual databases
+    createdb --encoding UTF-8 --owner quelology_db quelology-dev 'Quelology development database'
+    createdb --encoding UTF-8 --owner quelology_db quelology-test 'Quelology test database'
+    createdb --encoding UTF-8 --owner quelology_db quelology-prod 'Quelology production database'
+
+    # set them up to support triggers:
+    createlang -d quelology-dev  plpgsql
+    createlang -d quelology-test plpgsql
+    createlang -d quelology-prod plpgsql
+
+    # stop being user 'postgres':
+    exit
+
+
+Create a file called config.json in the quelology source tree root,
+with contents like that (and replace <password> with the actual
+database password:
+
+{
+    "dev": {
+        "dbname": "quelology-dev",
+        "dbhost": "localhost",
+        "dbuser": "quelology",
+        "dbpass": "<password>"
+    },
+    "test": {
+        "dbname": "quelology-test",
+        "dbhost": "localhost",
+        "dbuser": "quelology",
+        "dbpass": "<password>"
+    },
+    "prod": {
+        "dbname": "quelology-prod",
+        "dbhost": "localhost",
+        "dbuser": "quelology",
+        "dbpass": "<password>"
+    }
+}
+
+Set permissions so that no other use can read your passwords:
+
+    chmod 600 config.json
+
+Populate the development database with a schema:
+
+    psql -h localhost -U quelology quelolog-dev < schema.sql
+
+With a bit of luck, you should now be able to run
+
+    perl web/quelology daemon
+
+And get a response like this:
+
+    Mon May  9 09:48:22 2011 info Mojo::Server::Daemon:297 [29749]: Server
+    listening (http://*:3000)
+    Server available at http://127.0.0.1:3000.
+
+Now point your web browser to http://127.0.0.1:3000/ and admire a nearly empty
+page :-).
+
+Kill the server again by pressing Ctrl+C in the console where you started it.
+
+To avoid having to enter your database passwords whenever you import or export
+data (which also happens during automated unit tests), create a file called
+.pgpass in your home directory, with contents like this:
+
+    localhost:5432:quelology-dev:quelology:<password>
+    localhost:5432:quelology-test:quelology:<password>
+    localhost:5432:quelology-prod:quelology:<password>
+
+(without the leading spaces, and again substitute <password> for the actual
+ database password).
+
+You can import a bunch of data which makes development much more fun:
+
+    wget http://moritz.faui2k3.org/tmp/quelology-latest.sql.gz
+    zcat quelolog-latest.sql.gz | psql  -h localhost -U quelology quelolog-dev
+
+Now create a search index:
+
+    mkdir -p data/search-index/common/
+    perl create-ksx-index.pl
+
+And start the web server again:
+
+    perl web/quelology daemon
+
+And browse http://127.0.0.1:3000/
+
+Have fun!
