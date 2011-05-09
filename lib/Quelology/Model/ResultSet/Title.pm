@@ -4,10 +4,15 @@ use 5.012;
 use Carp qw(confess);
 use parent 'DBIx::Class::ResultSet';
 
+my $prefetch = { author_titles => 'author' };
+
 sub by_id {
     my ($self, $id) = @_;
     # TODO: benchmark with and without prefetch
-    my ($obj) = $self->search({ "me.id" => $id }, { prefetch => 'author_titles'});
+    my ($obj) = $self->search(
+        { "me.id" => $id },
+        { prefetch => $prefetch },
+    );
     die "No title with id '$id' found" unless $obj;
     return $obj;
 }
@@ -19,25 +24,9 @@ sub from_asin {
     if (my $t = $pub->title_obj) {
         return $t;
     } else {
-        return $self->new_from_publication($pub);
+        die "No title with asin '$asin' yet";
     }
 }
-
-sub new_from_publication {
-    my ($self, $pub) = @_;
-    my $new;
-    $self->result_source->schema->txn_do(sub {
-        $new = $self->create({
-                title       => $pub->title,
-                author      => $pub->author,
-                publisher   => $pub->publisher,
-                lang        => $pub->lang,
-        });
-        $pub->update({title_id => $new->id});
-    });
-    return $new;
-}
-
 
 # TODO: test if ->all() interferes with the current position in a resultset
 #
@@ -125,7 +114,7 @@ sub with_different_languages {
         },
         {
             join        => 'publications',
-            prefetch    => 'publications',
+            prefetch    => ['publications', $prefetch],
         },
     );
 }
