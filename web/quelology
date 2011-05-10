@@ -188,18 +188,7 @@ get '/title/unconfirmed-pubs/:page', [ page => qr/[0-9]+/], \&titles_with_unconf
 sub titles_with_unconfirmed_pubs {
     my $self   = shift;
     my $page   = $self->param('page') // 1;
-    my $titles = $schema->t->search(
-                undef,
-                 {
-                     join       => 'maybe_raw_publications',
-                     rows       => 100,
-                     page       => $page,
-                     order_by   => \'me.title',
-                     distinct   => 1,
-                     having     => \'COUNT(maybe_raw_publications.id) >= 1',
-                     prefetch   => { author_titles => 'author' },
-                 },
-             );
+    my $titles = $schema->t->with_unconfirmed_pubs($page);
     $self->render(
         title    => "Titles with Unconfirmed Publications (page $page)",
         template => 'title/unconfirmed-pubs',

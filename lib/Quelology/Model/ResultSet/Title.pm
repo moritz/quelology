@@ -173,8 +173,23 @@ sub unknown_lang {
             prefetch    => $prefetch,
         },
     );
+}
 
-
+sub with_unconfirmed_pubs {
+    my ($self, $page) = @_;
+    $page //= 1;
+    $self->search(
+        undef,
+        {
+            join       => 'maybe_raw_publications',
+            rows       => 100,
+            page       => $page,
+            order_by   => \'me.title',
+            distinct   => 1,
+            having     => \'COUNT(maybe_raw_publications.id) >= 1',
+            prefetch   => { author_titles => 'author' },
+        },
+    );
 }
 
 
