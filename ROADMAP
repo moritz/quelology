@@ -18,9 +18,19 @@ DONE:
 
 (go live in read-only mode)
 
-2) Big Redesign phase:
+1.5) Big Redesign phase:
     * consistent design
     * easier tree editing
+
+2) Editing capabilities
+    * enter and edit title, publication and author data
+    * search amazon, imoprt raw_publications
+      (implemented in the backend, no user interface for it)
+    * promote raw_publications to title + publication
+    * create translations
+    * move publications (and maybe raw publications) around
+      inside a series
+    * improved series create (how?)
 
 2.5) Explaning texts about tree editing
 
@@ -29,10 +39,9 @@ DONE:
 3) More Feature phase:
     * CSRF protection
     * cross-browser testing
-    * proper database search
-    * use, created and view aliases
+    * experiment with kinosearch thingy
+    * use, created and view aliases / alternative titles
     * timeline view
-    * translations
     * i18n, l10n
     * on-site SEO (titles, URLs)
     * other data source /link destination than amazon
@@ -42,11 +51,14 @@ DONE:
         - guard against multiple edit fields at once
             (which would mean that a user input might be lost)
     * mass edit form
-    * proper fulltext index + search
 
 4) Even More Features phase (speculative at best):
     * "social" features (?)
     * badges/achievement for editing (?)
     * voting on correctness, content; maybe user karma (?)
-    * additional meta-information (characters that appear in books, author
-        pages) (?)
+    * additional meta-information (characters that appear in books) (?)
+
+DONE
+    * translations
+    * proper fulltext index + search
+    * author pages
