@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS title_attribution;
 DROP TABLE IF EXISTS publication_attribution;
 DROP TABLE IF EXISTS author CASCADE;
 DROP TABLE IF EXISTS author_title_map;
+DROP VIEW  IF EXISTS author_wiki_link_count;
 DROP TABLE IF EXISTS author_link;
 DROP TABLE IF EXISTS author_attribution;
 DROP TABLE IF EXISTS publisher CASCADE;
@@ -49,6 +50,20 @@ CREATE TABLE title (
 CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX title_root_id_idx on title (root_id);
+
+CREATE TABLE publisher (
+    id              SERIAL          PRIMARY KEY,
+    isfdb_id        INTEGER         UNIQUE,
+    name            VARCHAR(255)    NOT NULL UNIQUE
+);
+
+CREATE TABLE publisher_link (
+    id              SERIAL          PRIMARY KEY,
+    publisher_id    INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
+    type            VARCHAR(64)     NOT NULL,
+    url             VARCHAR(255)    NOT NULL
+);
+CREATE INDEX publisher_link_publisher_id_idx ON publisher_link (publisher_id);
 
 CREATE TABLE publication (
     id                  SERIAL primary key,
@@ -219,16 +234,3 @@ CREATE TABLE author_attribution (
 );
 CREATE INDEX author_attribution_author_id on author_attribution (author_id);
 
-CREATE TABLE publisher (
-    id              SERIAL          PRIMARY KEY,
-    isfdb_id        INTEGER         UNIQUE,
-    name            VARCHAR(255)    NOT NULL UNIQUE
-);
-
-CREATE TABLE publisher_link (
-    id              SERIAL          PRIMARY KEY,
-    publisher_id    INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
-    type            VARCHAR(64)     NOT NULL,
-    url             VARCHAR(255)    NOT NULL
-);
-CREATE INDEX publisher_link_publisher_id_idx ON publisher_link (publisher_id);
