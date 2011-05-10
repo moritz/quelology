@@ -1,6 +1,7 @@
 package Quelology::Model::ResultSet::Publisher;
 use strict;
-use 5.012;
+use 5.010;
+use strict;
 
 use parent 'DBIx::Class::ResultSet';
 

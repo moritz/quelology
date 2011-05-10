@@ -13,7 +13,8 @@ It's a bit hard for me to drag nodes to long distance.
 
 * add JS form validation and username availability checking to signup form
 
-* add scraper for http://www.isfdb.org/cgi-bin/pe.cgi?13661
+* find a way to turn author birthplaces into geo coordinates, and display the
+  location(s) on a stylized world map
 
 
 DONE

@@ -1,5 +1,6 @@
 use warnings;
-use 5.012;
+use 5.010;
+use strict;
 use lib 'lib';
 use Quelology::Config qw(schema);
 

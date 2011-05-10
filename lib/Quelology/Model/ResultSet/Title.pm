@@ -1,6 +1,7 @@
 package Quelology::Model::ResultSet::Title;
 use strict;
-use 5.012;
+use 5.010;
+use strict;
 use Carp qw(confess);
 use parent 'DBIx::Class::ResultSet';
 use constant PAGE_SIZE => 100;

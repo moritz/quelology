@@ -1,5 +1,6 @@
 package Quelology::Model::ResultSet::Author;
-use 5.012;
+use 5.010;
+use strict;
 use Carp qw(confess);
 use parent 'DBIx::Class::ResultSet';
 

@@ -1,5 +1,6 @@
 package Quelology::Config;
-use 5.012;
+use 5.010;
+use strict;
 use warnings;
 use Exporter qw(import dbh);
 

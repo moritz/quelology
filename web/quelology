@@ -2,7 +2,8 @@
 
 use lib 'lib';
 use if $ENV{QUELOLOGY_HOME}, 'lib', "$ENV{QUELOLOGY_HOME}/lib";
-use 5.012;
+use 5.010;
+use strict;
 use Mojolicious::Lite;
 use Mojo::ByteStream 'b';
 use Quelology::Config qw(schema config run_mode);

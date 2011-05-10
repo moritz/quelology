@@ -1,6 +1,7 @@
 package Quelology::Model::ResultSet::Publication;
 use strict;
-use 5.012;
+use 5.010;
+use strict;
 use Carp qw(confess);
 use ISBN::Country qw/isbn_extract/;
 
