@@ -1,3 +1,20 @@
+-- all DROP TABLEs need to go first, so that newly created tables
+-- don't add dependencies to to-be-deleted tables
+DROP TABLE IF EXISTS title CASCADE;
+DROP TABLE IF EXISTS publication CASCADE;
+DROP TABLE IF EXISTS raw_publication CASCADE;
+DROP TABLE IF EXISTS raw_publication_attribution;
+DROP TABLE IF EXISTS user_login CASCADE;
+DROP TABLE IF EXISTS user_info;
+DROP TABLE IF EXISTS title_attribution;
+DROP TABLE IF EXISTS publication_attribution;
+DROP TABLE IF EXISTS author CASCADE;
+DROP TABLE IF EXISTS author_title_map;
+DROP TABLE IF EXISTS author_link;
+DROP TABLE IF EXISTS author_attribution;
+DROP TABLE IF EXISTS publisher CASCADE;
+DROP TABLE IF EXISTS publisher_link;
+
 -- trigger function from
 -- http://www.revsys.com/blog/2006/aug/04/automatically-updating-a-timestamp-column-in-postgresql/
 CREATE OR REPLACE FUNCTION update_modified_column()
@@ -8,10 +25,10 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+DROP TYPE bookbinding;
 CREATE TYPE bookbinding AS ENUM('paperback', 'hardcover', 'pamphlet', 'digest',
         'ebook', 'audio', 'video');
 
-DROP TABLE IF EXISTS title CASCADE;
 CREATE TABLE title (
     id SERIAL primary key,
     title           VARCHAR(512) NOT NULL,
@@ -33,7 +50,6 @@ CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE 
 
 CREATE INDEX title_root_id_idx on title (root_id);
 
-DROP TABLE IF EXISTS publication CASCADE;
 CREATE TABLE publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
@@ -73,7 +89,6 @@ CREATE INDEX publication_title_id_idx on publication (title_id);
 CREATE INDEX publication_publisher_id_idx on publication (publisher_id);
 
 
-DROP TABLE IF EXISTS raw_publication CASCADE;
 CREATE TABLE raw_publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
@@ -107,7 +122,6 @@ CREATE TABLE raw_publication (
 );
 CREATE TRIGGER update_raw_publication_modtime BEFORE UPDATE ON raw_publication FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-DROP TABLE IF EXISTS raw_publication_attribution;
 CREATE TABLE raw_publication_attribution (
     id              SERIAL          PRIMARY KEY,
     raw_publication_id  INTEGER         NOT NULL REFERENCES raw_publication (id) ON DELETE CASCADE,
@@ -117,7 +131,6 @@ CREATE TABLE raw_publication_attribution (
 );
 CREATE INDEX raw_publication_attribution_raw_publication_id on raw_publication_attribution (raw_publication_id);
 
-DROP TABLE IF EXISTS user_login CASCADE;
 CREATE TABLE user_login (
     id      SERIAL      PRIMARY KEY,
     name    VARCHAR(64) UNIQUE,
@@ -129,7 +142,6 @@ CREATE TABLE user_login (
 );
 CREATE TRIGGER update_user_login_modtime BEFORE UPDATE ON user_login FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-DROP TABLE IF EXISTS user_info;
 CREATE TABLE user_info (
     id              SERIAL      PRIMARY KEY,
     login_id        INTEGER     NOT NULL REFERENCES user_login (id) ON DELETE CASCADE,
@@ -138,7 +150,6 @@ CREATE TABLE user_info (
 );
 CREATE INDEX user_info_login_id_idx on user_info (login_id);
 
-DROP TABLE IF EXISTS title_attribution;
 CREATE TABLE title_attribution (
     id              SERIAL          PRIMARY KEY,
     title_id        INTEGER         NOT NULL REFERENCES title (id) ON DELETE CASCADE,
@@ -148,7 +159,6 @@ CREATE TABLE title_attribution (
 );
 CREATE INDEX title_attributioin_title_id on title_attribution (title_id);
 
-DROP TABLE IF EXISTS publication_attribution;
 CREATE TABLE publication_attribution (
     id              SERIAL          PRIMARY KEY,
     publication_id  INTEGER         NOT NULL REFERENCES publication (id) ON DELETE CASCADE,
@@ -158,7 +168,6 @@ CREATE TABLE publication_attribution (
 );
 CREATE INDEX publication_attribution_publication_id on publication_attribution (publication_id);
 
-DROP TABLE IF EXISTS author CASCADE;
 CREATE TABLE author (
     id              SERIAL          PRIMARY KEY,
     -- for import from isfdb.org
@@ -176,7 +185,6 @@ CREATE TABLE author (
 );
 CREATE TRIGGER update_author_modtime BEFORE UPDATE ON author FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
-DROP TABLE IF EXISTS author_title_map;
 CREATE TABLE author_title_map (
     id              SERIAL          PRIMARY KEY,
     author_id       INTEGER NOT NULL REFERENCES author (id) ON DELETE CASCADE,
@@ -184,7 +192,6 @@ CREATE TABLE author_title_map (
                     UNIQUE(author_id, title_id)
 );
 
-DROP TABLE IF EXISTS author_link;
 CREATE TABLE author_link (
     id              SERIAL          PRIMARY KEY,
     author_id       INTEGER NOT NULL REFERENCES author (id) ON DELETE CASCADE,
@@ -203,7 +210,6 @@ AS  SELECT   author_id, count(author_id)
     GROUP BY author_id
     ;
 
-DROP TABLE IF EXISTS author_attribution;
 CREATE TABLE author_attribution (
     id              SERIAL          PRIMARY KEY,
     author_id       INTEGER         NOT NULL REFERENCES author (id) ON DELETE CASCADE,
@@ -213,14 +219,12 @@ CREATE TABLE author_attribution (
 );
 CREATE INDEX author_attribution_author_id on author_attribution (author_id);
 
-DROP TABLE IF EXISTS publisher CASCADE;
 CREATE TABLE publisher (
     id              SERIAL          PRIMARY KEY,
     isfdb_id        INTEGER         UNIQUE,
     name            VARCHAR(255)    NOT NULL UNIQUE
 );
 
-DROP TABLE IF EXISTS publisher_link;
 CREATE TABLE publisher_link (
     id              SERIAL          PRIMARY KEY,
     publisher_id    INTEGER NOT NULL REFERENCES publisher (id) ON DELETE CASCADE,
