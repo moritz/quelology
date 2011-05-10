@@ -9,11 +9,20 @@ easy or not
     in a smll file (plain text or JSON). Bonus points for actually
     using the time that the database provides. Hint: SELECT NOW()
 
-(3)(depends on (2)): modify tools/create-ksx-index.pl in the
-   following way: if the index and the file written in task (2)
-   already exist, don't delete the index, but add only records
-   where the 'created' field is younger than the timestamp record
-   in task (2).
+(3) (depends on (2)): modify tools/create-ksx-index.pl in the
+    following way: if the index and the file written in task (2)
+    already exist, don't delete the index, but add only records
+    where the 'created' field is younger than the timestamp record
+    in task (2).
+
+(4) Move a DB query to the backend.
+    All non-trivial database queries should be methods in the classes
+    in the Quelology::Model:: namespace, usually in resultsets.
+    Create a class Quelology::Model::ResultSet::AuthorWikiLinkCount
+    (you can take the boilerplate from other ResultSet classes).
+    Then take the query from the '/trivia/authors-by-wiki-languages'
+    callback in file web/quelology and turn it into a method called
+    top_authors in that new file. Call that method from web/quelology.
 
 DONE:
 
