@@ -1,0 +1,41 @@
+Titles, publications, raw publications
+
+A title is an abstract concept for a book. It has one or more authors,
+and might be part of a series of books. In the Quelology data model, a title
+is at the same time a tree of titles which represent (possibly nested) series.
+
+You can't buy a title in a book store, you can only buy publications.
+A publication typically has an ISBN, some cover art, a binding (eg. paperback
+or hardcover), a price and so on. A publication always belongs to a title
+(TODO: In the long run, it might belong to more titles, in the case when
+the title is a  short story, and the publication is a collection of short
+stories).
+
+Titles and publications are nicely normalized tables, ie. author and publisher
+information isn't stored directly (and thus redundantly) in that table,
+instead they are realized as foreign keys. So there's a table that stores
+author names, birth dates etc., and then there's a table called
+author_title_map which stores pairs of (author_id, title_id).
+
+But that's not how we usually get data from the outside. For example when
+importing data from amazon, it's denormalized. So intead of author ids and
+publisher ids, that data contains author names and publisher names.
+This denormalized data is stored in the raw_publication table.
+
+
+Attributions
+
+All major tables (author, title, publication, raw_publication) have an
+accompanioning _attribution table (author_attribution, title_attribution etc.)
+that store links to sources where we got our data from (amazon, isfdb,
+wikipedia, more in future). Those tables store the id of the data set they
+belong to, a name ("wikipedia"), and a link to page where the data is from.
+
+Attributions serve several purposes:
+    * Transparency: the user can find out where the data came from
+    * License/legal: some data sources require attribution
+    * Pointers to other resoruces the user might find interesting
+
+All automatic data import *must* attribute its sources (even if the source
+doesn't require it), and forms for entering data should encourage the user to
+add links to pages they got the information from, if any.
