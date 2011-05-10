@@ -149,7 +149,7 @@ sub get_lang {
     my $lang        = $self->param('lang');
     my $page        = $self->param('page') // 1;
     my $language    = Locales->new->get_language_from_code($lang);
-    my $nodes       = $schema->t->search({ lang => $lang }, { rows => PAGE_SIZE, page => $page , order_by => \'title'});
+    my $nodes       = $schema->t->by_lang($lang, $page);
     my $url         = "/title/$lang/";
 
 
@@ -170,13 +170,7 @@ get '/title/unknown-lang/:page' => [ page => qr/[0-9]+/ ] => \&unknown_lang;
 sub unknown_lang {
     my $self = shift;
     my $page = $self->stash('page') // 1;
-    my $ul   = $schema->t->search({ lang => undef }, {
-            rows => PAGE_SIZE,
-            page => $page,
-            order_by => 'title',
-            # TODO: test this prefetch
-            prefetch => {author_titles => 'author' },
-    });
+    my $ul   = $schema->t->unknown_lang($page);
     $self->render(
         ul          => $ul,
         layout      => 'basic',

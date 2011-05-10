@@ -3,6 +3,7 @@ use strict;
 use 5.012;
 use Carp qw(confess);
 use parent 'DBIx::Class::ResultSet';
+use constant PAGE_SIZE => 100;
 
 my $prefetch = { author_titles => 'author' };
 
@@ -145,6 +146,35 @@ sub threads {
 sub singles {
     my $self = shift;
     $self->root_nodes->search({ r => { '=' => 2 }});
+}
+
+sub by_lang {
+    my ($self, $lang, $page) = @_;
+    $page //= 1;
+    $self->search(
+        { lang => $lang },
+        {
+            rows        => PAGE_SIZE,
+            page        => $page,
+            order_by    => 'title',
+            prefetch    => $prefetch,
+        },
+    );
+}
+
+sub unknown_lang {
+    my ($self, $page) = @_;
+    $self->search(
+        { lang => undef },
+        {
+            rows        => PAGE_SIZE,
+            page        => $page,
+            order_by    => 'title',
+            prefetch    => $prefetch,
+        },
+    );
+
+
 }
 
 
