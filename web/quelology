@@ -188,7 +188,6 @@ get '/title/unconfirmed-pubs/:page', [ page => qr/[0-9]+/], \&titles_with_unconf
 sub titles_with_unconfirmed_pubs {
     my $self   = shift;
     my $page   = $self->param('page') // 1;
-    # TODO: this query is wrong. It returns far too many rows.
     my $titles = $schema->t->search(
                 undef,
                  {
@@ -198,7 +197,7 @@ sub titles_with_unconfirmed_pubs {
                      order_by   => \'me.title',
                      distinct   => 1,
                      having     => \'COUNT(maybe_raw_publications.id) >= 1',
-                     prefetch   => 'author_titles',
+                     prefetch   => { author_titles => 'author' },
                  },
              );
     $self->render(
@@ -1176,7 +1175,9 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 %== include 'pager', pager => $pager
 <ul>
     % while (my $t = $titles->next) {
-        <li><%== include title_link => title => $t, single => 1  %></li>
+        <li><%== include title_link => title => $t, single => 1  %>
+            by <%== include authors => for => $t %>
+        </li>
     % }
 </ul>
 %== include 'pager', pager => $pager
