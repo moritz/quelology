@@ -30,7 +30,7 @@ DONE:
     * create translations
     * move publications (and maybe raw publications) around
       inside a series
-    * improved series create (how?)
+    * improved series creation (how?)
 
 2.5) Explaning texts about tree editing
 
@@ -42,7 +42,7 @@ DONE:
     * experiment with kinosearch thingy
     * use, created and view aliases / alternative titles
     * timeline view
-    * i18n, l10n
+    * i18n, l10n => translate page to German and maybe other languages
     * on-site SEO (titles, URLs)
     * other data source /link destination than amazon
     * non-book media
@@ -57,6 +57,17 @@ DONE:
     * badges/achievement for editing (?)
     * voting on correctness, content; maybe user karma (?)
     * additional meta-information (characters that appear in books) (?)
+    * OpenID integration
+
+Explorative ideas not tied to any particular plan:
+    * Automatically group translations of series into the same series
+      structure as the original language
+    * mark the original language in translations
+    * more advanced language guessing, based on character sets used,
+      or even baed on training data and statistical model (for example
+      using Text::Ngram::LanguageDetermine), or experiment with
+      Text::Language::Guess (though stopword analysis seems not too
+      promising for titles)
 
 DONE
     * translations
