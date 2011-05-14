@@ -218,6 +218,7 @@ get '/raw-publication/:id' => sub {
         template    => 'raw-publication',
         node        => $node,
         layout      => 'basic',
+        maybe_titles => [],     # TODO: fill with actual suggestions
     );
 };
 
@@ -1137,7 +1138,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
             <p><a href="/login/">Log in or create an account</a> to contribute!</p>
         % }
         % for my $rp (@rp) {
-            %== include 'raw-publication', node => $rp, title => $node
+            %== include 'raw-publication', node => $rp, title => $node, partial => 1
             <br />
         % }
         % if (session('logged_in')) {
@@ -1275,7 +1276,7 @@ Disallow: /
 @@ raw-publication.html.ep
 <div  id="rawpub_<%= $node->id %>" data-id="<%= $node->id %>">
 <h4><%= $node->title %></h4>
-% if (session('logged_in')) {
+% if (stash('partial') && session('logged_in')) {
     <p>Is this a publication of <%= $title->title %>?
     <br>
     <select name="rp_<%= $node->id %>" size=3>
@@ -1299,7 +1300,6 @@ Disallow: /
     <% } %>
   </p>
 % }
-
 <table>
     % my @keys = qw/authors isbn publication_date language pages binding publisher/;
     % my @names = ('Author(s)', 'ISBN', 'Date', 'Language', 'Pages', 'Binding', 'Publisher');
@@ -1320,7 +1320,26 @@ Disallow: /
      </p>
 
      %== include 'attributions', for => $node, type => "Publication"
+
+    % if (session('logged_in') && !stash('partial')) {
+        %== include 'raw-pub-connect-title', rp => $node, maybe_titles => $maybe_titles
+    % }
 </div>
+
+@@ raw-pub-connect-title.html.ep
+% my $mt = $rp->maybe_title;
+% my @mt = @$maybe_titles, $mt;
+% if (@mt) {
+    <h2>Connect to a Title</h2>
+    <ul>
+        % for my $t (@mt) {
+            <li><a href="/raw-publication/<%= $rp->id %>/cook-into/<%= $t->id %>">
+                Take as a publication for this title:</a>
+                <%== include 'small-title', n => $t %>
+            </li>
+        % }
+    </ul>
+% }
 
 @@ publisher.html.ep
 <h1><%= $p->name %></h1>
