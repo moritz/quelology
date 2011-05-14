@@ -809,7 +809,7 @@ __DATA__
 <ul class="series">
 <% for my $n (@$threads) { %>
     <li>
-    %== include small_medium_noimg => n => $n
+    %== include small-title => n => $n
     </li>
 <% } %>
 </ul>
@@ -819,7 +819,7 @@ __DATA__
 <ul>
 <% for my $n (@$singles) { %>
     <li>
-    <%== include small_medium_noimg => n => $n %>
+    <%== include small-title => n => $n %>
     </li>
 <% } %>
 </ul>
@@ -916,7 +916,7 @@ __DATA__
     <ul>
     % for (@$singles) {
         <li>
-        %== include 'small_medium_noimg', n => $_, surpress_author => ($_->authors->count == 1)
+        %== include 'small-title', n => $_, surpress_author => ($_->authors->count == 1)
         </li>
     % }
     </ul>
@@ -960,7 +960,7 @@ __DATA__
 %== include 'attributions', for => $node, type => "Series"
 
 @@ tree-part.html.ep
-%= include 'small_medium_noimg', n => $node
+%= include 'small-title', n => $node
 <ul>
 <% my $prev_level = 1;
    for my $n ($node->descendants) {
@@ -975,7 +975,7 @@ __DATA__
     %>
         <%== $ld =%>
     <li>
-        %== include 'small_medium_noimg', n => $n, surpress_author => stash('surpress_author')
+        %== include 'small-title', n => $n, surpress_author => stash('surpress_author')
     </li>
 <% } =%>
 <%== '</ul>' x $prev_level =%>
@@ -1153,7 +1153,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 <ul>
   % while (my $t = $nodes->next) {
     <li>
-    %== include small_medium_noimg => n => $t, single => 1 
+    %== include small-title => n => $t, single => 1 
   % }
 </ul>
 %== include 'pager', pager => $pager
@@ -1180,7 +1180,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
             % }
             </select>
         % }
-        %== include small_medium_noimg => n => $t
+        %== include small-title => n => $t
     </li>
   % }
 </ul>
@@ -1197,7 +1197,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 %== include 'pager', pager => $pager
 <ul>
     % while (my $t = $titles->next) {
-        <li><%== include small_medium_noimg => n => $t, single => 1  =%>
+        <li><%== include small-title => n => $t, single => 1  =%>
         </li>
     % }
 </ul>
@@ -1352,7 +1352,7 @@ Disallow: /
 % }
 
 
-@@ small_medium_noimg.html.ep
+@@ small-title.html.ep
 <span id="medium_<%= $n->id %>" class="medium" data-id="<%= $n->id %>">
     %== include title_link => title => $n
     % unless (stash('surpress_author')) {
@@ -1476,7 +1476,7 @@ specific terms, or with a different language.</p>
                 % if (session 'logged_in') {
                     <input type="checkbox" name="<%= $_->id %>" />
                 % }
-                <%= include small_medium_noimg  => (n => $_, edit => 0) %>
+                <%= include small-title  => (n => $_, edit => 0) %>
                 <%= include 'add_shelf_link', node => $_ =%>
             </li>
         % }
@@ -1494,7 +1494,7 @@ specific terms, or with a different language.</p>
         <li>
         % if ($_->isa('Quelology::Model::Result::Publication')) {
             <strong><%= $_->title %></strong>, publication of
-                %== include small_medium_noimg => n => $_->title_obj
+                %== include small-title => n => $_->title_obj
         % } else {
             <a href="/raw-publication/<%= $_->id %>"><strong><%= $_->title %></strong></a> by <%= $_->authors %>
         % }
