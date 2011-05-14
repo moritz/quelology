@@ -71,9 +71,9 @@ sub amazon_search {
 
     my @pubs;
     for (@{$res->items}) {
-        my $asin = $_->asin // $_->isbn;
+        my $asin = $_->ASIN // $_->ISBN;
         if (defined $asin && (my $db_pub = $self->p->find({ asin => $asin },
-                        { prefetch => { title => {author_title => 'author' }}}))) {
+                        { prefetch => { title_obj => {author_titles => 'author' }}}))) {
             push @pubs, $db_pub;
         } else {
             push @pubs, $self->rp->import_from_amazon_item($_);

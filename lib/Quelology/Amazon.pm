@@ -44,7 +44,7 @@ sub search {
         %base_request,
         Operation       => 'ItemSearch',
         SearchIndex     => $opts{searchindex} // 'Books',
-        Keywords        => $opts{keywords} // die "argument 'keywords' missing",
+        Keywords        => $opts{keywords} // die("argument 'keywords' missing"),
         ItemPage        => $opts{page} // 1,
     );
     return Quelology::Amazon::Response->new_from_dom($self->_do_request(\%req));

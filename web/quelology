@@ -1494,7 +1494,7 @@ specific terms, or with a different language.</p>
 <ul>
     % for (@$results) {
         <li>
-        % if ($_->isa('Quelology::Model::ResultSet::Publication')) {
+        % if ($_->isa('Quelology::Model::Result::Publication')) {
             <strong><%= $_->title %></strong>, publication of
                     <%== include title_link => title => $_->title_obj %>
         % } else {
