@@ -89,12 +89,12 @@ sub _hash_from_xml_amazon {
         binding             => _frob_binding($m->Binding),
         lang                => _guess_lang($m),
     };
-    for (qw/small medium large/) {
+    for (qw/Small Medium Large/) {
         my $method = $_ . 'image';
         if ($m->$method) {
-            $h->{$_ . '_image'}        = $m->$method->{url};
-            $h->{$_ . '_image_width'}  = $m->$method->{width};
-            $h->{$_ . '_image_height'} = $m->$method->{height};
+            $h->{$_ . '_image'}        = $m->$method->{URL};
+            $h->{$_ . '_image_width'}  = $m->$method->{Width};
+            $h->{$_ . '_image_height'} = $m->$method->{Height};
         }
     }
 
