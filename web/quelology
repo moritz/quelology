@@ -1153,8 +1153,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 <ul>
   % while (my $t = $nodes->next) {
     <li>
-    %== include title_link => title => $t
-    by <%== include authors => for => $t %></li>
+    %== include small_medium_noimg => n => $t, single => 1 
   % }
 </ul>
 %== include 'pager', pager => $pager
@@ -1198,8 +1197,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 %== include 'pager', pager => $pager
 <ul>
     % while (my $t = $titles->next) {
-        <li><%== include title_link => title => $t, single => 1  %>
-            by <%== include authors => for => $t %>
+        <li><%== include small_medium_noimg => n => $t, single => 1  =%>
         </li>
     % }
 </ul>
@@ -1496,7 +1494,7 @@ specific terms, or with a different language.</p>
         <li>
         % if ($_->isa('Quelology::Model::Result::Publication')) {
             <strong><%= $_->title %></strong>, publication of
-                    <%== include title_link => title => $_->title_obj %>
+                %== include small_medium_noimg => n => $_->title_obj
         % } else {
             <a href="/raw-publication/<%= $_->id %>"><strong><%= $_->title %></strong></a> by <%= $_->authors %>
         % }
