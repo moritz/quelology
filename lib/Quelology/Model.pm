@@ -64,10 +64,10 @@ sub amazon_search {
         keywords    => $q,
     );
 
-    my $page = Data::Page->new;
-    $page->total_entries($res->total_results);
-    $page->entries_per_page(10);
-    $page->current_page($page);
+    my $pager = Data::Page->new;
+    $pager->total_entries($res->total_results);
+    $pager->entries_per_page(10);
+    $pager->current_page($page);
 
     my @pubs;
     for (@{$res->items}) {
@@ -79,7 +79,7 @@ sub amazon_search {
             push @pubs, $self->rp->import_from_amazon_item($_);
         }
     }
-    return ($page, \@pubs);
+    return ($pager, \@pubs);
 }
 
 __PACKAGE__->load_namespaces();
