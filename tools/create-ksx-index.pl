@@ -29,7 +29,7 @@ sub fulltext {
 my $string   = KinoSearch::Plan::StringType->new( stored => 1, sortable => 0);
 my $qu = schema();
 
-for my $section (qw(author title series)) {
+for my $section (qw(author series title)) {
     my $ks       = KinoSearch::Plan::Schema->new;
     $ks->spec_field(name => 'id',           type => $string  );
     $ks->spec_field(name => 'data',         type => fulltext('en'));
@@ -46,7 +46,7 @@ for my $section (qw(author title series)) {
     my %populate = (
         author  => \&index_author,
         title   => \&index_title,
-        series  => \&series_title,
+        series  => \&index_series,
     );
 
     my $before = time;
@@ -86,7 +86,6 @@ sub index_series {
         $indexer->add_doc({
                 id          => $t->id,
                 data        => $combined,
-                series_id   => $t->root_id == $t->id ? '' : $t->root_id,
             });
         $c++;
     }
@@ -105,6 +104,7 @@ sub index_title {
         $indexer->add_doc({
                 id          => $t->id,
                 data        => $combined,
+                series_id   => $t->root_id == $t->id ? '' : $t->root_id,
             });
         $c++;
     }
