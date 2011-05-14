@@ -16,10 +16,10 @@ sub new_from_dom {
 
 sub _init_from_dom {
     my ($self, $dom) = @_;
-    $self->total_results($dom->at('totalresults')->text);
-    $self->result_pages ($dom->at('totalpages')  ->text);
+    $self->total_results($dom->at('TotalResults')->text);
+    $self->result_pages ($dom->at('TotalPages')  ->text);
     $self->items([map Quelology::Amazon::Item->new_from_dom($_),
-                    $dom->find('items item')->each]);
+                    $dom->find('Items Item')->each]);
 }
 
 

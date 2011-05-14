@@ -41,32 +41,32 @@ sub _dom2hash {
 
 sub _init_from_dom {
     my ($self, $dom) = @_;
-    %$self = _dom2hash $dom, $dom->at('itemattributes');
-    $self->{links} = {
-        map { $_->at('description')->text, $_->at('url')->text }
-            $dom->find('itemlinks itemlink')->each
+    %$self = _dom2hash $dom, $dom->at('ItemAttributes');
+    $self->{Links} = {
+        map { $_->at('Description')->text, $_->at('URL')->text }
+            $dom->find('ItemLinks ItemLink')->each
     };
-    delete $self->{links} unless %{$self->{links}};
+    delete $self->{Links} unless %{$self->{Links}};
 
-    for my $thing (qw/smallimage mediumimage largeimage listprice packagedimensions/) {
+    for my $thing (qw/SmallImage MediumImage LargeImage ListPrice PackageDimensions/) {
         if (my $d = $dom->at($thing)) {
             $self->{$thing} = { _dom2hash $d };
         }
     }
     {
         my %lang;
-        for ($dom->find('languages language')->each) {
+        for ($dom->find('Languages Language')->each) {
             my %l = _dom2hash $_;
-            $lang{$l{type}} = $l{name};
+            $lang{$l{Type}} = $l{Name};
         }
-        $self->{languages} = \%lang if %lang;
+        $self->{Languages} = \%lang if %lang;
     }
 }
 
-sub detailpageurl {
+sub DetailPageURL {
     my $self = shift;
-    $self->{detailpageurl} // "http://www.amazon.com/exec/obidos/ASIN/"
-                              . $self->{asin} . "/quelology-20";
+    $self->{DetailPageURL} // "http://www.amazon.com/exec/obidos/ASIN/"
+                              . $self->{ASIN} . "/quelology-20";
 
 }
 

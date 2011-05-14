@@ -62,7 +62,7 @@ while (my $t = $titles->next) {
     my $search_on = $t->is_single ? $t      : $qu->t->search({ root_id => $t->id });
     my $authors      = join ', ', map { $_->name  } $search_on->authors;
     my $titles       = join ', ', map { $_->title } $search_on->all;
-    my $publications = join ', ', map { $_->title } $search_on->publications;
+    my $publications = join ', ', map { $_->title, $_->isbn // '' } $search_on->publications;
     my $combined     = "$titles\n\t$authors\n\t$publications";
 #    say $combined;
     $indexer->add_doc({

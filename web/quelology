@@ -269,6 +269,29 @@ sub search {
     }
 }
 
+post '/am-search' => sub {
+    my $self = shift;
+    $self->redirect_to('/am-search/1/' . b($self->param('q'))->url_escape);
+};
+
+get '/am-search/:page/(*q)' => [ page => qr/[0-9]+/         ] => \&amazon_search;
+get '/am-search/(*q)'       => [ q    => qr{(?![0-9]+/).*}s ] => \&amazon_search;
+
+sub amazon_search {
+    my $self = shift;
+    my $page = $self->param('page') // 1;
+    my $q    = $self->param('q');
+    my ($pager, $results) = $schema->amazon_search($q, $page);
+    $self->render(
+        template    => 'am-search',
+        layout      => 'basic',
+        title       => qq[Amazon search results for "$q"],
+        pager       => $pager,
+        results     => $results,
+        base_url    => '/am-search/',
+    );
+}
+
 get '/trivia/authors-by-wiki-languages' => sub {
     my $self    = shift;
     my $authors = $schema->resultset('AuthorWikiLinkCount')->search(
@@ -1454,6 +1477,21 @@ specific terms, or with a different language.</p>
     % }
     </form>
 % }
+
+@@ am-search.html.ep
+<h1><%= $title %></h1>
+<ul>
+    % for (@$results) {
+        <li>
+        % if ($_->isa('Quelology::Model::ResultSet::Publication')) {
+            <strong><%= $_->title %></strong>, publication of
+                    <%== include title_link => title => $_->title_obj %>
+        % } else {
+            <strong><%= $_->title %></strong> by <%= $_->authors %>
+        % }
+        </li>
+    % }
+</ul>
 
 
 @@ trivia/authors-by-wiki-languages.html.ep

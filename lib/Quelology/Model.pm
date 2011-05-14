@@ -55,6 +55,33 @@ sub search {
     );
 }
 
+use Data::Page;
+
+sub amazon_search {
+    my ($self, $q, $page) = @_;
+    my $res = Quelology::Config::amazon()->search(
+        page        => $page,
+        keywords    => $q,
+    );
+
+    my $page = Data::Page->new;
+    $page->total_entries($res->total_results);
+    $page->entries_per_page(10);
+    $page->current_page($page);
+
+    my @pubs;
+    for (@{$res->items}) {
+        my $asin = $_->asin // $_->isbn;
+        if (defined $asin && (my $db_pub = $self->p->find({ asin => $asin },
+                        { prefetch => { title => {author_title => 'author' }}}))) {
+            push @pubs, $db_pub;
+        } else {
+            push @pubs, $self->rp->import_from_amazon_item($_);
+        }
+    }
+    return ($page, \@pubs);
+}
+
 __PACKAGE__->load_namespaces();
 
 1;

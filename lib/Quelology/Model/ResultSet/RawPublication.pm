@@ -46,14 +46,14 @@ sub _isbn_to_lang {
 
 sub _guess_lang {
     my $h = shift;
-    if ($h->languages) {
-        my $l = $h->languages;
+    if ($h->Languages) {
+        my $l = $h->Languages;
         my $guess = $l->{Published} // $l->{Unknown};
         return $locales->get_code_from_language($guess) if defined $guess;
         use Data::Dumper;
         print Dumper $l;
     }
-    my $is = $h->isbn // $h->asin;
+    my $is = $h->ISBN // $h->ASIN;
     _isbn_to_lang($is) if $is;
     undef;
 }
@@ -78,15 +78,15 @@ sub _hash_from_xml_amazon {
     my $m = shift;
     # TODO: handle publisher and author as relations
     my $h = {
-        asin                => $m->asin,
-        title               => $m->title,
-        isbn                => $m->isbn,
-        authors             => $m->author,
-        amazon_url          => $m->detailpageurl,
-        publication_date    => _fixup_date($m->publicationdate // $m->releasedate),
-        publisher           => $m->publisher,
-        pages               => $m->numberofpages,
-        binding             => _frob_binding($m->binding),
+        asin                => $m->ASIN,
+        title               => $m->Title,
+        isbn                => $m->ISBN,
+        authors             => $m->Author,
+        amazon_url          => $m->DetailPageURL,
+        publication_date    => _fixup_date($m->PublicationDate // $m->ReleaseDate),
+        publisher           => $m->Publisher,
+        pages               => $m->NumberOfPages,
+        binding             => _frob_binding($m->Binding),
         lang                => _guess_lang($m),
     };
     for (qw/small medium large/) {
@@ -144,7 +144,7 @@ sub by_asin {
 
 sub import_from_amazon_item {
     my ($self, $ai) = @_;
-    if ($ai->asin && (my $existing = $self->find({asin => $ai->asin}))) {
+    if ($ai->ASIN && (my $existing = $self->find({asin => $ai->ASIN}))) {
         return $existing;
     }
     my $row = $self->create(_hash_from_xml_amazon($ai));

@@ -34,7 +34,7 @@ sub asin {
     my $i = Quelology::Amazon::Item->new_from_dom($dom);
     # it is both logical and annoying that amazon skips the ASIN
     # in the response of requests for a particular ASIN. So fix it up:
-    $i->{asin} = $opts{asin};
+    $i->{ASIN} = $opts{asin};
     return $i;
 }
 
@@ -74,7 +74,7 @@ sub _do_request {
     my $url = "http://$domain/onca/xml?" . join '&', @param;
     my $response = Mojo::UserAgent->new->get($url)->res;
     my $dom = $response->dom;
-    if ($dom->at('isvalid')->text ne 'True') {
+    if ($dom->at('IsValid')->text ne 'True') {
         die "Error during request (TODO: extract error from response)";
     };
     $dom;
