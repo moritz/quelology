@@ -300,6 +300,7 @@ sub amazon_search {
         pager       => $pager,
         results     => $results,
         base_url    => '/am-search/',
+        pager_postfix   => '/' . b($q)->url_escape,
     );
 }
 
@@ -809,7 +810,7 @@ __DATA__
 <ul class="series">
 <% for my $n (@$threads) { %>
     <li>
-    %== include small-title => n => $n
+    %== include 'small-title' => n => $n
     </li>
 <% } %>
 </ul>
@@ -819,7 +820,7 @@ __DATA__
 <ul>
 <% for my $n (@$singles) { %>
     <li>
-    <%== include small-title => n => $n %>
+    <%== include 'small-title' => n => $n %>
     </li>
 <% } %>
 </ul>
@@ -1153,7 +1154,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 <ul>
   % while (my $t = $nodes->next) {
     <li>
-    %== include small-title => n => $t, single => 1 
+    %== include 'small-title', n => $t, single => 1
   % }
 </ul>
 %== include 'pager', pager => $pager
@@ -1180,7 +1181,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
             % }
             </select>
         % }
-        %== include small-title => n => $t
+        %== include 'small-title' => n => $t
     </li>
   % }
 </ul>
@@ -1197,7 +1198,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 %== include 'pager', pager => $pager
 <ul>
     % while (my $t = $titles->next) {
-        <li><%== include small-title => n => $t, single => 1  =%>
+        <li><%== include 'small-title' => n => $t, single => 1  =%>
         </li>
     % }
 </ul>
@@ -1209,7 +1210,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     Result pages:
     <ul class="pager">
       % for ($pager->first_page .. $pager->last_page) {
-        <li><a href="<%= $base_url . $_ %>">
+        <li><a href="<%= $base_url . $_ . stash('pager_postfix') %>">
           <%== $_ == $pager->current_page ? "<strong>«$_»</strong>" : $_ =%>
         </a></li>
       % }
@@ -1476,7 +1477,7 @@ specific terms, or with a different language.</p>
                 % if (session 'logged_in') {
                     <input type="checkbox" name="<%= $_->id %>" />
                 % }
-                <%= include small-title  => (n => $_, edit => 0) %>
+                <%= include 'small-title'  => (n => $_, edit => 0) %>
                 <%= include 'add_shelf_link', node => $_ =%>
             </li>
         % }
@@ -1489,18 +1490,20 @@ specific terms, or with a different language.</p>
 
 @@ am-search.html.ep
 <h1><%= $title %></h1>
+%== include pager => pager => $pager
 <ul>
     % for (@$results) {
         <li>
         % if ($_->isa('Quelology::Model::Result::Publication')) {
             <strong><%= $_->title %></strong>, publication of
-                %== include small-title => n => $_->title_obj
+                %== include 'small-title' => n => $_->title_obj
         % } else {
             <a href="/raw-publication/<%= $_->id %>"><strong><%= $_->title %></strong></a> by <%= $_->authors %>
         % }
         </li>
     % }
 </ul>
+%== include pager => pager => $pager
 
 
 @@ trivia/authors-by-wiki-languages.html.ep
