@@ -90,11 +90,11 @@ sub _hash_from_xml_amazon {
         lang                => _guess_lang($m),
     };
     for (qw/Small Medium Large/) {
-        my $method = $_ . 'image';
+        my $method = $_ . 'Image';
         if ($m->$method) {
-            $h->{$_ . '_image'}        = $m->$method->{URL};
-            $h->{$_ . '_image_width'}  = $m->$method->{Width};
-            $h->{$_ . '_image_height'} = $m->$method->{Height};
+            $h->{lc($_) . '_image'}        = $m->$method->{URL};
+            $h->{lc($_) . '_image_width'}  = $m->$method->{Width};
+            $h->{lc($_) . '_image_height'} = $m->$method->{Height};
         }
     }
 
