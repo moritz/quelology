@@ -144,6 +144,9 @@ sub by_asin {
 
 sub import_from_amazon_item {
     my ($self, $ai) = @_;
+    if ($ai->asin && (my $existing = $self->find({asin => $ai->asin}))) {
+        return $existing;
+    }
     my $row = $self->create(_hash_from_xml_amazon($ai));
     $row->discard_changes;
     $row->attribute($row->amazon_url);
