@@ -193,5 +193,30 @@ sub with_unconfirmed_pubs {
     );
 }
 
+sub random_series {
+    my ($self, $count) = @_;
+    $count //= 50;
+    $self->threads->search(
+        undef,
+        {
+            rows        => $count,
+            order_by    => \'random()',
+            prefetch    => $prefetch,
+        },
+    );
+}
+
+sub random_singles {
+    my ($self, $count) = @_;
+    $count //= 50;
+    $self->singles->search(
+        undef,
+        {
+            rows        => $count,
+            order_by    => \'random()',
+            prefetch    => $prefetch,
+        },
+    );
+}
 
 1;

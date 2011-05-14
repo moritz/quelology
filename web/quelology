@@ -8,7 +8,6 @@ use Mojolicious::Lite;
 use Mojo::ByteStream 'b';
 use Quelology::Config qw(schema config run_mode);
 use Carp qw(confess);
-use List::MoreUtils qw/uniq/;
 use Digest::SHA1 qw/sha1/;
 use Locales;
 use utf8;
@@ -93,8 +92,8 @@ get '/' =>  sub {
     my $self = shift;
     my $t = '';
     $self->render(
-        threads     => [$schema->t->threads->search(undef, {rows => 20, order_by => \'random()'})],
-        singles     => [$schema->t->singles->search(undef, {rows => 10, order_by => \'random()'})],
+        threads     => [$schema->t->random_series(20)],
+        singles     => [$schema->t->random_singles(10)],
         template    => 'index',
         title       => 'Quelology - Find Sequels and Translations of your books',
         langs       => [$schema->t->langs],

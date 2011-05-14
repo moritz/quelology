@@ -44,7 +44,8 @@ DONE:
     * timeline view
     * i18n, l10n => translate page to German and maybe other languages
     * on-site SEO (titles, URLs)
-    * other data source /link destination than amazon
+    * other data source /link destinations than amazon (bol.de/book.de/
+      thalia.de, barnes&nobles, ...)
     * non-book media
     * log changes to make them reversible
     * more advanced edit:
