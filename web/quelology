@@ -210,6 +210,17 @@ get '/publication/:id' => sub {
     );
 } => 'publication';
 
+get '/raw-publication/:id' => sub {
+    my $self = shift;
+    my $node = $schema->rp->find({id => $self->param('id')});
+    $self->render(
+        title       => 'Raw publication details', # TODO: better title
+        template    => 'raw-publication',
+        node        => $node,
+        layout      => 'basic',
+    );
+};
+
 get '/publisher/:id' => sub  {
     my $self      = shift;
     my $publisher = $schema->resultset('Publisher')->by_id($self->param('id'));
@@ -652,7 +663,7 @@ post '/dissolve' => sub {
     $self->render(text => '');
 };
 
-post '/raw_publication/confirm' => sub {
+post '/raw-publication/confirm' => sub {
     my $self     = shift;
     my $title_id = $self->param('title');
     my $title    = $schema->t->by_id($title_id);
@@ -1119,13 +1130,13 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         <p>Please help improving our data by telling us if these publications
            below actually belong to this title.</p>
         % if (session('logged_in')) {
-            <form action="/raw_publication/confirm" method="post">
+            <form action="/raw-publication/confirm" method="post">
             <input type="hidden" name="title" value="<%= $node->id %>">
         % } else {
             <p><a href="/login/">Log in or create an account</a> to contribute!</p>
         % }
         % for my $rp (@rp) {
-            %== include 'raw_publication', node => $rp, title => $node
+            %== include 'raw-publication', node => $rp, title => $node
             <br />
         % }
         % if (session('logged_in')) {
@@ -1262,7 +1273,7 @@ Disallow: /
      %== include 'attributions', for => $node, type => "Publication"
 </div>
 
-@@ raw_publication.html.ep
+@@ raw-publication.html.ep
 <div  id="rawpub_<%= $node->id %>" data-id="<%= $node->id %>">
 <h4><%= $node->title %></h4>
 % if (session('logged_in')) {
@@ -1487,7 +1498,7 @@ specific terms, or with a different language.</p>
             <strong><%= $_->title %></strong>, publication of
                     <%== include title_link => title => $_->title_obj %>
         % } else {
-            <strong><%= $_->title %></strong> by <%= $_->authors %>
+            <a href="/raw-publication/<%= $_->id %>"><strong><%= $_->title %></strong></a> by <%= $_->authors %>
         % }
         </li>
     % }
