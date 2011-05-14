@@ -56,10 +56,16 @@ while (my $a = $authors->next) {
 }
 
 
-my $titles = $qu->t->root_nodes;
+my $prefetch = {
+    prefetch => [
+#        'publications',
+        { author_titles => 'author' },
+    ],
+};
+my $titles = $qu->t->root_nodes->search(undef, $prefetch);
 while (my $t = $titles->next) {
     my $type      = $t->is_single ? 'title' : 'series';
-    my $search_on = $t->is_single ? $t      : $qu->t->search({ root_id => $t->id });
+    my $search_on = $t->is_single ? $t      : $qu->t->search({ root_id => $t->id }, $prefetch);
     my $authors      = join ', ', map { $_->name  } $search_on->authors;
     my $titles       = join ', ', map { $_->title } $search_on->all;
     my $publications = join ', ', map { $_->title, $_->isbn // '' } $search_on->publications;
