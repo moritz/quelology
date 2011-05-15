@@ -25,7 +25,6 @@ __PACKAGE__->add_columns(qw/
 
 __PACKAGE__->set_primary_key('id');
 __PACKAGE__->belongs_to('root',         'Quelology::Model::Result::Title', 'root_id');
-__PACKAGE__->has_many('descendants',    'Quelology::Model::Result::Title', 'root_id');
 __PACKAGE__->belongs_to('alias_for',    'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('aliases',        'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('attributions',   'Quelology::Model::Result::TitleAttribution', 'title_id');
@@ -263,5 +262,18 @@ sub split_by_language {
 }
 
 sub all { shift }
+
+sub whole_tree {
+    my $self = shift;
+    $self->result_source->resultset->search(
+        {
+            root_id => $self->root_id,
+        },
+        {
+            order_by    => 'l',
+            prefetch    => { author_titles => 'author' },
+        },
+    );
+}
 
 1;

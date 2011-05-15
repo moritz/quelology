@@ -965,7 +965,7 @@ __DATA__
 %= include 'small-title', n => $node
 <ul>
 <% my $prev_level = 1;
-   for my $n ($node->descendants) {
+   for my $n ($node->whole_tree) {
       my $l = $n->level - $prev_level;
       $prev_level = $n->level;
       my $ld = '';
@@ -1460,11 +1460,13 @@ Disallow: /
 </div>
 
 @@ no_search.html.ep
+<h1><%= $title %></h1>
 <h2>Sorry, no search results</h2>
 <p>Your search did not produce any results. Please try it again with less
 specific terms, or with a different language.</p>
 
 @@ search.html.ep
+<h1><%= $title %></h1>
 % if ($result->authors) {
     <h2>Authors</h2>
     <ul>
