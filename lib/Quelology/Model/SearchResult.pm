@@ -12,21 +12,29 @@ sub _init {
     my ($self, $params) = @_;
     $self->{$_} = $params->{$_} for qw/terms schema/;
     my $hits = $params->{hits};
-    my %method = (
-        author  => 'a',
-        series  => 't',
-        title   => 't',
-    );
-    my %storage = (
-        author  => 'authors',
-        series  => 'series',
-        title   => 'titles',
-    );
-    while (my $h = $hits->next) {
-        my $type = $h->{type};
-        my $method = $method{$h->{type}};
-        push @{ $self->{ $storage{$h->{type}} } },
-             $self->{schema}->$method->by_id( $h->{id} );
+    my %series_seen;
+    my $schema = $self->{schema};
+    for my $section (qw/author title series/) {
+        my $hits = $params->{$section};
+        next unless $hits;
+        while (my $h = $hits->next) {
+            given ($section) {
+                when ('author') {
+                    push @{ $self->{authors} }, $schema->a->by_id( $h->{id} );
+                }
+                when ('title') {
+                    if ($h->{series_id}) {
+                        $series_seen{$h->{series_id}} = undef;
+                    }
+                    push @{ $self->{titles} }, $schema->t->by_id( $h->{id} );
+                }
+                when ('series') {
+                    unless (exists $series_seen{$h->{id}}) {
+                        push @{ $self->{series} }, $schema->t->by_id( $h->{id} );
+                    }
+                }
+            }
+        }
     }
     $self;
 }
