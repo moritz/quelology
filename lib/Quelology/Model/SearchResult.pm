@@ -37,18 +37,20 @@ sub _init {
             }
         }
     }
-    $self->{authors} = [ $schema->a->search({ id => { -in => $ids{authors} } }) ];
+    # TODO: fix order of items, the come out wheigthed by relevance out of
+    # KinoSearch, so restore it later on..
+    $self->{authors} = [ $schema->a->search({ id => { -in => $ids{authors} } }) ] if $ids{authors};
     $self->{titles}  = [ $schema->t->search({ 'me.id' => { -in => $ids{titles} } },
         {
             prefetch => { author_titles => 'author' },
         },
     
-    ) ];
+    ) ] if $ids{titles};
     $self->{series}  = [ $schema->t->search({ 'me.id' => { -in => $ids{series} } },
         {
             prefetch => { author_titles => 'author' },
         },
-    ) ];
+    ) ] if $ids{series};
     $self;
 }
 
