@@ -965,7 +965,7 @@ __DATA__
 %= include 'small-title', n => $node
 <ul>
 <% my $prev_level = 1;
-   for my $n ($node->whole_tree) {
+   for my $n ($node->tree_without_root) {
       my $l = $n->level - $prev_level;
       $prev_level = $n->level;
       my $ld = '';

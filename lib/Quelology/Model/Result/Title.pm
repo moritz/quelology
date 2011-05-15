@@ -276,4 +276,18 @@ sub whole_tree {
     );
 }
 
+sub tree_without_root {
+    my $self = shift;
+    $self->result_source->resultset->search(
+        {
+            root_id => $self->root_id,
+            l       => { '<>' => 1 },
+        },
+        {
+            order_by    => 'l',
+            prefetch    => { author_titles => 'author' },
+        },
+    );
+}
+
 1;
