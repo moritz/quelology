@@ -9,6 +9,7 @@ use KinoSearch::Plan::FullTextType;
 use KinoSearch::Plan::StringType;
 use KinoSearch::Analysis::PolyAnalyzer;
 use KinoSearch::Index::Indexer;
+use File::Path qw/remove_tree/;
 
 use Memoize;
 memoize('poly_an');
@@ -23,6 +24,7 @@ sub fulltext {
     my $lang = shift;
     KinoSearch::Plan::FullTextType->new(
         analyzer => poly_an($lang),
+        stored   => 0,
     );
 }
 
@@ -36,7 +38,9 @@ for my $section (qw(author series title)) {
     $ks->spec_field(name => 'series_id',    type => $string  ) if $section eq 'title';
 
 
+
     my $idx_path = "data/search-index/$section";
+    remove_tree($idx_path);
     my $indexer  = KinoSearch::Index::Indexer->new(
         schema  => $ks,
         index   => $idx_path,
@@ -53,7 +57,8 @@ for my $section (qw(author series title)) {
     my $count = $populate{$section}->($indexer);
     $indexer->commit();
     my $time_diff = time - $before;
-    say "Indexed $count items in section $section in $time_diff seconds";
+    printf "Indexed % 6d items in section '%s' in %d seconds\n",
+        $count, $section, $time_diff;
 }
 
 my $prefetch = { prefetch => { author_titles => 'author' } };
