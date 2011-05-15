@@ -8,6 +8,7 @@ Dependencies:
     JSON::XS
     Crypt::Eksblowfish::Bcrypt
     KinoSearch
+    aliased
 
 A postgresql database server, and ideally three databases, one each for
 development, testing and production.
