@@ -1,4 +1,5 @@
 package Quelology::Model;
+use 5.010;
 use Carp qw(confess);
 use KinoSearch::Search::IndexSearcher;
 use Quelology::Model::SearchResult;
@@ -30,32 +31,38 @@ sub login {
     $user->authenticate($password);
 }
 
-my $ks;
-my $query_parser;
+use Data::Page;
 
 # TODO: make paths more robust
 sub search {
-    my ($self, $terms) = @_;
-    $ks //= KinoSearch::Search::IndexSearcher->new(
-        index => 'data/search-index/common/',
-    );
-    $query_parser //= KinoSearch::Search::QueryParser->new(
-        schema          => $ks->get_schema,
-        default_boolop  => 'AND',
-    );
-    my $hits = $ks->hits(
-        query       => $query_parser->parse($terms),
-        offset      => 0,
-        num_wanted  => 100,
-    );
-    Quelology::Model::SearchResult->new(
-        hits    => $hits,
+    my ($self, $terms, $page) = @_;
+    $page //= 1;
+    state %ks;
+    state %query_parser;
+
+    my %res;
+    for my $section (qw/author title series/) {
+        $ks{$section} //= KinoSearch::Search::IndexSearcher->new(
+            index => "data/search-index/$section/",
+        );
+        $query_parser{$section} //= KinoSearch::Search::QueryParser->new(
+            schema          => $ks{$section}->get_schema,
+            default_boolop  => 'AND',
+        );
+        my $hits = $ks{$section}->hits(
+            query       => $query_parser{$section}->parse($terms),
+            offset      => 100 * ($page - 1),
+            num_wanted  => 100,
+        );
+        $res{$section} = $hits;
+    }
+    return Quelology::Model::SearchResult->new(
         terms   => $terms,
         schema  => $self,
+        %res,
     );
 }
 
-use Data::Page;
 
 sub amazon_search {
     my ($self, $q, $page) = @_;
