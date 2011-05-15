@@ -1478,6 +1478,30 @@ specific terms, or with a different language.</p>
     </ul>
     <br />
 % }
+% if ($result->titles) {
+    <h2>Titles</h2>
+    <form action="/lump/" method="post">
+    <ul>
+        % for (@{$result->titles}) {
+            <li>
+                % if (session 'logged_in') {
+                    <input type="checkbox" name="<%= $_->id %>" />
+                % }
+                <%= include 'small-title'  => (n => $_, edit => 0) %>
+                % if (! $_->is_single) {
+                    belongs to series
+                    <strong><a href="/t/<%= $_->root_id %>"><%= $_->root->title %></a></strong>
+                % }
+%#                <%= include 'add_shelf_link', node => $_ =%>
+
+            </li>
+        % }
+    </ul>
+    % if (session 'logged_in') {
+        <input type="submit" value="Group together" />
+    % }
+    </form>
+% }
 % if ($result->series) {
     <h2>Series</h2>
     <ul>
@@ -1488,25 +1512,6 @@ specific terms, or with a different language.</p>
         % }
     </ul>
     <br />
-% }
-% if ($result->titles) {
-    <h2>Single Books</h2>
-    <form action="/lump/" method="post">
-    <ul>
-        % for (@{$result->titles}) {
-            <li>
-                % if (session 'logged_in') {
-                    <input type="checkbox" name="<%= $_->id %>" />
-                % }
-                <%= include 'small-title'  => (n => $_, edit => 0) %>
-                <%= include 'add_shelf_link', node => $_ =%>
-            </li>
-        % }
-    </ul>
-    % if (session 'logged_in') {
-        <input type="submit" value="Group together" />
-    % }
-    </form>
 % }
 
 @@ am-search.html.ep

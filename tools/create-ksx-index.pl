@@ -100,7 +100,7 @@ sub index_series {
 sub index_title {
     my $indexer = shift;
     my $c = 0;
-    my $titles = $qu->t->singles->search(undef, $prefetch);
+    my $titles = $qu->t->search(undef, $prefetch);
     while (my $t = $titles->next) {
         my $authors      = join ', ', map { $_->name  } $t->authors;
         my $publications = join ', ', map { $_->title, $_->isbn // '' } $t->publications, $t->descendants->publications;
