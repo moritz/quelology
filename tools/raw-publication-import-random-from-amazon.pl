@@ -15,8 +15,8 @@ while (my $t = $pubs->next) {
     for (@{ $similar->items }) {
         next if schema->p->find({ asin => $_->asin });
         next if schema->rp->find({ asin => $_->asin });
-        next if length($_->title) > 255;
-        next unless $_->mediumimage;
+        next if length($_->Title) > 255;
+        next unless $_->MediumImage;
         eval {
             my $rp = schema->rp->import_from_amazon_item($_);
             $rp->update({maybe_title_id => $t->id }) if $t->lang eq $rp->lang;

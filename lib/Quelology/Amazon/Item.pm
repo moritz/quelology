@@ -1,12 +1,15 @@
 package Quelology::Amazon::Item;
 use 5.010;
+use Carp qw/confess/;
+use strict;
+use warnings;
 
 # just a glorified hash really.
 # A design sin, but convenient
 
 sub AUTOLOAD {
     my $self = shift;
-    my $name = $AUTOLOAD;
+    my $name = our $AUTOLOAD;
     $name =~ s/.*:://;
     $self->{$name};
 }
