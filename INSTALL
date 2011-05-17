@@ -15,7 +15,7 @@ development, testing and production.
 
 For example under Debian, you'd install
 
-    aptitude install postgresql-8.4 postgresql-client-8.4
+    aptitude install postgresql-8.4 postgresql-client-8.4 postgresql-server-dev-8.4
 
 And then create the databases:
 
