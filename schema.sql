@@ -43,7 +43,8 @@ CREATE TABLE title (
     r               INTEGER NOT NULL DEFAULT(2),
     level           INTEGER NOT NULL DEFAULT(1),
     created         TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified        TIMESTAMP NOT NULL DEFAULT NOW()
+    modified        TIMESTAMP NOT NULL DEFAULT NOW(),
+    UNIQUE(same_as, lang)
 --    CHECK(r > l)
 --    CHECK((r - l) % 2 = 1)
 );
