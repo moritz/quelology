@@ -1,6 +1,7 @@
 Dependencies:
     perl 5.12.0 or later
     DBIx::Class::Tree::NestedSet from https://github.com/moritz/DBIx-Class-Tree-NestedSet
+    DBICx::TestDatabase
     ISBN::Country from https://github.com/moritz/ISBN-Country
     DBD::Pg
     Mojolicious
