@@ -48,19 +48,19 @@ database password:
     "dev": {
         "dbname": "quelology-dev",
         "dbhost": "localhost",
-        "dbuser": "quelology",
+        "dbuser": "quelology_db",
         "dbpass": "<password>"
     },
     "test": {
         "dbname": "quelology-test",
         "dbhost": "localhost",
-        "dbuser": "quelology",
+        "dbuser": "quelology_db",
         "dbpass": "<password>"
     },
     "prod": {
         "dbname": "quelology-prod",
         "dbhost": "localhost",
-        "dbuser": "quelology",
+        "dbuser": "quelology_db",
         "dbpass": "<password>"
     }
 }
@@ -71,7 +71,7 @@ Set permissions so that no other use can read your passwords:
 
 Populate the development database with a schema:
 
-    psql -h localhost -U quelology quelolog-dev < schema.sql
+    psql -h localhost -U quelology_db quelology-dev < schema.sql
 
 With a bit of luck, you should now be able to run
 
