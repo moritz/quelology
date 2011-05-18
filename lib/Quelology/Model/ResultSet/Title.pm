@@ -131,6 +131,16 @@ sub publications {
     $self->search_related('publications');
 }
 
+sub with_translations {
+    shift->search(undef,
+        {
+            join        => 'aliases',
+            prefetch    => 'aliases',
+            having      => \'count(aliases.*) > 1',
+        },
+    );
+}
+
 sub root_nodes {
     my $self = shift;
     my $csa = $self->current_source_alias;

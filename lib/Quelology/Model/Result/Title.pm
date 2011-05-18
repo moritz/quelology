@@ -159,6 +159,18 @@ sub translations {
     });
 }
 
+sub all_translations {
+    my $self        = shift;
+    my $alias       = $self->alias_for;
+    my $target_id   = ($alias // $self)->id;
+    $self->result_source->resultset->search({
+        -or => [
+            same_as     => $target_id,
+            id          => $target_id,
+        ],
+    });
+}
+
 sub add_alias {
     my ($self, $other) = @_;
     my $own_alias   = $self->same_as;
