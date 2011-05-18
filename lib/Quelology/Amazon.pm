@@ -74,12 +74,17 @@ sub _do_request {
     my $url = "http://$domain/onca/xml?" . join '&', @param;
     my $response = Mojo::UserAgent->new->get($url)->res;
     my $dom = $response->dom;
+    if ($dom->at('ItemAttributes')) {
+        # even if we got an error, it can'be very fatal.
+        return $dom;
+    }
     if (my $ed = $dom->at('Error')) {
         if ($ed->at('Code')->text eq 'AWS.ECommerceService.NoExactMatches') {
             # happens, not really an error in our sense
             return $dom;
         }
-        say $ed->to_xml;
+        say $dom->at('Message')->text;
+#        say $dom->to_xml;
         die "Error during request: " . $ed->at('Message')->text;
     };
     $dom;
