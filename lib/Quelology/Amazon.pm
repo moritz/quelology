@@ -83,7 +83,7 @@ sub _do_request {
             # happens, not really an error in our sense
             return $dom;
         }
-        say $dom->at('Message')->text;
+        say $dom->at('Message')->text if $ENV{QUELOLOGY_DEBUG_AMAZON};
 #        say $dom->to_xml;
         die "Error during request: " . $ed->at('Message')->text;
     };
