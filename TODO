@@ -26,3 +26,5 @@ empty series anywhere inside a series.
 
 * make most elements of a <li> draggable, not just the link/image
 
+* investigate other data sources. Take inspiration from
+  http://www.ubka.uni-karlsruhe.de/kvk.html
