@@ -44,6 +44,7 @@ for my $isbn (@ARGV) {
 
         schema->txn_do(sub {
             my $rp = eval { schema->rp->import_by_asin($new_isbn) };
+            warn $@ if $@;
             return unless $rp;
             eval {
                 $rp->update({ lang => $attrs->{lang}}) unless $rp->lang eq $attrs->{lang};

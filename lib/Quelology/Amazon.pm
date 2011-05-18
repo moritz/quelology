@@ -46,15 +46,14 @@ sub asin {
     );
     my $dom = $self->_do_request(\%req);
 #    say $dom->inner_xml;
-    my $i = Quelology::Amazon::Item->new_from_dom($dom);
-
     if ($cache_file) {
         use autodie;
         open my $f, '>:encoding(UTF-8)', $cache_file;
         print { $f } $dom->to_xml;
         close $f;
     }
-
+    _check_error($dom);
+    my $i = Quelology::Amazon::Item->new_from_dom($dom);
     # it is both logical and annoying that amazon skips the ASIN
     # in the response of requests for a particular ASIN. So fix it up:
     $i->{ASIN} = $opts{asin};
@@ -70,7 +69,9 @@ sub search {
         Keywords        => $opts{keywords} // die("argument 'keywords' missing"),
         ItemPage        => $opts{page} // 1,
     );
-    return Quelology::Amazon::Response->new_from_dom($self->_do_request(\%req));
+    my $dom = $self->_do_request(\%req);
+    _check_error($dom);
+    return Quelology::Amazon::Response->new_from_dom($dom);
 }
 
 my %locale2tld = (
@@ -81,6 +82,22 @@ my %locale2tld = (
     uk  => 'co.uk',
     us  => 'com',
 );
+
+sub _check_error {
+    my $dom = shift;
+    if ($dom->at('ItemAttributes')) {
+        # even if we got an error, it can'be very fatal.
+        return;
+    }
+    if (my $ed = $dom->at('Error')) {
+        if ($ed->at('Code')->text eq 'AWS.ECommerceService.NoExactMatches') {
+            return;
+        }
+        say $dom->at('Message')->text if $ENV{QUELOLOGY_DEBUG_AMAZON};
+        die "Error during request: " . $ed->at('Message')->text;
+    };
+
+}
 
 sub _do_request {
     my ($self, $req) = @_;
@@ -97,19 +114,6 @@ sub _do_request {
     my $url = "http://$domain/onca/xml?" . join '&', @param;
     my $response = Mojo::UserAgent->new->get($url)->res;
     my $dom = $response->dom;
-    if ($dom->at('ItemAttributes')) {
-        # even if we got an error, it can'be very fatal.
-        return $dom;
-    }
-    if (my $ed = $dom->at('Error')) {
-        if ($ed->at('Code')->text eq 'AWS.ECommerceService.NoExactMatches') {
-            # happens, not really an error in our sense
-            return $dom;
-        }
-        say $dom->at('Message')->text if $ENV{QUELOLOGY_DEBUG_AMAZON};
-#        say $dom->to_xml;
-        die "Error during request: " . $ed->at('Message')->text;
-    };
     $dom;
 }
 
