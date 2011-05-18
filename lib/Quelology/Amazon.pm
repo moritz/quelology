@@ -4,6 +4,7 @@ has 'token';
 has 'secrit';
 has 'associate' => 'quelology-20';
 has 'locale'    => 'us';
+has 'cache_dir';
 
 use Quelology::Amazon::Response;
 use Mojo::UserAgent;
@@ -24,14 +25,36 @@ sub new {
 
 sub asin {
     my ($self, %opts) = @_;
+    my $asin = $opts{asin};
+    my $cache_file;
+    if ($self->cache_dir) {
+        $cache_file = $self->cache_dir . '/' . $asin . '.xml';
+        if (open my $f, '<:encoding(UTF-8)', $self->cache_dir . '/' . $asin . '.xml') {
+            my $contents = do { local $/; <$f> };
+            close $f;
+            my $i = Quelology::Amazon::Item->new_from_dom(
+                Mojo::DOM->new->parse($contents)
+            );
+            $i->{ASIN} = $opts{asin};
+            return $i;
+        }
+    };
     my %req = (
         %base_request,
         Operation   => 'ItemLookup',
-        ItemId      => $opts{asin},
+        ItemId      => $asin,
     );
     my $dom = $self->_do_request(\%req);
 #    say $dom->inner_xml;
     my $i = Quelology::Amazon::Item->new_from_dom($dom);
+
+    if ($cache_file) {
+        use autodie;
+        open my $f, '>:encoding(UTF-8)', $cache_file;
+        printf { $f } $dom->to_xml;
+        close $f;
+    }
+
     # it is both logical and annoying that amazon skips the ASIN
     # in the response of requests for a particular ASIN. So fix it up:
     $i->{ASIN} = $opts{asin};

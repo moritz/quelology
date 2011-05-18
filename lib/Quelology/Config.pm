@@ -55,6 +55,7 @@ sub amazon {
         token   => config('amazon_token'),
         secrit  => config('amazon_secret_key'),
         locale  => 'us',
+        cache_dir => 'data/amazon-xml',
     );
 }
 
