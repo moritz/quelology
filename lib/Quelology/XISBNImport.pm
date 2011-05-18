@@ -210,15 +210,13 @@ sub binding {
 
 sub get_xml {
     my $isbn = shift;
-    if (open my $f, '<', "data/xisbn/$isbn.xml") {
+    if (open my $f, '<:encoding(UTF-8)', "data/xisbn/$isbn.xml") {
         $xml = do { local $/; <$f> };
         close $f;
-        say "retrieved $isbn from cache";
     } else {
         use autodie;
-        say "getting $isbn via web";
         $xml = Mojo::UserAgent->new->get("http://xisbn.worldcat.org/webservices/xid/isbn/$isbn?method=getEditions&format=xml&fl=*")->res->body;
-        open my $f, '>', "data/xisbn/$isbn.xml";
+        open my $f, '>:encoding(UTF-8)', "data/xisbn/$isbn.xml";
         print { $f } $xml;
         close $f;
     }
@@ -234,7 +232,8 @@ sub preprocess {
         for (qw/lang originalLang/) {
             $attrs->{$_} = lang_marc_to_iso($attrs->{$_}) if exists $attrs->{$_};
         }
-        for (split / /, $attrs->{form}) {
+        my $form = delete $attrs->{form};
+        for (split / /, $form) {
             if (binding($_)) {
                 $attrs->{form} = binding($_);
                 last;
