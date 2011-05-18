@@ -27,30 +27,27 @@ sub asin {
     my ($self, %opts) = @_;
     my $asin = $opts{asin};
     my $cache_file;
+    my $dom;
     if ($self->cache_dir) {
         $cache_file = $self->cache_dir . '/' . $asin . '.xml';
         if (open my $f, '<:encoding(UTF-8)', $self->cache_dir . '/' . $asin . '.xml') {
             my $contents = do { local $/; <$f> };
             close $f;
-            my $i = Quelology::Amazon::Item->new_from_dom(
-                Mojo::DOM->new->parse($contents)
-            );
-            $i->{ASIN} = $opts{asin};
-            return $i;
+            $dom = Mojo::DOM->new->parse($contents)
         }
-    };
-    my %req = (
-        %base_request,
-        Operation   => 'ItemLookup',
-        ItemId      => $asin,
-    );
-    my $dom = $self->_do_request(\%req);
-#    say $dom->inner_xml;
-    if ($cache_file) {
-        use autodie;
-        open my $f, '>:encoding(UTF-8)', $cache_file;
-        print { $f } $dom->to_xml;
-        close $f;
+    }  else {
+        my %req = (
+            %base_request,
+            Operation   => 'ItemLookup',
+            ItemId      => $asin,
+        );
+        $dom = $self->_do_request(\%req);
+        if ($cache_file) {
+            use autodie;
+            open my $f, '>:encoding(UTF-8)', $cache_file;
+            print { $f } $dom->to_xml;
+            close $f;
+        }
     }
     _check_error($dom);
     my $i = Quelology::Amazon::Item->new_from_dom($dom);
