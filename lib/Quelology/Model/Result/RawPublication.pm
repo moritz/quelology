@@ -54,6 +54,8 @@ sub language {
 sub cook {
     my ($self, $title) = @_;
     die "Need a title to attach to" unless $title;
+    die "Title should be of class 'Q::M::Result::Title', is $title"
+        unless $title->isa('Quelology::Model::Result::Title');
     $self->result_source->schema->txn_do(sub {
         my $pub = $title->create_related('publications', {
             asin                => $self->asin,
