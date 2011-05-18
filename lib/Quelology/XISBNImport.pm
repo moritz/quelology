@@ -1,7 +1,12 @@
 package Quelology::XISBNImport;
 use 5.010;
+
 use Exporter qw/import/;
-our @EXPORT_OK = qw/lang_marc_to_iso binding/;
+our @EXPORT_OK = qw/lang_marc_to_iso binding get_xml from_isbn/;
+
+use Mojo::UserAgent;
+use Mojo::DOM;
+
 
 my %langcodes = (
     'som' => 'so',
@@ -201,6 +206,48 @@ sub lang_marc_to_iso {
 
 sub binding {
     $form{ shift() };
+}
+
+sub get_xml {
+    my $isbn = shift;
+    if (open my $f, '<', "data/xisbn/$isbn.xml") {
+        $xml = do { local $/; <$f> };
+        close $f;
+        say "retrieved $isbn from cache";
+    } else {
+        use autodie;
+        say "getting $isbn via web";
+        $xml = Mojo::UserAgent->new->get("http://xisbn.worldcat.org/webservices/xid/isbn/$isbn?method=getEditions&format=xml&fl=*")->res->body;
+        open my $f, '>', "data/xisbn/$isbn.xml";
+        print { $f } $xml;
+        close $f;
+    }
+    return $xml;
+}
+
+sub preprocess {
+    my $xml = shift;
+    my %isbn;
+    for my $d (Mojo::DOM->new->parse($xml)->find('isbn')->each) {
+        my $isbn = $d->text;
+        my $attrs = $d->attrs;
+        for (qw/lang originalLang/) {
+            $attrs->{$_} = lang_marc_to_iso($attrs->{$_}) if exists $attrs->{$_};
+        }
+        for (split / /, $attrs->{form}) {
+            if (binding($_)) {
+                $attrs->{form} = binding($_);
+                last;
+            }
+        }
+        $isbn{$isbn} = $attrs;
+    }
+    return \%isbn;
+}
+
+sub from_isbn {
+    my $isbn = shift;
+    preprocess(get_xml($isbn));
 }
 
 1;

@@ -2,7 +2,7 @@ use 5.010;
 use strict;
 use warnings;
 use lib 'lib';
-use Quelology::XISBNImport qw/lang_marc_to_iso binding/;
+use Quelology::XISBNImport qw/from_isbn/;
 binmode STDOUT, ':encoding(UTF-8)';
 
 # see http://xisbn.worldcat.org/xisbnadmin/doc/api.htm#response
@@ -20,40 +20,13 @@ if (@ARGV) {
     $isbn = schema->p->search(undef, { rows => 1, order_by => \'RANDOM()' })->first->isbn;
 }
 
-my $xml;
-
-if (open my $f, '<', "data/xisbn/$isbn.xml") {
-    $xml = do { local $/; <$f> };
-    close $f;
-    say "retrieved $isbn from cache";
-} else {
-    use autodie;
-    say "getting $isbn via web";
-    $xml = Mojo::UserAgent->new->get("http://xisbn.worldcat.org/webservices/xid/isbn/$isbn?method=getEditions&format=xml&fl=*")->res->body;
-    open my $f, '>', "data/xisbn/$isbn.xml";
-    print { $f } $xml;
-    close $f;
-}
-
-my $dom = Mojo::DOM->new->parse($xml);
-
-say $isbn;
 my $root_title = schema->p->find({asin => $isbn })->title_obj;
 say ' ' x 2, $root_title->id, ' ', $root_title->title;
+say $isbn;
 use Data::Dumper;
-for my $d ($dom->find('isbn')->each) {
-    my $new_isbn = $d->text;
+my $data = from_isbn($isbn);
+while (my ($new_isbn, $attrs) = each %$data) {
     say $new_isbn;
-    my $attrs = $d->attrs;
-    for (qw/lang originalLang/) {
-        $attrs->{$_} = lang_marc_to_iso($attrs->{$_}) if exists $attrs->{$_};
-    }
-    for (split / /, $attrs->{form}) {
-        if (binding($_)) {
-            $attrs->{form} = binding($_);
-            last;
-        }
-    }
     unless (defined $attrs->{lang}) {
         say '    language unknown';
         next;
@@ -111,7 +84,6 @@ for my $d ($dom->find('isbn')->each) {
         };
         warn $@ if $@;
     });
-#    print Dumper $attrs;
 }
 
 say ' ' x 2, $root_title->id, ' ', $root_title->title;
