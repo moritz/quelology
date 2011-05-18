@@ -35,7 +35,8 @@ sub asin {
             close $f;
             $dom = Mojo::DOM->new->parse($contents)
         }
-    }  else {
+    }
+    unless ($dom) {
         my %req = (
             %base_request,
             Operation   => 'ItemLookup',
