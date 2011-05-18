@@ -51,7 +51,7 @@ sub asin {
     if ($cache_file) {
         use autodie;
         open my $f, '>:encoding(UTF-8)', $cache_file;
-        printf { $f } $dom->to_xml;
+        print { $f } $dom->to_xml;
         close $f;
     }
 
