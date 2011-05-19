@@ -165,6 +165,31 @@ sub import_by_asin {
     }
 }
 
+sub import_from_xisbn_attrs {
+    my ($self, $attrs) = @_;
+    if (length($attrs->{lang}) > 2) {
+        die "Please preprocess xisbn data (with package Quelology::XISBNImport) before passing it to import_from_xisbn_attrs)";
+    }
+    my $h = {
+        asin                => $attrs->{isbn}, # TODO: make sure it's ISBN-10
+        title               => $attrs->{title},
+        isbn                => $attrs->{isbn},
+        authors             => $attrs->{author},
+        publication_date    => _fixup_date($attrs->{year}),
+        publisher           => $attrs->{publisher},
+        binding             => $attrs->{form},
+        lang                => $attrs->{lang},
+    };
+    $self->get_schema->txn_do(sub {
+            my $new = $self->create($h);
+            $new->create_related('attributions', {
+                    name    => 'worldcat',
+                    url     => $attrs->{url},
+            });
+            return $new;
+    });
+}
+
 sub _join_sorted {
     my ($self, $values, $what, $children) = @_;
     return $values->{$what} if exists $values->{$what};

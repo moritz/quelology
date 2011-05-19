@@ -14,7 +14,8 @@ It's a bit hard for me to drag nodes to long distance.
 * add JS form validation and username availability checking to signup form
 
 * find a way to turn author birthplaces into geo coordinates, and display the
-  location(s) on a stylized world map
+  location(s) on a stylized world map (see
+  http://wiki.openstreetmap.org/wiki/Nominatim for example
 
 
 DONE
