@@ -6,16 +6,22 @@ easy or not
     Since we use Mojo anyway, rewrite it to use Mojo::JSON instead.
 
 (2) modify tools/create-ksx-index.pl to record the current timestamp
-    in a smll file (plain text or JSON). Bonus points for actually
+    in a small file (plain text or JSON). Bonus points for actually
     using the time that the database provides. Hint: SELECT NOW()
 
 (3) (depends on (2)): modify tools/create-ksx-index.pl in the
-    following way: if the index and the file written in task (2)
+    following way: if the indexes and the file written in task (2)
     already exist, don't delete the index, but add only records
     where the 'created' field is younger than the timestamp record
     in task (2).
 
-(4) Move a DB query to the backend.
+(4) (depends on (3)) modify tools/create-ksx-index.pl so that it checks
+    bot the 'created' and 'modified' fields. If a row was modified
+    since the last run, but created before it,  delete the old item
+    from the index (method delete_by_term in KinoSearch::Index::Indexer)
+    before adding the new one.
+
+(5) Move a DB query to the backend.
     All non-trivial database queries should be methods in the classes
     in the Quelology::Model:: namespace, usually in resultsets.
     Create a class Quelology::Model::ResultSet::AuthorWikiLinkCount

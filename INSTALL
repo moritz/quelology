@@ -105,11 +105,13 @@ You can import a bunch of data which makes development much more fun:
     wget http://moritz.faui2k3.org/tmp/quelology-latest.sql.gz
     zcat quelolog-latest.sql.gz | psql  -h localhost -U quelology quelolog-dev
 
-Now create a search index:
+Now create the search indexes:
 
-    mkdir -p data/search-index/common/
     perl create-ksx-index.pl
 
+(You don't have to wait for the completion of the search indexes, it will
+take quite some time. Juste note that the search box won't work until the
+indexes are built.)
 And start the web server again:
 
     perl web/quelology daemon
