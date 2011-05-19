@@ -55,6 +55,7 @@ for my $section (qw(author series title)) {
 
     my $before = time;
     my $count = $populate{$section}->($indexer);
+    $indexer->optimize();
     $indexer->commit();
     my $time_diff = time - $before;
     printf "Indexed % 6d items in section '%s' in %d seconds\n",
