@@ -223,6 +223,19 @@ sub get_xml {
     return $xml;
 }
 
+sub fixup_author {
+    my $a = shift;
+    $a =~ s/\s*\[.*//;
+    $a = (split /\s*;/, $a)[0];
+    $a =~ s/^(by|af|un[ae]? \w+ de) //;
+    $a =~ s/\bill\. by.*//i;
+    $a =~ s/\b(\w)\. (\w)\./$1.$2./g;
+    $a =~ s/\. Aus dem.*//;
+    $a = join ', ', split / and /, $a;
+    return $a;
+}
+
+
 sub preprocess {
     my $xml = shift;
     my %isbn;
@@ -238,8 +251,9 @@ sub preprocess {
                 $attrs->{form} = binding($_);
                 last;
             }
+            $attrs->{author} = fixup_author($attrs->{author});
         }
-        $isbn{$isbn} = $attrs;
+        $isbn{isbn} = $attrs;
     }
     return \%isbn;
 }

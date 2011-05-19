@@ -17,7 +17,9 @@ unless (@ARGV) {
     @ARGV = schema->p->search(undef, { rows => 1, order_by => \'RANDOM()' })->first->isbn;
 }
 for my $isbn (@ARGV) {
-    my $root_title = schema->p->find({asin => $isbn })->title_obj;
+    my $pub_obj = schema->p->find({asin => $isbn });
+    next unless $pub_obj;
+    my $root_title = $pub_obj->title_obj;
     say ' ' x 2, $root_title->id, ' ', $root_title->title;
     say $isbn;
     use Data::Dumper;
@@ -44,8 +46,11 @@ for my $isbn (@ARGV) {
 
         schema->txn_do(sub {
             my $rp = eval { schema->rp->import_by_asin($new_isbn) };
-            warn $@ if $@;
-            return unless $rp;
+            print $@ if $@;
+            unless ($rp) {
+                $rp = schema->rp->import_from_xisbn_attrs($attrs);
+                say "    using worldcat data for raw publication (" . $rp->id . ")";
+            }
             eval {
                 $rp->update({ lang => $attrs->{lang}}) unless $rp->lang eq $attrs->{lang};
                 my $title = $root_title->lang eq $attrs->{lang}

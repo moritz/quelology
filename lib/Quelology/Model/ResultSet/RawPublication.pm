@@ -180,7 +180,7 @@ sub import_from_xisbn_attrs {
         binding             => $attrs->{form},
         lang                => $attrs->{lang},
     };
-    $self->get_schema->txn_do(sub {
+    $self->result_source->schema->txn_do(sub {
             my $new = $self->create($h);
             $new->create_related('attributions', {
                     name    => 'worldcat',
