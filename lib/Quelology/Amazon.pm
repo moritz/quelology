@@ -5,6 +5,7 @@ has 'secrit';
 has 'associate' => 'quelology-20';
 has 'locale'    => 'us';
 has 'cache_dir';
+has 'blocked_time';
 
 use Quelology::Amazon::Response;
 use Mojo::UserAgent;
@@ -43,6 +44,7 @@ sub asin {
             ItemId      => $asin,
         );
         $dom = $self->_do_request(\%req);
+        $self->_check_error_early($dom);
         if ($cache_file) {
             use autodie;
             open my $f, '>:encoding(UTF-8)', $cache_file;
@@ -68,6 +70,7 @@ sub search {
         ItemPage        => $opts{page} // 1,
     );
     my $dom = $self->_do_request(\%req);
+    $self->_check_error_early($dom);
     _check_error($dom);
     return Quelology::Amazon::Response->new_from_dom($dom);
 }
@@ -97,8 +100,24 @@ sub _check_error {
 
 }
 
+sub _check_error_early {
+    my ($self, $dom) = @_;
+    my $e;
+    if (($e = $dom->at('Error Message')) && $e->text =~ /Account limit/) {
+        $self->blocked_time(time);
+        die $e->text;
+    }
+}
 sub _do_request {
     my ($self, $req) = @_;
+    if (defined($self->blocked_time)) {
+        if (time - $self->blocked_time < 60) {
+            die "We're in rate limit by amazon, try again in a minute please";
+        } else {
+            # try again
+            $self->blocked_time(undef);
+        }
+    }
     $req->{Timestamp}      = strftime('%Y-%m-%dT%H:%M:%SZ', gmtime);
     $req->{AWSAccessKeyId} = $self->token;
     my $domain = "ecs.amazonaws." .$locale2tld{$self->locale};
