@@ -109,9 +109,6 @@ Now create the search indexes:
 
     perl create-ksx-index.pl
 
-(You don't have to wait for the completion of the search indexes, it will
-take quite some time. Juste note that the search box won't work until the
-indexes are built.)
 And start the web server again:
 
     perl web/quelology daemon

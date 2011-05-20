@@ -2,7 +2,7 @@ use warnings;
 use 5.010;
 use strict;
 use lib 'lib';
-use Quelology::Config qw/schema/;
+use Quelology::Config qw/schema dbh/;
 use utf8;
 use KinoSearch::Plan::Schema;
 use KinoSearch::Plan::FullTextType;
@@ -14,6 +14,8 @@ use File::Path qw/remove_tree/;
 use Memoize;
 memoize('poly_an');
 memoize('fulltext');
+
+my $dbh = dbh();
 
 sub poly_an {
     my $lang = shift;
@@ -67,12 +69,15 @@ my $prefetch = { prefetch => { author_titles => 'author' } };
 sub index_author {
     my $indexer = shift;
     my $c = 0;
-    my $authors = $qu->a;
-    while (my $a = $authors->next) {
+    my $sth = $dbh->prepare('SELECT id, name, legal_name FROM author');
+    $sth->execute;
+    $sth->bind_columns(\my ($id, $name, $legal_name));
+
+    while ($sth->fetch) {
         no warnings 'uninitialized';
         $indexer->add_doc({
-                id      => $a->id,
-                data    => $a->name . '   ' . $a->legal_name,
+                id      => $id,
+                data    => $name . ', ' . $legal_name,
             });
         $c++;
     }
@@ -82,15 +87,25 @@ sub index_author {
 sub index_series {
     my $indexer = shift;
     my $c = 0;
-    my $titles = $qu->t->threads->search(undef, $prefetch);
-    while (my $t = $titles->next) {
-        my $authors      = join ', ', map { $_->name  } $t->authors;
-        my $titles       = join ', ', map { $_->title } $t, $t->descendants;
-        my $publications = join ', ', map { $_->title, $_->isbn // '' } $t->publications, $t->descendants->publications;
-        my $combined     = "$titles\n\t$authors\n\t$publications";
-#    say $combined;
+    my $sth = $dbh->prepare(q[
+        SELECT title.id,
+               title.title                                         AS rt,
+               ARRAY_TO_STRING(ARRAY_AGG(leaf.title       ), ', ') AS lt,
+               ARRAY_TO_STRING(ARRAY_AGG(publication.title), ', ') AS pub,
+               ARRAY_TO_STRING(ARRAY_AGG(author.name      ), ', ') AS au
+          FROM title
+          JOIN title leaf ON leaf.root_id = title.id
+          JOIN publication ON leaf.id = publication.title_id
+          JOIN author_title_map m ON m.title_id = title.id
+          JOIN author ON author.id = m.author_id
+      GROUP BY title.id, title.title
+    ]);
+    $sth->execute;
+    $sth->bind_columns(\my ($id, $title, $leaf_titles, $pubs, $authors));
+    while ($sth->fetch) {
+        my $combined     = "$title, $leaf_titles\n\t$authors\n\t$pubs";
         $indexer->add_doc({
-                id          => $t->id,
+                id          => $id,
                 data        => $combined,
             });
         $c++;
@@ -101,16 +116,29 @@ sub index_series {
 sub index_title {
     my $indexer = shift;
     my $c = 0;
-    my $titles = $qu->t->search(undef, $prefetch);
-    while (my $t = $titles->next) {
-        my $authors      = join ', ', map { $_->name  } $t->authors;
-        my $publications = join ', ', map { $_->title, $_->isbn // '' } $t->publications, $t->descendants->publications;
-        my $combined     = $t->title . "\n\t$authors\n\t$publications";
-#    say $combined;
+    # too slow if done via DBIx::Class, so get down to the metal:
+    my $sth = $dbh->prepare(q[
+        SELECT title.id,
+               title.root_id,
+               title.title                                         AS t,
+               ARRAY_TO_STRING(ARRAY_AGG(publication.title), ', ') AS pub,
+               ARRAY_TO_STRING(ARRAY_AGG(author.name), ', ')       AS au
+          FROM title
+          JOIN publication ON title.id = publication.title_id
+          JOIN author_title_map m ON m.title_id = title.id
+          JOIN author ON author.id = m.author_id
+      GROUP BY title.id, title.root_id, title.title
+    ]);
+    $sth->execute;
+    $sth->bind_columns(\my ($id, $root_id, $title, $pubs, $authors));
+
+
+    while ($sth->fetch) {
+        my $combined     = "$title\n\t$authors\n\t$pubs";
         $indexer->add_doc({
-                id          => $t->id,
+                id          => $id,
                 data        => $combined,
-                series_id   => $t->root_id == $t->id ? '' : $t->root_id,
+                series_id   => $root_id // '',
             });
         $c++;
     }
