@@ -253,7 +253,7 @@ sub preprocess {
             }
             $attrs->{author} = fixup_author($attrs->{author});
         }
-        $isbn{isbn} = $attrs;
+        $isbn{$isbn} = $attrs;
     }
     return \%isbn;
 }
