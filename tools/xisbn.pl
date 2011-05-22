@@ -17,6 +17,10 @@ unless (@ARGV) {
     @ARGV = schema->p->search(undef, { rows => 1, order_by => \'RANDOM()' })->first->isbn;
 }
 for my $isbn (@ARGV) {
+    unless (defined $isbn) {
+        say 'Ugh, undefined ISBN.';
+        next;
+    }
     my $pub_obj = schema->p->find({asin => $isbn });
     next unless $pub_obj;
     my $root_title = $pub_obj->title_obj;

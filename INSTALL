@@ -115,4 +115,16 @@ And start the web server again:
 
 And browse http://127.0.0.1:3000/
 
+
+Some features of quelology require access to the Amazon advertising API.
+This is necessary for the amazon search, and for importing raw publications
+from amazon.
+
+To use these features, you must sign up at
+https://affiliate-program.amazon.com/ to obtain a "token" and a "secret key".
+
+Add those two strings to the config.json file, with keys "amazon_token"
+and "amazon_secret_key".
+
+
 Have fun!

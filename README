@@ -1,18 +1,17 @@
 Does this book have a sequel? or a prequel? is it part of a greater story arc?
 What's the name of the other books in the story arc, and in what order do they
-appear?
+appear? What about translations?
 
 I call the science behind this question "quelology", and that is what this
 project is about: gather semantic relations between books (and later maybe
-other media), and make that information easily available and editable.
+other media) from various sources, and make that information easily available
+and editable.
 
 Technologies used:
     * HTML, CSS, Javascript
     * Perl 5.12 with
         + Mojolicious
         + DBIx::Class
-        + Net::Amzon
-        + Amazon::XML
     * PostgreSQL
 
 Wanted: 
