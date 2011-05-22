@@ -14,7 +14,7 @@ use lib 'lib';
 use Quelology::Config qw/schema amazon/;
 
 unless (@ARGV) {
-    @ARGV = schema->p->search(undef, { rows => 1, order_by => \'RANDOM()' })->first->isbn;
+    @ARGV = schema->p->search({isbn => { '<>' => undef }}, { rows => 1, order_by => \'RANDOM()' })->first->isbn;
 }
 for my $isbn (@ARGV) {
     unless (defined $isbn) {
