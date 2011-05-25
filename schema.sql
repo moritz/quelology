@@ -76,7 +76,7 @@ CREATE TABLE publication (
     lang                CHAR(2),
     -- cannot make NOT NULL because of how import from isfdb
     -- works. TODO: fixup later
-    title_id            INTEGER REFERENCES title (id),
+    title_id            INTEGER REFERENCES title (id) ON DELETE CASCADE,
 
     amazon_url          VARCHAR(255),
     publication_date    DATE,
