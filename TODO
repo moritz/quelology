@@ -17,6 +17,7 @@ It's a bit hard for me to drag nodes to long distance.
   location(s) on a stylized world map (see
   http://wiki.openstreetmap.org/wiki/Nominatim for example
 
+* fix/investigate publication/translations prefixing for /t/:id URLs
 
 DONE
 [ambrus] It would be nice if there was a way to create a new
@@ -29,3 +30,4 @@ empty series anywhere inside a series.
 
 * investigate other data sources. Take inspiration from
   http://www.ubka.uni-karlsruhe.de/kvk.html
+

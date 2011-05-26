@@ -126,6 +126,19 @@ sub authors {
     $self->search_related('author_titles')->search_related('author', undef, { distinct => 1})
 }
 
+sub whole_tree_by_id {
+    my $self = shift;
+    $self->search(
+        {
+            root_id     => shift,
+        },
+        {
+            order_by    => 'l',
+            prefetch    => $prefetch,
+        },
+    );
+}
+
 sub publications {
     my $self = shift;
     $self->search_related('publications');
