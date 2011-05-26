@@ -38,10 +38,15 @@ CREATE TABLE title (
     isfdb_id        INTEGER         UNIQUE,
     -- NestedSet columns:
     root_id         INTEGER REFERENCES title (id) ON DELETE CASCADE,
-    same_as         INTEGER REFERENCES title (id) ON DELETE CASCADE,
     l               INTEGER NOT NULL DEFAULT(1),
     r               INTEGER NOT NULL DEFAULT(2),
     level           INTEGER NOT NULL DEFAULT(1),
+
+    -- used to mark translations
+    -- translations should have set same_as to the title.id of the
+    -- title in the original language 
+    same_as         INTEGER REFERENCES title (id) ON DELETE CASCADE,
+
     created         TIMESTAMP NOT NULL DEFAULT NOW(),
     modified        TIMESTAMP NOT NULL DEFAULT NOW(),
     UNIQUE(same_as, lang)
@@ -71,7 +76,6 @@ CREATE TABLE publication (
     asin                CHAR(10) UNIQUE,
     isbn                VARCHAR(13),
     title               VARCHAR(512) NOT NULL,
-    -- TODO: maybe make "NOT NULL"?
     publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
     -- cannot make NOT NULL because of how import from isfdb
