@@ -957,6 +957,8 @@ __DATA__
 <p>
 %== include add_shelf_link => (node => $node)
 </p>
+
+%== include 'translations', for => $node;
 %== include 'tree-part', node => $node, surpress_author => $node->single_author
 
 %== include 'attributions', for => $node, type => "Series"
@@ -1103,21 +1105,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
         <strong>(<%= $node->root->title %>)</strong></a></p>
     % }
 
-    % my $t = $node->translations;
-    % if ($t->count) {
-        <div class="translations">
-            <h3>Translations</h3>
-            <ul>
-                % while (my $n = $t->next) {
-                    <li>
-                        <span class="language"><%= $n->language %>:</span>
-                        %== include 'title_link', title => $n, single => 1
-                    </li>
-                % }
-            </ul>
-            <br />
-        </div>
-    % }
+    %== include 'translations', for => $node;
 
     %== include 'attributions', for => $node, type => "Title"
 
@@ -1148,6 +1136,24 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
     % }
 </div>
+
+
+@@ translations.html.ep
+% my $t = $for->translations;
+% if ($t->count) {
+    <div class="translations">
+        <h3>Translations</h3>
+        <ul>
+            % while (my $n = $t->next) {
+                <li>
+                    <span class="language"><%= $n->language %>:</span>
+                    %== include 'title_link', title => $n
+                </li>
+            % }
+        </ul>
+        <br />
+    </div>
+% }
 
 @@ title-lang.html.ep
 <h1><%= $title %></h1>
