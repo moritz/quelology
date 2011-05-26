@@ -55,6 +55,13 @@ for my $isbn (@ARGV) {
                 $rp = schema->rp->import_from_xisbn_attrs($attrs);
                 say "    using worldcat data for raw publication (" . $rp->id . ")";
             }
+            # there some weird "publications" which are actually audio players
+            # with a certain audio title preloaded. Those don't add any value,
+            # so filter 'em out
+            if ($rp->title =~ /With Earbuds/) {
+                $rp->delete;
+                return;
+            }
             eval {
                 $rp->update({ lang => $attrs->{lang}}) unless $rp->lang eq $attrs->{lang};
                 my $title = $root_title->lang eq $attrs->{lang}
