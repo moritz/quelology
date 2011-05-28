@@ -70,6 +70,10 @@ sub import_related_isbn {
             $rp->delete;
             return;
         }
+        unless (defined $rp->isbn) {
+            say "    ISBN undefined - something went wrong :-(";
+            return;
+        }
         eval {
             $rp->update({ lang => $attrs->{lang}}) unless $rp->lang eq $attrs->{lang};
             my $title = $root_title->lang eq $attrs->{lang}
