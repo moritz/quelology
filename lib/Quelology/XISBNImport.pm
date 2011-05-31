@@ -242,6 +242,7 @@ sub preprocess {
     for my $d (Mojo::DOM->new->parse($xml)->find('isbn')->each) {
         my $isbn = $d->text;
         my $attrs = $d->attrs;
+        $attrs->{isbn} = $isbn;
         for (qw/lang originalLang/) {
             $attrs->{$_} = lang_marc_to_iso($attrs->{$_}) if exists $attrs->{$_};
         }
