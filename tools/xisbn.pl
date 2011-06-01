@@ -21,6 +21,34 @@ for my $isbn (@ARGV) {
         say 'Ugh, undefined ISBN.';
         next;
     }
+    if ($isbn eq '-s') {
+        my $series = schema->t->search(
+            {
+                l   => 1,
+                r   => { '>' => 2},
+            },
+            {
+                rows        => 1,
+                order_by    => \'RANDOM()',
+            },
+        )->first;
+        say 'SERIES: ', $series->title;
+        for ($series->whole_tree) {
+            my $pubs = $_->publications->search({ isbn => { '<>' => undef } });
+            if ($pubs->first) {
+                look_for_isbn($pubs->first->isbn);
+            } else {
+                say "  ... no publications with ISBN for " . $_->title;
+
+            }
+        }
+    } else {
+        look_for_isbn($isbn);
+    }
+}
+
+sub look_for_isbn {
+    my $isbn = shift;
     my $pub_obj = schema->p->find({asin => $isbn });
     next unless $pub_obj;
     my $root_title = $pub_obj->title_obj;
@@ -50,7 +78,6 @@ for my $isbn (@ARGV) {
         import_related_isbn($root_title, $new_isbn, $attrs);
 
     }
-
     say ' ' x 2, $root_title->id, ' ', $root_title->title;
 }
 

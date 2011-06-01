@@ -38,13 +38,23 @@ my @attrs = qw/title publication_date language binding publisher_id/;
 while (my $t = $rs->next) {
     my %seen;
     for ($t->publications_unordered) {
-        next if defined $_->asin;
         my %col = $_->get_columns;
         no warnings 'uninitialized';
         my $key = join '|', @col{@attrs};
-        if ($seen{$key}++) {
-            say '     deleting';
-            $_->delete;
+        if ($seen{$key}) {
+            if ($seen{$key}->asin) {
+                say '     deleting';
+                $_->delete;
+            } elsif ($_->asin) {
+                say '     deleting';
+                $seen{$key}->delete;
+                $seen{$key} = $_;
+            } else {
+                say '     deleting';
+                $_->delete;
+            }
+        } else {
+            $seen{$key} = $_;
         }
     }
 }
