@@ -44,6 +44,7 @@ while (my $t = $titles->next) {
                 },
             );
         }
+        $translations++;
     }
 }
 say $hp, ' / ', $translations;
