@@ -36,7 +36,12 @@ while (my $t = $titles->next) {
     }
     for (@{ $res->{translations} }) {
         if (length($_->{lang}) == 2) {
-            $t->create_related('links',
+            my $add_to;
+            if ($add_to = $t->translations->search({ lang => $_->{lang} })->first) {
+            } else {
+                $add_to = $t;
+            }
+            $add_to->create_related('links',
                 {
                     type    => 'wikipedia',
                     url     => $_->{url},
