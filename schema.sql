@@ -62,7 +62,7 @@ CREATE TABLE title_link (
     id              SERIAL          PRIMARY KEY,
     title_id        INTEGER         NOT NULL REFERENCES title (id) ON DELETE CASCADE,
     url             VARCHAR(512)    NOT NULL,
-    name            VARCHAR(255)    NOT NULL,
+    type            VARCHAR(255)    NOT NULL,
     lang            CHAR(2)
 );
 

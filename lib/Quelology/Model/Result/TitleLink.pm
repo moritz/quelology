@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
         is_numeric      => 1,
     },
     qw/
-    name
+    type
     url
     lang
     /,
