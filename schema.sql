@@ -63,7 +63,10 @@ CREATE TABLE title_link (
     title_id        INTEGER         NOT NULL REFERENCES title (id) ON DELETE CASCADE,
     url             VARCHAR(512)    NOT NULL,
     type            VARCHAR(255)    NOT NULL,
-    lang            CHAR(2)
+    lang            CHAR(2),
+    -- an URL can be entered for two languages, since
+    -- content negotion exists.
+    UNIQUE(title_id, url, lang)
 );
 
 CREATE INDEX title_link_title_id_idx on title_link (title_id);
