@@ -1118,6 +1118,9 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
     %== include 'translations', for => $node;
 
+    % my $lang_to_search_for = $node->language // 'en';
+    %== include links => links => [$node->links->search({ lang => [$lang_to_search_for, undef] })]
+
     %== include 'attributions', for => $node, type => "Title"
 
     <h3>Publications</h3>
