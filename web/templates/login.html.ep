@@ -1,3 +1,10 @@
+<h1>Log In or Create a New Account</h1>
+
+<p>... but be aware that this site is still in early beta testing phase, and
+all changes you make and your account might be lost some day.</p>
+
+<h2>Log in</h2>
+
 <form action="/login/" method="post">
 <dl>
     <dt>Username</dt>
