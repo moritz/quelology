@@ -22,8 +22,8 @@ while (my $p = $publishers->next) {
     my $res = wiki_links $wiki->url;
 
     my $homepage;
-    if ($res->{homepage}) {
-        $p->create_related('links', { type => 'homepage', url => $res->{homepage} });
+    if ($res->{official_website}) {
+        $p->create_related('links', { type => 'homepage', url => $res->{official_website} });
         $hp++;
         say $wiki->url, '    ', $homepage;
     }

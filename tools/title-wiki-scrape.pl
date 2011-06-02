@@ -25,12 +25,14 @@ while (my $t = $titles->next) {
     my $wikis = $t->links->search({ type => 'wikipedia' });
     next if $wikis->count != 1;
 
-    my $res = wiki_links $wikis->first->url;
+    my $wiki = $wikis->first;
+    say "Querying ", $wiki->url;
+    my $res = wiki_links $wiki->url;
 
-    if ($res->{homepage} && $t->links->search({ type => 'homepage' })->count == 0) {
-        $t->create_related('links', { type => 'homepage', url => $res->{homepage} });
+    if ($res->{official_website} && $t->links->search({ type => 'homepage' })->count == 0) {
+        $t->create_related('links', { type => 'homepage', url => $res->{official_website} });
         $hp++;
-        say $t, '    ', $res->{homepage};
+        say $t, '    ', $res->{official_website};
     }
     for (@{ $res->{translations} }) {
         if (length($_->{lang}) == 2) {
