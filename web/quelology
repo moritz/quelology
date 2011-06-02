@@ -799,10 +799,21 @@ __DATA__
 <ul>
 % use Locales;
 % my $loc = Locales->new();
-% for my $lang (@$langs) {
+% my @first_langs = splice @$langs, 0, 6;
+% for my $lang (@first_langs) {
     % my ($l, $c) = map $lang->get_column($_), qw/lang count/;
     <li><a href="/title/<%= $l %>"><%= $loc->get_language_from_code($l) // $l %> (<%= $c %> titles)</a></li>
 % } 
+% if (@$langs) {
+    % my $last_lang = pop @$langs;
+    <p>... and more in
+    % for my $lang (@$langs) {
+        % my ($l, $c) = map $lang->get_column($_), qw/lang count/;
+        <a href="/title/<%= $l %>"><%= $loc->get_language_from_code($l) // $l %></a>,
+    % }
+    % my ($l, $c) = map $last_lang->get_column($_), qw/lang count/;
+    <a href="/title/<%= $l %>"><%= $loc->get_language_from_code($l) // $l %></a>.
+% }
 
 </ul>
 <br />
@@ -845,7 +856,7 @@ __DATA__
 %} else {
     (no authors known)
 % }
-
+ 
 @@ add_shelf_link.html.ep
 <span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to your book shelf</a></span>
 
