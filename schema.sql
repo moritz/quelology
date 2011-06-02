@@ -1,6 +1,7 @@
 -- all DROP TABLEs need to go first, so that newly created tables
 -- don't add dependencies to to-be-deleted tables
 DROP TABLE IF EXISTS title CASCADE;
+DROP TABLE IF EXISTS title_link;
 DROP TABLE IF EXISTS publication CASCADE;
 DROP TABLE IF EXISTS raw_publication CASCADE;
 DROP TABLE IF EXISTS raw_publication_attribution;
@@ -56,6 +57,16 @@ CREATE TABLE title (
 CREATE TRIGGER update_title_modtime BEFORE UPDATE ON title FOR EACH ROW EXECUTE PROCEDURE update_modified_column();
 
 CREATE INDEX title_root_id_idx on title (root_id);
+
+CREATE TABLE title_link (
+    id              SERIAL          PRIMARY KEY,
+    title_id        INTEGER         NOT NULL REFERENCES title (id) ON DELETE CASCADE,
+    url             VARCHAR(512)    NOT NULL,
+    name            VARCHAR(255)    NOT NULL,
+    lang            CHAR(2)
+);
+
+CREATE INDEX title_link_title_id_idx on title_link (title_id);
 
 CREATE TABLE publisher (
     id              SERIAL          PRIMARY KEY,

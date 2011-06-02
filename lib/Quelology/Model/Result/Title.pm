@@ -28,6 +28,7 @@ __PACKAGE__->belongs_to('root',         'Quelology::Model::Result::Title', 'root
 __PACKAGE__->belongs_to('alias_for',    'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('aliases',        'Quelology::Model::Result::Title', 'same_as');
 __PACKAGE__->has_many('attributions',   'Quelology::Model::Result::TitleAttribution', 'title_id');
+__PACKAGE__->has_many('links',          'Quelology::Model::Result::TitleLink', 'title_id');
 
 __PACKAGE__->has_many('publications',   'Quelology::Model::Result::Publication',
                       'title_id', { order_by => \'publication_date'});
