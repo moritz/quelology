@@ -14,6 +14,7 @@ DONE:
         (cheated version, just uses amazon and then looks
          up threads by ASIN)
     * simple model unit tests
+    * experiment with kinosearch thingy
 
 
 (go live in read-only mode)
@@ -39,7 +40,6 @@ DONE:
 3) More Feature phase:
     * CSRF protection
     * cross-browser testing
-    * experiment with kinosearch thingy
     * use, created and view aliases / alternative titles
     * timeline view
     * i18n, l10n => translate page to German and maybe other languages
@@ -62,13 +62,15 @@ DONE:
 
 Explorative ideas not tied to any particular plan:
     * Automatically group translations of series into the same series
-      structure as the original language
+      structure as the original language (partially done with
+      tools/title-translations-to-trees.pl)
     * mark the original language in translations
     * more advanced language guessing, based on character sets used,
       or even baed on training data and statistical model (for example
       using Text::Ngram::LanguageDetermine), or experiment with
       Text::Language::Guess (though stopword analysis seems not too
       promising for titles)
+    * http://schema.org/ markup, specifically http://schema.org/Book
 
 DONE
     * translations
