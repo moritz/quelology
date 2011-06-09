@@ -105,9 +105,9 @@ You can import a bunch of data which makes development much more fun:
     wget http://moritz.faui2k3.org/tmp/quelology-latest.sql.gz
     zcat quelolog-latest.sql.gz | psql  -h localhost -U quelology quelolog-dev
 
-Now create the search indexes:
+Now create the search indexes (currently requires postgres 8.4 or newer):
 
-    perl create-ksx-index.pl
+    perl tools/create-ksx-index.pl
 
 And start the web server again:
 
