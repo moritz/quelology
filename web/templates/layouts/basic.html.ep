@@ -6,7 +6,7 @@
     <link href="/css/grid.css"   rel="stylesheet" type="text/css" />
     <link href="/css/type.css"   rel="stylesheet" type="text/css" />
     <!--[if IE]><link href="/css/ie.css"          type="text/css" rel="stylesheet"><![endif]-->
-    <link href="/css/custom.css" rel="stylesheet"type="text/css" media="screen, projection" />
+    <link href="/css/custom.css" rel="stylesheet" type="text/css" media="screen, projection" />
 
     <link rel="shortcut icon" href="/favicon.ico">
     <script type="text/javascript" src="/js/jquery-1.4.3.min.js"></script>

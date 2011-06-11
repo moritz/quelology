@@ -1278,7 +1278,7 @@ Disallow: /
     % if (my $publisher = $node->publisher) {
         <tr>
             <td>Publisher</td>
-            <td><a href="/publisher/<%= $publisher->id %>"><%= $publisher->name %></td>
+            <td><a href="/publisher/<%= $publisher->id %>"><%= $publisher->name %></a></td>
         </tr>
     % }
 </table>
