@@ -239,7 +239,7 @@ sub fixup_author {
 sub preprocess {
     my $xml = shift;
     my %isbn;
-    for my $d (Mojo::DOM->new->parse($xml)->find('isbn')->each) {
+    for my $d (Mojo::DOM->new->charset('UTF-8')->parse($xml)->find('isbn')->each) {
         my $isbn = $d->text;
         my $attrs = $d->attrs;
         $attrs->{isbn} = $isbn;
