@@ -126,5 +126,12 @@ https://affiliate-program.amazon.com/ to obtain a "token" and a "secret key".
 Add those two strings to the config.json file, with keys "amazon_token"
 and "amazon_secret_key".
 
+Some tools in the tools/ directory require additional modules to run.
+Most developers don't need those, many concern additional data mining
+tasks. Those additional modules are
+
+    WebService::Libris
+    WWW::Wikipedia::Links
+
 
 Have fun!
