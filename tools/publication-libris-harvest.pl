@@ -4,6 +4,7 @@ use warnings;
 use lib 'lib';
 use Quelology::Config qw/schema/;
 use WebService::Libris;
+use Time::HiRes qw/sleep/;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my $s = schema;
@@ -26,4 +27,6 @@ while (my $p = $rs->next) {
         };
         warn $@ if $@;
     }
+    # Don't DOS the poor server
+    sleep 0.2;
 }
