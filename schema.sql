@@ -89,6 +89,7 @@ CREATE TABLE publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
     isbn                VARCHAR(13),
+    libris_id           VARCHAR(24) UNIQUE,
     title               VARCHAR(512) NOT NULL,
     publisher_id        INTEGER REFERENCES publisher (id),
     lang                CHAR(2),
@@ -126,6 +127,7 @@ CREATE INDEX publication_publisher_id_idx on publication (publisher_id);
 CREATE TABLE raw_publication (
     id                  SERIAL primary key,
     asin                CHAR(10) UNIQUE,
+    libris_id           VARCHAR(24) UNIQUE,
     isbn                VARCHAR(13) UNIQUE,
     title               VARCHAR(512) NOT NULL,
     authors             VARCHAR(512),

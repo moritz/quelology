@@ -11,6 +11,7 @@ __PACKAGE__->add_columns(qw/
     id
     asin
     isbn
+    libris_id
     title
     publisher
     amazon_url
@@ -57,9 +58,11 @@ sub cook {
     die "Title should be of class 'Q::M::Result::Title', is $title"
         unless $title->isa('Quelology::Model::Result::Title');
     $self->result_source->schema->txn_do(sub {
+        # TODO: automatically generate that list with get_columns or so
         my $pub = $title->create_related('publications', {
             asin                => $self->asin,
             isbn                => $self->isbn,
+            libris_id           => $self->libris_id,
             title               => $self->title,
             amazon_url          => $self->amazon_url,
             publication_date    => $self->publication_date,
