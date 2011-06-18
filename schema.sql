@@ -208,6 +208,7 @@ CREATE TABLE author (
     id              SERIAL          PRIMARY KEY,
     -- for import from isfdb.org
     isfdb_id        INTEGER         UNIQUE,
+    libris_id       VARCHAR(24)     UNIQUE,
     -- TODO: figure out if that should really be UNIQUE 
     name            VARCHAR(255)    NOT NULL UNIQUE,
     legal_name      VARCHAR(255),

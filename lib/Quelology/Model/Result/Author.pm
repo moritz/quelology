@@ -9,6 +9,7 @@ __PACKAGE__->table('author');
 __PACKAGE__->add_columns(qw/
     id
     isfdb_id
+    libris_id
     name
     legal_name
     birthplace
