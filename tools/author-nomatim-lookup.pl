@@ -19,6 +19,7 @@ my $rs = $s->a->search(
 
 # see http://wiki.openstreetmap.org/wiki/Nominatim
 my $base_url = Mojo::URL->new('http://nominatim.openstreetmap.org/search?');
+my $ua = Mojo::UserAgent->new->name('Quelology + Mojolicious (Perl)');
 
 while (my $author = $rs->next) {
     my $place = $author->birthplace;
@@ -35,7 +36,7 @@ while (my $author = $rs->next) {
             email   => $email,
             limit   => 1,
         );
-        my $json = Mojo::UserAgent->new->get($url)->res->json;
+        my $json = $ua->get($url)->res->json;
         my $lat = $json->[0]{lat};
         my $lon = $json->[0]{lon};
         unless ($lat && $lon) {
@@ -48,6 +49,6 @@ while (my $author = $rs->next) {
         });
         $seen{$place} = [$lat, $lon];
         say "$place -> ($lat, $lon)";
-        sleep 5;
+        sleep 10;
     }
 }
