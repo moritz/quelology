@@ -37,7 +37,6 @@ sub config {
 };
 
 sub dbh {
-    say "Database: ", config('dbname');
     my $dbh = DBI->connect(
         sprintf("dbi:Pg:dbname=%s;host=%s", config('dbname'), config('dbhost')),
         config('dbuser'), config('dbpass'),
