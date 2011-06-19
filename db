@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use lib 'lib';
+
+use Quelology::Config qw/config/;
+my ($action, $mode) = @ARGV;
+
+my %commands = (
+    shell => ['psql'],
+    dump  => ['pg_dump', '--clean'],
+);
+
+if (!$action || !$commands{$action}) {
+    die <<"USAGE";
+Usage: $0 action [mode]
+
+action can be:
+    shell       start a psql shell
+    dump        dump the database to STDOUT
+USAGE
+}
+
+if ($mode) {
+    $ENV{QUELOLOGY_RUNMODE} = $mode;
+    $Quelology::RunMode     = $mode;
+}
+
+my @cmd = @{ $commands{$action} };
+push @cmd, (
+    '-h', config('dbhost'),
+    '-U', config('dbuser'),
+    config('dbname'),
+);
+
+exec @cmd;
+
+# vim: ft=perl
