@@ -4,6 +4,7 @@ use warnings;
 use lib 'lib';
 use Quelology::Config qw/schema/;
 use WebService::Libris;
+use Mojo::URL;
 binmode STDOUT, ':encoding(UTF-8)';
 
 my $rs = schema->p->search({ libris_id => {'<>' => undef }});
@@ -21,8 +22,25 @@ while (my $pub = $rs->next) {
         next unless @la;
         if (@la == 1) {
             my $munged = munge_name($la[0]->libris_key);
+            my $same_as = $la[0]->same_as;
+
             if ($authors[0]->name eq $munged || $authors[0]->legal_name eq $munged) {
                 $authors[0]->update({ libris_id => $la[0]->id });
+                $authors[0]->create_related('links', {
+                    type    => 'libris',
+                    lang    => 'en',
+                    url     => "http://libris.kb.se/auth/" . $la[0]->id,
+                });
+                if ($same_as) {
+                    my $mu = Mojo::URL->new($same_as);
+                    my $type = (split /\./, $mu->host)[-2];
+                    say "    $type: $same_as";
+                    $authors[0]->create_related('links', {
+                        type    => $type,
+                        lang    => 'en',
+                        url     => $same_as,
+                    });
+                }
             } else {
                 printf "REVIEW: %d %s  '%s'  VS '%s'\n",
                         $authors[0]->id,
