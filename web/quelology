@@ -1096,19 +1096,22 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 % }
 
 @@ title.html.ep
-<div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> >
-    <h2><%= $node->title %></h2>
+<div class="title node draggable" <%== include semantic_attrs => (id => $node->id, what => 'title') %> itemscope itemtype="http://schema.org/Book">
+    <h2 itemprop="name"><%= $node->title %></h2>
     <p>By <%== include authors => for => $node %></p>
 
     <table>
-        % my %h = (date => 'initial publication', language => 'Language',);
-        % for my $k (sort {$h{$a} cmp $h{$b}} keys %h) {
-            % if (defined $node->$k) {
-                <tr>
-                    <td>        <%= $h{$k}    %>         </td>
-                    <td><strong><%= $node->$k %></strong></td>
-                </tr>
-            % }
+        % if ($node->date) { 
+            <tr>
+                <td>Initial publication</td>
+                <td itemprop="datePublished"><%= $node->date %></td>
+            </tr>
+        % }
+        % if ($node->language) { 
+            <tr>
+                <td itemprop="inLanguage">Language</td>
+                <td itemprop="datePublished"><%= $node->language %></td>
+            </tr>
         % }
     </table>
     % if ($node->id != $node->root_id) {
