@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use 5.010;
 use strict;
+use utf8;
 
 use Test::More;
 use Test::Exception;
@@ -13,17 +14,16 @@ init_db();
 BEGIN { use_ok('Quelology::Config', 'schema') }
 
 ok my $schema = schema(), 'can get a schema';
-ok my $m = $schema->t->by_id(1), 'medium by id';
-like $m->title, qr/Lord of the Rings/, 'can access title';
-like $m->author, qr/Tolkien/, 'author';
+ok my $m = $schema->t->by_id(35254), 'medium by id';
+is $m->title, "Kushiel's Dart", 'can access title';
+note $m->authors->first->id;
+like $m->authors->first->name, qr/Carey/, 'author';
 my $isbn = $m->publications->first->isbn;
 ok length($isbn) == 10 || length($isbn) == 13, 'isbn is 10 or 13 chars long';
-is $m->lang, 'en', 'isbn-based language detection (en)';
+is $m->lang, 'en', 'lang';
 is $m->language, 'English', 'human readable language';
-is $schema->t->by_id(30)->lang, 'de', 'language detection (de)';
-is $schema->t->by_id(30)->language, 'German', 'human redable language';
 ok my $root = $m->root, 'can get thread root';
-like $root->title, qr/middle earth/i, '...and it is the rigth one';
+is $root->title, "Kushiel's Legacy Universe", '...and it is the rigth one';
 is $root->lang, 'en', 'language is propagated up to the root';
 
 {

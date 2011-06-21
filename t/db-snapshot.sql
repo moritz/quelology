@@ -14,64 +14,102 @@ SET search_path = public, pg_catalog;
 ALTER TABLE ONLY public.user_info DROP CONSTRAINT user_info_login_id_fkey;
 ALTER TABLE ONLY public.title DROP CONSTRAINT title_same_as_fkey;
 ALTER TABLE ONLY public.title DROP CONSTRAINT title_root_id_fkey;
+ALTER TABLE ONLY public.title_link DROP CONSTRAINT title_link_title_id_fkey;
 ALTER TABLE ONLY public.title_attribution DROP CONSTRAINT title_attribution_title_id_fkey;
-ALTER TABLE ONLY public.publisher_link DROP CONSTRAINT publisher_link_author_id_fkey;
+ALTER TABLE ONLY public.raw_publication DROP CONSTRAINT raw_publication_maybe_title_id_fkey;
+ALTER TABLE ONLY public.raw_publication_attribution DROP CONSTRAINT raw_publication_attribution_raw_publication_id_fkey;
+ALTER TABLE ONLY public.publisher_link DROP CONSTRAINT publisher_link_publisher_id_fkey;
 ALTER TABLE ONLY public.publication DROP CONSTRAINT publication_title_id_fkey;
+ALTER TABLE ONLY public.publication DROP CONSTRAINT publication_publisher_id_fkey;
 ALTER TABLE ONLY public.publication_attribution DROP CONSTRAINT publication_attribution_publication_id_fkey;
-ALTER TABLE ONLY public.medium DROP CONSTRAINT medium_same_as_fkey;
-ALTER TABLE ONLY public.medium DROP CONSTRAINT medium_root_id_fkey;
 ALTER TABLE ONLY public.author_title_map DROP CONSTRAINT author_title_map_title_id_fkey;
 ALTER TABLE ONLY public.author_title_map DROP CONSTRAINT author_title_map_author_id_fkey;
 ALTER TABLE ONLY public.author_link DROP CONSTRAINT author_link_author_id_fkey;
 ALTER TABLE ONLY public.author_attribution DROP CONSTRAINT author_attribution_author_id_fkey;
-ALTER TABLE ONLY public.attribution DROP CONSTRAINT attribution_medium_id_fkey;
+DROP TRIGGER update_user_login_modtime ON public.user_login;
+DROP TRIGGER update_title_modtime ON public.title;
+DROP TRIGGER update_raw_publication_modtime ON public.raw_publication;
+DROP TRIGGER update_publication_modtime ON public.publication;
+DROP TRIGGER update_author_modtime ON public.author;
+DROP INDEX public.user_info_login_id_idx;
 DROP INDEX public.title_root_id_idx;
-DROP INDEX public.medium_root_id_idx;
+DROP INDEX public.title_link_title_id_idx;
+DROP INDEX public.title_attributioin_title_id;
+DROP INDEX public.raw_publication_attribution_raw_publication_id;
+DROP INDEX public.publisher_link_publisher_id_idx;
+DROP INDEX public.publication_title_id_idx;
+DROP INDEX public.publication_publisher_id_idx;
+DROP INDEX public.publication_attribution_publication_id;
+DROP INDEX public.author_link_author_id_idx;
+DROP INDEX public.author_attribution_author_id;
 ALTER TABLE ONLY public.user_login DROP CONSTRAINT user_login_pkey;
 ALTER TABLE ONLY public.user_login DROP CONSTRAINT user_login_name_key;
 ALTER TABLE ONLY public.user_info DROP CONSTRAINT user_info_pkey;
+ALTER TABLE ONLY public.user_auth DROP CONSTRAINT user_auth_pkey;
+ALTER TABLE ONLY public.user_auth DROP CONSTRAINT user_auth_name_key;
+ALTER TABLE ONLY public.title DROP CONSTRAINT title_same_as_key;
 ALTER TABLE ONLY public.title DROP CONSTRAINT title_pkey;
+ALTER TABLE ONLY public.title_link DROP CONSTRAINT title_link_title_id_key;
+ALTER TABLE ONLY public.title_link DROP CONSTRAINT title_link_pkey;
+ALTER TABLE ONLY public.title DROP CONSTRAINT title_isfdb_id_key;
 ALTER TABLE ONLY public.title_attribution DROP CONSTRAINT title_attribution_pkey;
-ALTER TABLE ONLY public.title DROP CONSTRAINT title_asin_key;
+ALTER TABLE ONLY public.raw_publication DROP CONSTRAINT raw_publication_pkey;
+ALTER TABLE ONLY public.raw_publication DROP CONSTRAINT raw_publication_libris_id_key;
+ALTER TABLE ONLY public.raw_publication DROP CONSTRAINT raw_publication_isbn_key;
+ALTER TABLE ONLY public.raw_publication_attribution DROP CONSTRAINT raw_publication_attribution_pkey;
+ALTER TABLE ONLY public.raw_publication DROP CONSTRAINT raw_publication_asin_key;
 ALTER TABLE ONLY public.publisher DROP CONSTRAINT publisher_pkey;
 ALTER TABLE ONLY public.publisher DROP CONSTRAINT publisher_name_key;
 ALTER TABLE ONLY public.publisher_link DROP CONSTRAINT publisher_link_pkey;
 ALTER TABLE ONLY public.publisher DROP CONSTRAINT publisher_isfdb_id_key;
 ALTER TABLE ONLY public.publication DROP CONSTRAINT publication_pkey;
+ALTER TABLE ONLY public.publication DROP CONSTRAINT publication_libris_id_key;
 ALTER TABLE ONLY public.publication_attribution DROP CONSTRAINT publication_attribution_pkey;
 ALTER TABLE ONLY public.publication DROP CONSTRAINT publication_asin_key;
-ALTER TABLE ONLY public.medium DROP CONSTRAINT medium_pkey;
-ALTER TABLE ONLY public.medium DROP CONSTRAINT medium_asin_key;
+ALTER TABLE ONLY public.login DROP CONSTRAINT login_pkey;
+ALTER TABLE ONLY public.login DROP CONSTRAINT login_name_key;
 ALTER TABLE ONLY public.author_title_map DROP CONSTRAINT author_title_map_pkey;
 ALTER TABLE ONLY public.author_title_map DROP CONSTRAINT author_title_map_author_id_key;
 ALTER TABLE ONLY public.author DROP CONSTRAINT author_pkey;
 ALTER TABLE ONLY public.author DROP CONSTRAINT author_name_key;
 ALTER TABLE ONLY public.author_link DROP CONSTRAINT author_link_pkey;
+ALTER TABLE ONLY public.author_link DROP CONSTRAINT author_link_author_id_key;
+ALTER TABLE ONLY public.author DROP CONSTRAINT author_libris_id_key;
 ALTER TABLE ONLY public.author DROP CONSTRAINT author_isfdb_id_key;
 ALTER TABLE ONLY public.author_attribution DROP CONSTRAINT author_attribution_pkey;
-ALTER TABLE ONLY public.attribution DROP CONSTRAINT attribution_pkey;
 ALTER TABLE public.user_login ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.user_info ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.user_auth ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.title_link ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.title_attribution ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.title ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.raw_publication_attribution ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.raw_publication ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.publisher_link ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.publisher ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.publication_attribution ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.publication ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.medium ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.login ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.author_title_map ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.author_link ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.author_attribution ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.author ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE public.attribution ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.user_login_id_seq;
 DROP TABLE public.user_login;
 DROP SEQUENCE public.user_info_id_seq;
 DROP TABLE public.user_info;
+DROP SEQUENCE public.user_auth_id_seq;
+DROP TABLE public.user_auth;
+DROP SEQUENCE public.title_link_id_seq;
+DROP TABLE public.title_link;
 DROP SEQUENCE public.title_id_seq;
 DROP SEQUENCE public.title_attribution_id_seq;
 DROP TABLE public.title_attribution;
 DROP TABLE public.title;
+DROP SEQUENCE public.raw_publication_id_seq;
+DROP SEQUENCE public.raw_publication_attribution_id_seq;
+DROP TABLE public.raw_publication_attribution;
+DROP TABLE public.raw_publication;
 DROP SEQUENCE public.publisher_link_id_seq;
 DROP TABLE public.publisher_link;
 DROP SEQUENCE public.publisher_id_seq;
@@ -80,8 +118,9 @@ DROP SEQUENCE public.publication_id_seq;
 DROP SEQUENCE public.publication_attribution_id_seq;
 DROP TABLE public.publication_attribution;
 DROP TABLE public.publication;
-DROP SEQUENCE public.medium_id_seq;
-DROP TABLE public.medium;
+DROP SEQUENCE public.login_id_seq;
+DROP TABLE public.login;
+DROP VIEW public.author_wiki_link_count;
 DROP SEQUENCE public.author_title_map_id_seq;
 DROP TABLE public.author_title_map;
 DROP SEQUENCE public.author_link_id_seq;
@@ -90,86 +129,98 @@ DROP SEQUENCE public.author_id_seq;
 DROP SEQUENCE public.author_attribution_id_seq;
 DROP TABLE public.author_attribution;
 DROP TABLE public.author;
-DROP SEQUENCE public.attribution_id_seq;
-DROP TABLE public.attribution;
+DROP FUNCTION public.update_modified_column();
+DROP TYPE public.bookbinding;
+DROP PROCEDURAL LANGUAGE plpgsql;
 DROP SCHEMA public;
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
 CREATE SCHEMA public;
 
 
+ALTER SCHEMA public OWNER TO postgres;
+
 --
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
 --
 
+COMMENT ON SCHEMA public IS 'standard public schema';
 
+
+--
+-- Name: plpgsql; Type: PROCEDURAL LANGUAGE; Schema: -; Owner: postgres
+--
+
+CREATE PROCEDURAL LANGUAGE plpgsql;
+
+
+ALTER PROCEDURAL LANGUAGE plpgsql OWNER TO postgres;
 
 SET search_path = public, pg_catalog;
+
+--
+-- Name: bookbinding; Type: TYPE; Schema: public; Owner: quelology-dev
+--
+
+CREATE TYPE bookbinding AS ENUM (
+    'paperback',
+    'hardcover',
+    'pamphlet',
+    'digest',
+    'ebook',
+    'audio',
+    'video'
+);
+
+
+ALTER TYPE public.bookbinding OWNER TO "quelology-dev";
+
+--
+-- Name: update_modified_column(); Type: FUNCTION; Schema: public; Owner: quelology-dev
+--
+
+CREATE FUNCTION update_modified_column() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    NEW.modified = now();
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.update_modified_column() OWNER TO "quelology-dev";
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: attribution; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE attribution (
-    id integer NOT NULL,
-    medium_id integer NOT NULL,
-    name character varying(64) NOT NULL,
-    url character varying(255),
-    retrieved date DEFAULT ('now'::text)::date
-);
-
-
---
--- Name: attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE attribution_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MAXVALUE
-    NO MINVALUE
-    CACHE 1;
-
-
---
--- Name: attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE attribution_id_seq OWNED BY attribution.id;
-
-
---
--- Name: attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
---
-
-SELECT pg_catalog.setval('attribution_id_seq', 49, true);
-
-
---
--- Name: author; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: author; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE author (
     id integer NOT NULL,
     isfdb_id integer,
+    libris_id character varying(24),
     name character varying(255) NOT NULL,
     legal_name character varying(255),
     birthplace character varying(64),
     birthplace_lat double precision,
     birthplace_lon double precision,
     birthdate date,
-    deathdate date
+    deathdate date,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
+ALTER TABLE public.author OWNER TO "quelology-dev";
+
 --
--- Name: author_attribution; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: author_attribution; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE author_attribution (
@@ -181,8 +232,10 @@ CREATE TABLE author_attribution (
 );
 
 
+ALTER TABLE public.author_attribution OWNER TO "quelology-dev";
+
 --
--- Name: author_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: author_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE author_attribution_id_seq
@@ -193,22 +246,24 @@ CREATE SEQUENCE author_attribution_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.author_attribution_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: author_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: author_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE author_attribution_id_seq OWNED BY author_attribution.id;
 
 
 --
--- Name: author_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: author_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('author_attribution_id_seq', 1, false);
 
 
 --
--- Name: author_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: author_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE author_id_seq
@@ -219,34 +274,39 @@ CREATE SEQUENCE author_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.author_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: author_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE author_id_seq OWNED BY author.id;
 
 
 --
--- Name: author_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: author_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('author_id_seq', 1, false);
 
 
 --
--- Name: author_link; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: author_link; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE author_link (
     id integer NOT NULL,
     author_id integer NOT NULL,
     type character varying(64) NOT NULL,
-    url character varying(255) NOT NULL
+    url character varying(512) NOT NULL,
+    lang character(2)
 );
 
 
+ALTER TABLE public.author_link OWNER TO "quelology-dev";
+
 --
--- Name: author_link_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: author_link_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE author_link_id_seq
@@ -257,22 +317,24 @@ CREATE SEQUENCE author_link_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.author_link_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: author_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: author_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE author_link_id_seq OWNED BY author_link.id;
 
 
 --
--- Name: author_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: author_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('author_link_id_seq', 1, false);
 
 
 --
--- Name: author_title_map; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: author_title_map; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE author_title_map (
@@ -282,8 +344,10 @@ CREATE TABLE author_title_map (
 );
 
 
+ALTER TABLE public.author_title_map OWNER TO "quelology-dev";
+
 --
--- Name: author_title_map_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: author_title_map_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE author_title_map_id_seq
@@ -294,50 +358,52 @@ CREATE SEQUENCE author_title_map_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.author_title_map_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: author_title_map_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: author_title_map_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE author_title_map_id_seq OWNED BY author_title_map.id;
 
 
 --
--- Name: author_title_map_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: author_title_map_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('author_title_map_id_seq', 1, false);
 
 
 --
--- Name: medium; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: author_wiki_link_count; Type: VIEW; Schema: public; Owner: quelology-dev
 --
 
-CREATE TABLE medium (
+CREATE VIEW author_wiki_link_count AS
+    SELECT author_link.author_id, count(author_link.author_id) AS link_count FROM author_link WHERE ((author_link.type)::text = 'wikipedia'::text) GROUP BY author_link.author_id;
+
+
+ALTER TABLE public.author_wiki_link_count OWNER TO "quelology-dev";
+
+--
+-- Name: login; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE TABLE login (
     id integer NOT NULL,
-    asin character(10),
-    isbn character varying(13),
-    title character varying(255) NOT NULL,
-    author character varying(255),
-    publisher character varying(255),
-    amazon_url character varying(255),
-    small_image character varying(255),
-    medium_image character varying(255),
-    large_image character varying(255),
-    lang character(2),
-    publish_year smallint,
-    root_id integer,
-    same_as integer,
-    l integer DEFAULT 1 NOT NULL,
-    r integer DEFAULT 2 NOT NULL,
-    level integer DEFAULT 1 NOT NULL
+    name character varying(64),
+    salt bytea NOT NULL,
+    cost integer NOT NULL,
+    pw_hash bytea NOT NULL
 );
 
 
+ALTER TABLE public.login OWNER TO "quelology-dev";
+
 --
--- Name: medium_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: login_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
-CREATE SEQUENCE medium_id_seq
+CREATE SEQUENCE login_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MAXVALUE
@@ -345,35 +411,39 @@ CREATE SEQUENCE medium_id_seq
     CACHE 1;
 
 
---
--- Name: medium_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE medium_id_seq OWNED BY medium.id;
-
+ALTER TABLE public.login_id_seq OWNER TO "quelology-dev";
 
 --
--- Name: medium_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: login_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('medium_id_seq', 58, true);
+ALTER SEQUENCE login_id_seq OWNED BY login.id;
 
 
 --
--- Name: publication; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
+--
+
+SELECT pg_catalog.setval('login_id_seq', 1, false);
+
+
+--
+-- Name: publication; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE publication (
     id integer NOT NULL,
     asin character(10),
     isbn character varying(13),
-    title character varying(255) NOT NULL,
-    author character varying(255),
+    libris_id character varying(24),
+    title character varying(512) NOT NULL,
     publisher_id integer,
     lang character(2),
     title_id integer,
     amazon_url character varying(255),
     publication_date date,
+    binding bookbinding,
+    pages integer,
     small_image character varying(255),
     small_image_width integer,
     small_image_height integer,
@@ -382,12 +452,16 @@ CREATE TABLE publication (
     medium_image_height integer,
     large_image character varying(255),
     large_image_width integer,
-    large_image_height integer
+    large_image_height integer,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
+ALTER TABLE public.publication OWNER TO "quelology-dev";
+
 --
--- Name: publication_attribution; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: publication_attribution; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE publication_attribution (
@@ -399,8 +473,10 @@ CREATE TABLE publication_attribution (
 );
 
 
+ALTER TABLE public.publication_attribution OWNER TO "quelology-dev";
+
 --
--- Name: publication_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: publication_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE publication_attribution_id_seq
@@ -411,22 +487,24 @@ CREATE SEQUENCE publication_attribution_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.publication_attribution_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: publication_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: publication_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE publication_attribution_id_seq OWNED BY publication_attribution.id;
 
 
 --
--- Name: publication_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: publication_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('publication_attribution_id_seq', 39, true);
+SELECT pg_catalog.setval('publication_attribution_id_seq', 1, false);
 
 
 --
--- Name: publication_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: publication_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE publication_id_seq
@@ -437,22 +515,24 @@ CREATE SEQUENCE publication_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.publication_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: publication_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: publication_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE publication_id_seq OWNED BY publication.id;
 
 
 --
--- Name: publication_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: publication_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('publication_id_seq', 39, true);
+SELECT pg_catalog.setval('publication_id_seq', 1, false);
 
 
 --
--- Name: publisher; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE publisher (
@@ -462,8 +542,10 @@ CREATE TABLE publisher (
 );
 
 
+ALTER TABLE public.publisher OWNER TO "quelology-dev";
+
 --
--- Name: publisher_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: publisher_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE publisher_id_seq
@@ -474,34 +556,38 @@ CREATE SEQUENCE publisher_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.publisher_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: publisher_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: publisher_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE publisher_id_seq OWNED BY publisher.id;
 
 
 --
--- Name: publisher_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: publisher_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('publisher_id_seq', 1, false);
 
 
 --
--- Name: publisher_link; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher_link; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE publisher_link (
     id integer NOT NULL,
-    author_id integer NOT NULL,
+    publisher_id integer NOT NULL,
     type character varying(64) NOT NULL,
     url character varying(255) NOT NULL
 );
 
 
+ALTER TABLE public.publisher_link OWNER TO "quelology-dev";
+
 --
--- Name: publisher_link_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: publisher_link_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE publisher_link_id_seq
@@ -512,41 +598,150 @@ CREATE SEQUENCE publisher_link_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.publisher_link_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: publisher_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: publisher_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE publisher_link_id_seq OWNED BY publisher_link.id;
 
 
 --
--- Name: publisher_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: publisher_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('publisher_link_id_seq', 1, false);
 
 
 --
--- Name: title; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: raw_publication; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE TABLE raw_publication (
+    id integer NOT NULL,
+    asin character(10),
+    libris_id character varying(24),
+    isbn character varying(13),
+    title character varying(512) NOT NULL,
+    authors character varying(512),
+    publisher character varying(255),
+    lang character(2),
+    maybe_title_id integer,
+    amazon_url character varying(255),
+    publication_date date,
+    binding bookbinding,
+    pages integer,
+    small_image character varying(255),
+    small_image_width integer,
+    small_image_height integer,
+    medium_image character varying(255),
+    medium_image_width integer,
+    medium_image_height integer,
+    large_image character varying(255),
+    large_image_width integer,
+    large_image_height integer,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE public.raw_publication OWNER TO "quelology-dev";
+
+--
+-- Name: raw_publication_attribution; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE TABLE raw_publication_attribution (
+    id integer NOT NULL,
+    raw_publication_id integer NOT NULL,
+    name character varying(64) NOT NULL,
+    url character varying(255),
+    retrieved date DEFAULT ('now'::text)::date
+);
+
+
+ALTER TABLE public.raw_publication_attribution OWNER TO "quelology-dev";
+
+--
+-- Name: raw_publication_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
+--
+
+CREATE SEQUENCE raw_publication_attribution_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.raw_publication_attribution_id_seq OWNER TO "quelology-dev";
+
+--
+-- Name: raw_publication_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
+--
+
+ALTER SEQUENCE raw_publication_attribution_id_seq OWNED BY raw_publication_attribution.id;
+
+
+--
+-- Name: raw_publication_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
+--
+
+SELECT pg_catalog.setval('raw_publication_attribution_id_seq', 1, false);
+
+
+--
+-- Name: raw_publication_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
+--
+
+CREATE SEQUENCE raw_publication_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.raw_publication_id_seq OWNER TO "quelology-dev";
+
+--
+-- Name: raw_publication_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
+--
+
+ALTER SEQUENCE raw_publication_id_seq OWNED BY raw_publication.id;
+
+
+--
+-- Name: raw_publication_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
+--
+
+SELECT pg_catalog.setval('raw_publication_id_seq', 1, false);
+
+
+--
+-- Name: title; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE title (
     id integer NOT NULL,
-    asin character(10),
-    title character varying(255) NOT NULL,
-    author character varying(255),
-    publisher character varying(255),
+    title character varying(512) NOT NULL,
     lang character(2),
+    isfdb_id integer,
     root_id integer,
-    same_as integer,
     l integer DEFAULT 1 NOT NULL,
     r integer DEFAULT 2 NOT NULL,
-    level integer DEFAULT 1 NOT NULL
+    level integer DEFAULT 1 NOT NULL,
+    same_as integer,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
+ALTER TABLE public.title OWNER TO "quelology-dev";
+
 --
--- Name: title_attribution; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: title_attribution; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE title_attribution (
@@ -558,8 +753,10 @@ CREATE TABLE title_attribution (
 );
 
 
+ALTER TABLE public.title_attribution OWNER TO "quelology-dev";
+
 --
--- Name: title_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: title_attribution_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE title_attribution_id_seq
@@ -570,22 +767,24 @@ CREATE SEQUENCE title_attribution_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.title_attribution_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: title_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: title_attribution_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE title_attribution_id_seq OWNED BY title_attribution.id;
 
 
 --
--- Name: title_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: title_attribution_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
 SELECT pg_catalog.setval('title_attribution_id_seq', 1, false);
 
 
 --
--- Name: title_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: title_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE title_id_seq
@@ -596,22 +795,110 @@ CREATE SEQUENCE title_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.title_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: title_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: title_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE title_id_seq OWNED BY title.id;
 
 
 --
--- Name: title_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: title_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('title_id_seq', 48, true);
+SELECT pg_catalog.setval('title_id_seq', 1, false);
 
 
 --
--- Name: user_info; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: title_link; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE TABLE title_link (
+    id integer NOT NULL,
+    title_id integer NOT NULL,
+    url character varying(512) NOT NULL,
+    type character varying(255) NOT NULL,
+    lang character(2)
+);
+
+
+ALTER TABLE public.title_link OWNER TO "quelology-dev";
+
+--
+-- Name: title_link_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
+--
+
+CREATE SEQUENCE title_link_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.title_link_id_seq OWNER TO "quelology-dev";
+
+--
+-- Name: title_link_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
+--
+
+ALTER SEQUENCE title_link_id_seq OWNED BY title_link.id;
+
+
+--
+-- Name: title_link_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
+--
+
+SELECT pg_catalog.setval('title_link_id_seq', 1, false);
+
+
+--
+-- Name: user_auth; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE TABLE user_auth (
+    id integer NOT NULL,
+    name character varying(64),
+    salt bytea NOT NULL,
+    cost integer NOT NULL,
+    pw_hash bytea NOT NULL
+);
+
+
+ALTER TABLE public.user_auth OWNER TO "quelology-dev";
+
+--
+-- Name: user_auth_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
+--
+
+CREATE SEQUENCE user_auth_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MAXVALUE
+    NO MINVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.user_auth_id_seq OWNER TO "quelology-dev";
+
+--
+-- Name: user_auth_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
+--
+
+ALTER SEQUENCE user_auth_id_seq OWNED BY user_auth.id;
+
+
+--
+-- Name: user_auth_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
+--
+
+SELECT pg_catalog.setval('user_auth_id_seq', 1, false);
+
+
+--
+-- Name: user_info; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE user_info (
@@ -622,8 +909,10 @@ CREATE TABLE user_info (
 );
 
 
+ALTER TABLE public.user_info OWNER TO "quelology-dev";
+
 --
--- Name: user_info_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: user_info_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE user_info_id_seq
@@ -634,22 +923,24 @@ CREATE SEQUENCE user_info_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.user_info_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: user_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: user_info_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE user_info_id_seq OWNED BY user_info.id;
 
 
 --
--- Name: user_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: user_info_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('user_info_id_seq', 4, true);
+SELECT pg_catalog.setval('user_info_id_seq', 1, false);
 
 
 --
--- Name: user_login; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+-- Name: user_login; Type: TABLE; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE TABLE user_login (
@@ -657,12 +948,16 @@ CREATE TABLE user_login (
     name character varying(64),
     salt bytea NOT NULL,
     cost integer NOT NULL,
-    pw_hash bytea NOT NULL
+    pw_hash bytea NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone DEFAULT now() NOT NULL
 );
 
 
+ALTER TABLE public.user_login OWNER TO "quelology-dev";
+
 --
--- Name: user_login_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: user_login_id_seq; Type: SEQUENCE; Schema: public; Owner: quelology-dev
 --
 
 CREATE SEQUENCE user_login_id_seq
@@ -673,185 +968,156 @@ CREATE SEQUENCE user_login_id_seq
     CACHE 1;
 
 
+ALTER TABLE public.user_login_id_seq OWNER TO "quelology-dev";
+
 --
--- Name: user_login_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: user_login_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: quelology-dev
 --
 
 ALTER SEQUENCE user_login_id_seq OWNED BY user_login.id;
 
 
 --
--- Name: user_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: user_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('user_login_id_seq', 4, true);
-
-
---
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE attribution ALTER COLUMN id SET DEFAULT nextval('attribution_id_seq'::regclass);
+SELECT pg_catalog.setval('user_login_id_seq', 1, false);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE author ALTER COLUMN id SET DEFAULT nextval('author_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE author_attribution ALTER COLUMN id SET DEFAULT nextval('author_attribution_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE author_link ALTER COLUMN id SET DEFAULT nextval('author_link_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE author_title_map ALTER COLUMN id SET DEFAULT nextval('author_title_map_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
-ALTER TABLE medium ALTER COLUMN id SET DEFAULT nextval('medium_id_seq'::regclass);
+ALTER TABLE login ALTER COLUMN id SET DEFAULT nextval('login_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE publication ALTER COLUMN id SET DEFAULT nextval('publication_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE publication_attribution ALTER COLUMN id SET DEFAULT nextval('publication_attribution_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE publisher ALTER COLUMN id SET DEFAULT nextval('publisher_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE publisher_link ALTER COLUMN id SET DEFAULT nextval('publisher_link_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE raw_publication ALTER COLUMN id SET DEFAULT nextval('raw_publication_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE raw_publication_attribution ALTER COLUMN id SET DEFAULT nextval('raw_publication_attribution_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE title ALTER COLUMN id SET DEFAULT nextval('title_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE title_attribution ALTER COLUMN id SET DEFAULT nextval('title_attribution_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE title_link ALTER COLUMN id SET DEFAULT nextval('title_link_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE user_auth ALTER COLUMN id SET DEFAULT nextval('user_auth_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE user_info ALTER COLUMN id SET DEFAULT nextval('user_info_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: id; Type: DEFAULT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE user_login ALTER COLUMN id SET DEFAULT nextval('user_login_id_seq'::regclass);
 
 
 --
--- Data for Name: attribution; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: author; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY attribution (id, medium_id, name, url, retrieved) FROM stdin;
-1	1	amazon	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706	2011-04-04
-2	2	amazon	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081	2011-04-04
-3	3	amazon	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722	2011-04-04
-4	4	amazon	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705	2011-04-04
-5	5	amazon	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813	2011-04-04
-6	6	amazon	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	2011-04-04
-7	7	amazon	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298	2011-04-04
-8	8	amazon	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301	2011-04-04
-9	9	amazon	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	2011-04-04
-10	10	amazon	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	2011-04-04
-11	11	amazon	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044	2011-04-04
-12	12	amazon	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ	2011-04-04
-13	13	amazon	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043	2011-04-04
-14	14	amazon	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987	2011-04-04
-15	15	amazon	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048	2011-04-04
-16	16	amazon	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539	2011-04-04
-17	17	amazon	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	2011-04-04
-18	18	amazon	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	2011-04-04
-19	19	amazon	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X	2011-04-04
-20	20	amazon	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048	2011-04-04
-21	21	amazon	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056	2011-04-04
-22	22	amazon	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072	2011-04-04
-23	23	amazon	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550	2011-04-04
-24	24	amazon	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727	2011-04-04
-25	25	amazon	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X	2011-04-04
-26	26	amazon	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X	2011-04-04
-27	27	amazon	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X	2011-04-04
-28	28	amazon	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202	2011-04-04
-29	29	amazon	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210	2011-04-04
-30	30	amazon	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229	2011-04-04
-31	31	amazon	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043	2011-04-04
-32	32	amazon	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	2011-04-04
-33	33	amazon	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842	2011-04-04
-34	34	amazon	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850	2011-04-04
-35	35	amazon	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048	2011-04-04
-36	36	amazon	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587	2011-04-04
-37	46	amazon	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	2011-04-04
-38	47	amazon	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	2011-04-04
-39	48	amazon	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	2011-04-04
-40	49	amazon	http://www.amazon.com/Dune-40th-Anniversary-Chronicles-Book/dp/0441013597%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441013597	2011-04-09
-41	50	amazon	http://www.amazon.com/Dune-Messiah-Chronicles-Frank-Herbert/dp/0441015611%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441015611	2011-04-09
-42	51	amazon	http://www.amazon.com/Children-Dune-Chronicles-Book/dp/0441104029%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441104029	2011-04-09
-43	52	amazon	http://www.amazon.com/God-Emperor-Dune-Chronicles/dp/0441016316%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441016316	2011-04-09
-44	53	amazon	http://www.amazon.com/Heretics-Dune-Chronicles-Frank-Herbert/dp/0441016774%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441016774	2011-04-09
-45	54	amazon	http://www.amazon.com/Sandworms-Dune-Brian-Herbert/dp/B001AQY03Q%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB001AQY03Q	2011-04-09
-46	55	amazon	http://www.amazon.com/Winds-Dune-Heroes/dp/B003H4RDUG%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB003H4RDUG	2011-04-09
-47	56	amazon	http://www.amazon.com/Chapterhouse-Dune-Chronicles-Book/dp/0441102670%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441102670	2011-04-09
-48	57	amazon	http://www.amazon.com/Legends-Dune-Trilogy-Box-Set/dp/0765357119%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765357119	2011-04-09
-49	58	amazon	http://www.amazon.com/Hunters-Dune-Brian-Herbert/dp/076535148X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D076535148X	2011-04-09
+COPY author (id, isfdb_id, libris_id, name, legal_name, birthplace, birthplace_lat, birthplace_lon, birthdate, deathdate, created, modified) FROM stdin;
+809	159	\N	Jules Verne	Verne, Jules Gabriel	Nantes, Loire-Atlantique, Pays-de-la-Loire, France	47.219167200000001	-1.5529162000000001	1828-02-08	1905-03-24	2011-05-06 13:25:41.370605	2011-06-19 15:41:32.355688
+2111	138945	\N	Nicole Pitesa	\N	\N	\N	\N	\N	\N	2011-05-06 13:53:31.262856	2011-06-19 15:41:32.355688
+2112	138947	\N	Maria Wilhelm	\N	\N	\N	\N	\N	\N	2011-05-06 13:53:31.262856	2011-06-19 15:41:32.355688
+2113	138948	\N	Dirk Mathison	\N	\N	\N	\N	\N	\N	2011-05-06 13:53:31.262856	2011-06-19 15:41:32.355688
+1996	6852	\N	Jacqueline Carey	\N	Highland Park, Illinois, USA	42.181691899999997	-87.800343799999993	1964-01-01	\N	2011-05-06 13:51:20.605216	2011-06-19 15:41:32.355688
 \.
 
 
 --
--- Data for Name: author; Type: TABLE DATA; Schema: public; Owner: -
---
-
-COPY author (id, isfdb_id, name, legal_name, birthplace, birthplace_lat, birthplace_lon, birthdate, deathdate) FROM stdin;
-\.
-
-
---
--- Data for Name: author_attribution; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: author_attribution; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY author_attribution (id, author_id, name, url, retrieved) FROM stdin;
@@ -859,255 +1125,237 @@ COPY author_attribution (id, author_id, name, url, retrieved) FROM stdin;
 
 
 --
--- Data for Name: author_link; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: author_link; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY author_link (id, author_id, type, url) FROM stdin;
+COPY author_link (id, author_id, type, url, lang) FROM stdin;
 \.
 
 
 --
--- Data for Name: author_title_map; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: author_title_map; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY author_title_map (id, author_id, title_id) FROM stdin;
+69520	809	62011
+82482	809	74299
+20834	2111	17602
+20835	2112	17602
+20836	2113	17602
+20831	2111	17600
+20832	2112	17601
+20833	2113	17601
+41283	1996	35263
+41282	1996	35262
+41277	1996	35257
+41273	1996	35253
+41274	1996	35254
+41275	1996	35255
+41276	1996	35256
+41281	1996	35261
+41278	1996	35258
+41279	1996	35259
+41280	1996	35260
+41272	1996	35252
+41269	1996	35249
+41270	1996	35250
+41271	1996	35251
+88683	1996	80186
+89141	1996	80615
+88640	1996	80146
 \.
 
 
 --
--- Data for Name: medium; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: login; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY medium (id, asin, isbn, title, author, publisher, amazon_url, small_image, medium_image, large_image, lang, publish_year, root_id, same_as, l, r, level) FROM stdin;
-49	0441013597	9780441013593	Dune, 40th Anniversary Edition	Frank Herbert	Ace Trade	http://www.amazon.com/Dune-40th-Anniversary-Chronicles-Book/dp/0441013597%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441013597	http://ecx.images-amazon.com/images/I/412Z9FE2E6L._SL75_.jpg	http://ecx.images-amazon.com/images/I/412Z9FE2E6L._SL160_.jpg	http://ecx.images-amazon.com/images/I/412Z9FE2E6L.jpg	en	2005	49	\N	1	2	0
-50	0441015611	0441015611	Dune Messiah	Frank Herbert	Ace Hardcover	http://www.amazon.com/Dune-Messiah-Chronicles-Frank-Herbert/dp/0441015611%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441015611	http://ecx.images-amazon.com/images/I/51Z69w2JOAL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51Z69w2JOAL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51Z69w2JOAL.jpg	en	2008	50	\N	1	2	0
-9	0316037834	9780316037839	The Ambassador's Mission	Trudi Canavan	Orbit	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51rcW1kFeGL.jpg	en	2010	38	\N	2	3	1
-10	0316037869	0316037869	The Rogue	Trudi Canavan	Orbit	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51UYVonc3lL.jpg	en	2011	38	\N	4	5	1
-6	006057528X	006057528X	The Magicians' Guild	Trudi Canavan	Harper Voyager	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51tN5SeF1wL.jpg	en	2004	39	\N	2	3	1
-7	0060575298	9780060575298	The Novice	Trudi Canavan	Harper Voyager	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298	http://ecx.images-amazon.com/images/I/415Td1q9EmL._SL75_.jpg	http://ecx.images-amazon.com/images/I/415Td1q9EmL._SL160_.jpg	http://ecx.images-amazon.com/images/I/415Td1q9EmL.jpg	en	2004	39	\N	4	5	1
-8	0060575301	9780060575304	The High Lord	Trudi Canavan	Harper Voyager	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL.jpg	en	2004	39	\N	6	7	1
-4	0345518705	9780345518705	The Warded Man	Peter V. Brett	Del Rey	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705	http://ecx.images-amazon.com/images/I/51u6lj2ouJL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51u6lj2ouJL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51u6lj2ouJL.jpg	en	2010	42	\N	2	3	1
-5	0345503813	9780345503817	The Desert Spear	Peter V. Brett	Del Rey	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813	http://ecx.images-amazon.com/images/I/41fvCXHZoHL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41fvCXHZoHL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41fvCXHZoHL.jpg	en	2010	42	\N	4	5	1
-12	B0017PICLQ	\N	The Silmarillion, Second Edition	J.R.R. Tolkien, Christopher Tolkien	\N	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL.jpg	\N	\N	44	\N	2	3	1
-11	0345296044	0345296044	The Hobbit	J.R.R. Tolkien	Ballantine Books	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044	http://ecx.images-amazon.com/images/I/61BtpQ95N7L._SL75_.jpg	http://ecx.images-amazon.com/images/I/61BtpQ95N7L._SL160_.jpg	http://ecx.images-amazon.com/images/I/61BtpQ95N7L.jpg	en	1981	44	\N	4	5	1
-3	0007269722	9780007269723	Lord of the Rings, The: The Return of the King	J. R. R. Tolkien	HarperCollins	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722	http://ecx.images-amazon.com/images/I/51W9T9VpTjL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51W9T9VpTjL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51W9T9VpTjL.jpg	en	2008	44	\N	11	12	2
-13	0618154043	0618154043	Unfinished Tales of Numenor and Middle-earth	Christopher Tolkien, J.R.R. Tolkien	Houghton Mifflin Harcourt	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043	http://ecx.images-amazon.com/images/I/51c7zKC8DSL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51c7zKC8DSL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51c7zKC8DSL.jpg	en	\N	44	\N	14	15	1
-14	0765342987	9780765342980	Kushiel's Dart	Jacqueline Carey	Tor Fantasy	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987	http://ecx.images-amazon.com/images/I/51wgsbYdF9L._SL75_.jpg	http://ecx.images-amazon.com/images/I/51wgsbYdF9L._SL160_.jpg	http://ecx.images-amazon.com/images/I/51wgsbYdF9L.jpg	en	2002	45	\N	3	4	2
-51	0441104029	0441104029	Children of Dune	Frank Herbert	Ace	http://www.amazon.com/Children-Dune-Chronicles-Book/dp/0441104029%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441104029	http://ecx.images-amazon.com/images/I/416jhSZ61mL._SL75_.jpg	http://ecx.images-amazon.com/images/I/416jhSZ61mL._SL160_.jpg	http://ecx.images-amazon.com/images/I/416jhSZ61mL.jpg	en	1987	51	\N	1	2	0
-52	0441016316	0441016316	God Emperor of Dune	Frank Herbert	Ace Hardcover	http://www.amazon.com/God-Emperor-Dune-Chronicles/dp/0441016316%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441016316	http://ecx.images-amazon.com/images/I/515dF6iCIpL._SL75_.jpg	http://ecx.images-amazon.com/images/I/515dF6iCIpL._SL160_.jpg	http://ecx.images-amazon.com/images/I/515dF6iCIpL.jpg	en	2008	52	\N	1	2	0
-23	0786852550	0786852550	The Amulet of Samarkand	Jonathan Stroud	Disney-Hyperion	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550	http://ecx.images-amazon.com/images/I/51DGa4T2v2L._SL75_.jpg	http://ecx.images-amazon.com/images/I/51DGa4T2v2L._SL160_.jpg	http://ecx.images-amazon.com/images/I/51DGa4T2v2L.jpg	en	2004	23	\N	1	2	0
-24	1423123727	9781423123729	Bartimaeus: The Ring of Solomon	Jonathan Stroud	Hyperion Book CH	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727	http://ecx.images-amazon.com/images/I/41LYVL93LgL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41LYVL93LgL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41LYVL93LgL.jpg	\N	2010	24	\N	1	2	0
-25	078683868X	078683868X	Ptolemy's Gate	Jonathan Stroud	Hyperion Book CH	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X	http://ecx.images-amazon.com/images/I/21GDQ710ADL._SL75_.jpg	http://ecx.images-amazon.com/images/I/21GDQ710ADL._SL160_.jpg	http://ecx.images-amazon.com/images/I/21GDQ710ADL.jpg	en	2007	25	\N	1	2	0
-26	142310420X	142310420X	The Bartimaeus Trilogy Boxed Set	Jonathan Stroud	Disney-Hyperion	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X	http://ecx.images-amazon.com/images/I/21E0CGCDZEL._SL75_.jpg	http://ecx.images-amazon.com/images/I/21E0CGCDZEL._SL160_.jpg	http://ecx.images-amazon.com/images/I/21E0CGCDZEL.jpg	\N	\N	26	\N	1	2	0
-27	038560615X	038560615X	Golem's Eye	Jonathan Stroud	Doubleday Children's Books	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X	http://ecx.images-amazon.com/images/I/41073NG1J3L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41073NG1J3L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41073NG1J3L.jpg	en	2004	27	\N	1	2	0
-28	3802581202	3802581202	Kushiel 01. Das Zeichen	Jacqueline Carey	Egmont vgs Verlagsgesell.	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202	http://ecx.images-amazon.com/images/I/21wTujaDZpL._SL75_.jpg	http://ecx.images-amazon.com/images/I/21wTujaDZpL._SL160_.jpg	http://ecx.images-amazon.com/images/I/21wTujaDZpL.jpg	de	2007	37	\N	2	3	1
-16	0765347539	0765347539	Kushiel's Avatar	Jacqueline Carey	Tor Fantasy	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539	http://ecx.images-amazon.com/images/I/41IroVTFHgL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41IroVTFHgL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41IroVTFHgL.jpg	en	2004	45	\N	7	8	2
-15	0765345048	0765345048	Kushiel's Chosen	Jacqueline Carey	Tor Fantasy	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048	http://ecx.images-amazon.com/images/I/510zCCQSX2L._SL75_.jpg	http://ecx.images-amazon.com/images/I/510zCCQSX2L._SL160_.jpg	http://ecx.images-amazon.com/images/I/510zCCQSX2L.jpg	en	2003	45	\N	5	6	2
-19	044661016X	9780446610162	Kushiel's Mercy	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X	http://ecx.images-amazon.com/images/I/514ZlQoxZyL._SL75_.jpg	http://ecx.images-amazon.com/images/I/514ZlQoxZyL._SL160_.jpg	http://ecx.images-amazon.com/images/I/514ZlQoxZyL.jpg	en	2009	45	\N	15	16	2
-18	0446610143	9780446610148	Kushiel's Justice	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51FgNHapbUL.jpg	en	2008	45	\N	13	14	2
-21	0446198056	9780446198059	Naamah's Curse	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056	http://ecx.images-amazon.com/images/I/517FyWIUZYL._SL75_.jpg	http://ecx.images-amazon.com/images/I/517FyWIUZYL._SL160_.jpg	http://ecx.images-amazon.com/images/I/517FyWIUZYL.jpg	en	2010	45	\N	21	22	2
-20	0446198048	0446198048	Naamah's Kiss	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048	http://ecx.images-amazon.com/images/I/51JDVcFFm0L._SL75_.jpg	http://ecx.images-amazon.com/images/I/51JDVcFFm0L._SL160_.jpg	http://ecx.images-amazon.com/images/I/51JDVcFFm0L.jpg	en	2010	45	\N	19	20	2
-53	0441016774	0441016774	Heretics of Dune	Frank Herbert	Ace Hardcover	http://www.amazon.com/Heretics-Dune-Chronicles-Frank-Herbert/dp/0441016774%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441016774	http://ecx.images-amazon.com/images/I/41kiB4l1m7L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41kiB4l1m7L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41kiB4l1m7L.jpg	en	2009	53	\N	1	2	0
-44	\N	\N	Middle Earth	J.R.R. Tolkien, Christopher Tolkien, Alan Lee	Houghton Mifflin Harcourt, Ballantine Books	\N	\N	\N	\N	en	\N	44	\N	1	16	0
-29	3802581210	9783802581212	Kushiel 02. Der Verrat	Jacqueline Carey	Egmont vgs Verlagsgesell.	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210	http://ecx.images-amazon.com/images/I/51L9D5j7YwL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51L9D5j7YwL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51L9D5j7YwL.jpg	de	2008	37	\N	4	5	1
-37	\N	\N	Kushiels Auserwählte	Jacqueline Carey	Egmont vgs Verlagsgesell.	\N	\N	\N	\N	de	\N	37	\N	1	8	0
-2	0618129081	0618129081	The Two Towers	J.R.R. Tolkien	Mariner Books	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081	http://ecx.images-amazon.com/images/I/411RC3MC6WL._SL75_.jpg	http://ecx.images-amazon.com/images/I/411RC3MC6WL._SL160_.jpg	http://ecx.images-amazon.com/images/I/411RC3MC6WL.jpg	en	\N	44	\N	9	10	2
-38	\N	\N	The Traitor Spy Trilogy	Trudi Canavan	Orbit	\N	\N	\N	\N	en	\N	38	\N	1	6	0
-1	0007269706	9780007269709	Lord of the Rings, The: The Fellowship of the Ring	J. R. R. Tolkien	HarperCollins	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706	http://ecx.images-amazon.com/images/I/51HRRyQf0wL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51HRRyQf0wL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51HRRyQf0wL.jpg	en	2008	44	\N	7	8	2
-39	\N	\N	The Black Magician Trilogy	Trudi Canavan	Harper Voyager	\N	\N	\N	\N	en	\N	39	\N	1	8	0
-30	3802581229	9783802581229	Kushiel 03. Die Erlösung	Jacqueline Carey	Egmont vgs Verlagsgesell.	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229	http://ecx.images-amazon.com/images/I/51I4wJF2PoL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51I4wJF2PoL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51I4wJF2PoL.jpg	de	2008	37	16	6	7	1
-45	\N	\N	Terre d'Ange	Jacqueline Carey	Grand Central Publishing, Tor Fantasy	\N	\N	\N	\N	en	\N	45	\N	1	26	0
-32	0201896834	0201896834	Art of Computer Programming, Volume 1: Fundamental Algorithms	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41233D6XS0L.jpg	en	1997	31	\N	2	3	1
-36	0618260587	0618260587	The Lord of the Rings	J.R.R. Tolkien, Alan Lee	Houghton Mifflin Harcourt	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL._SL75_.jpg	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL._SL160_.jpg	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL.jpg	en	\N	44	\N	6	13	1
-42	\N	\N	Demon Series	Peter V. Brett	Del Rey	\N	\N	\N	\N	en	\N	42	\N	1	6	0
-43	\N	\N	Naamah's Gift (Moirin)	Jacqueline Carey	Grand Central Publishing	\N	\N	\N	\N	en	\N	45	\N	18	25	1
-41	\N	\N	Kushiel's Dart (Phedre)	Jacqueline Carey	Tor Fantasy	\N	\N	\N	\N	en	\N	45	\N	2	9	1
-40	\N	\N	Kushiel's Scion (Imriel)	Jacqueline Carey	Grand Central Publishing	\N	\N	\N	\N	en	\N	45	\N	10	17	1
-31	0321751043	0321751043	Art of Computer Programming, Volumes 1-4A Boxed Set, The (3rd Edition)	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043	http://ecx.images-amazon.com/images/I/41gCSRxxVeL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41gCSRxxVeL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41gCSRxxVeL.jpg	en	2011	31	\N	1	10	0
-33	0201896842	0201896842	Art of Computer Programming, Volume 2: Seminumerical Algorithms	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842	http://ecx.images-amazon.com/images/I/41T1XCAEE1L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41T1XCAEE1L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41T1XCAEE1L.jpg	en	1997	31	\N	4	5	1
-34	0201896850	0201896850	Art of Computer Programming, Volume 3: Sorting and Searching	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850	http://ecx.images-amazon.com/images/I/41N01A6R2KL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41N01A6R2KL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41N01A6R2KL.jpg	en	1998	31	\N	6	7	1
-35	0201038048	\N	The Art of Computer Programming, Volume 4A: Combinatorial Algorithms, Part 1	Donald E. Knuth	Addison-Wesley Professional	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L._SL75_.jpg	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L._SL160_.jpg	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L.jpg	\N	\N	31	\N	8	9	1
-17	044661002X	9780446610025	Kushiel's Scion	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51C8YGxxWuL.jpg	en	2007	45	\N	11	12	2
-22	0446198072	0446198072	Naamah's Blessing	Jacqueline Carey	Grand Central Publishing	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL.jpg	en	2011	45	\N	23	24	2
-54	B001AQY03Q	\N	Sandworms of Dune	Brian Herbert, Kevin J. Anderson	Tor Books	http://www.amazon.com/Sandworms-Dune-Brian-Herbert/dp/B001AQY03Q%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB001AQY03Q	http://ecx.images-amazon.com/images/I/51yhDT4SRYL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51yhDT4SRYL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51yhDT4SRYL.jpg	\N	\N	54	\N	1	2	0
-46	0756405890	0756405890	The Name of the Wind	Patrick Rothfuss	DAW Trade	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51qxhokQlWL.jpg	en	2009	46	\N	1	2	0
-47	360893815X	9783608938159	Der Name des Windes	Patrick Rothfuss	Klett Cotta Verlag	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL75_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL160_.jpg	http://ecx.images-amazon.com/images/I/413fiTHKV5L.jpg	de	2008	47	\N	1	2	0
-55	B003H4RDUG	\N	The Winds of Dune	Brian Herbert, Kevin J. Anderson, Steve Stone	Tor Books	http://www.amazon.com/Winds-Dune-Heroes/dp/B003H4RDUG%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB003H4RDUG	http://ecx.images-amazon.com/images/I/51pqlrA%2Be%2BL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51pqlrA%2Be%2BL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51pqlrA%2Be%2BL.jpg	\N	\N	55	\N	1	2	0
-48	8499082475	8499082475	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	\N	\N	\N	es	2011	48	\N	1	2	0
-56	0441102670	9780441102679	Chapterhouse Dune	Frank Herbert	Ace	http://www.amazon.com/Chapterhouse-Dune-Chronicles-Book/dp/0441102670%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0441102670	http://ecx.images-amazon.com/images/I/41x0YQZORnL._SL75_.jpg	http://ecx.images-amazon.com/images/I/41x0YQZORnL._SL160_.jpg	http://ecx.images-amazon.com/images/I/41x0YQZORnL.jpg	en	1987	56	\N	1	2	0
-57	0765357119	0765357119	Legends of Dune Trilogy [Box Set] -	Brian Herbert, Kevin J. Anderson	Tor Science Fiction	http://www.amazon.com/Legends-Dune-Trilogy-Box-Set/dp/0765357119%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765357119	http://ecx.images-amazon.com/images/I/51AU-fxCpVL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51AU-fxCpVL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51AU-fxCpVL.jpg	en	2006	57	\N	1	2	0
-58	076535148X	076535148X	Hunters of Dune	Brian Herbert, Kevin J. Anderson	Tor Science Fiction	http://www.amazon.com/Hunters-Dune-Brian-Herbert/dp/076535148X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D076535148X	http://ecx.images-amazon.com/images/I/51Ptt4MqAjL._SL75_.jpg	http://ecx.images-amazon.com/images/I/51Ptt4MqAjL._SL160_.jpg	http://ecx.images-amazon.com/images/I/51Ptt4MqAjL.jpg	en	2007	58	\N	1	2	0
+COPY login (id, name, salt, cost, pw_hash) FROM stdin;
 \.
 
 
 --
--- Data for Name: publication; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: publication; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY publication (id, asin, isbn, title, author, publisher_id, lang, title_id, amazon_url, publication_date, small_image, small_image_width, small_image_height, medium_image, medium_image_width, medium_image_height, large_image, large_image_width, large_image_height) FROM stdin;
-1	0007269706	9780007269709	Lord of the Rings, The: The Fellowship of the Ring	J. R. R. Tolkien	\N	en	1	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706	2008-04-01	http://ecx.images-amazon.com/images/I/51HRRyQf0wL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51HRRyQf0wL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51HRRyQf0wL.jpg	\N	\N
-2	0618129081	0618129081	The Two Towers	J.R.R. Tolkien	\N	en	2	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081	\N	http://ecx.images-amazon.com/images/I/411RC3MC6WL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/411RC3MC6WL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/411RC3MC6WL.jpg	\N	\N
-3	0007269722	9780007269723	Lord of the Rings, The: The Return of the King	J. R. R. Tolkien	\N	en	3	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722	2008-04-01	http://ecx.images-amazon.com/images/I/51W9T9VpTjL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51W9T9VpTjL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51W9T9VpTjL.jpg	\N	\N
-4	0345518705	9780345518705	The Warded Man	Peter V. Brett	\N	en	4	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705	2010-03-23	http://ecx.images-amazon.com/images/I/51u6lj2ouJL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51u6lj2ouJL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51u6lj2ouJL.jpg	\N	\N
-5	0345503813	9780345503817	The Desert Spear	Peter V. Brett	\N	en	5	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813	2010-04-13	http://ecx.images-amazon.com/images/I/41fvCXHZoHL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41fvCXHZoHL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41fvCXHZoHL.jpg	\N	\N
-6	006057528X	006057528X	The Magicians' Guild	Trudi Canavan	\N	en	6	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	2004-02-01	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51tN5SeF1wL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51tN5SeF1wL.jpg	\N	\N
-7	0060575298	9780060575298	The Novice	Trudi Canavan	\N	en	7	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298	2004-05-01	http://ecx.images-amazon.com/images/I/415Td1q9EmL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/415Td1q9EmL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/415Td1q9EmL.jpg	\N	\N
-8	0060575301	9780060575304	The High Lord	Trudi Canavan	\N	en	8	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301	2004-09-01	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51Q-3cRiwiL.jpg	\N	\N
-9	0316037834	9780316037839	The Ambassador's Mission	Trudi Canavan	\N	en	9	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	2010-05-18	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51rcW1kFeGL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51rcW1kFeGL.jpg	\N	\N
-10	0316037869	0316037869	The Rogue	Trudi Canavan	\N	en	10	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	2011-05-11	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51UYVonc3lL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51UYVonc3lL.jpg	\N	\N
-11	0345296044	0345296044	The Hobbit	J.R.R. Tolkien	\N	en	11	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044	1981-03-12	http://ecx.images-amazon.com/images/I/61BtpQ95N7L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/61BtpQ95N7L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/61BtpQ95N7L.jpg	\N	\N
-12	B0017PICLQ	\N	The Silmarillion, Second Edition	J.R.R. Tolkien, Christopher Tolkien	\N	\N	12	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ	\N	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41%2BsuVXiorL.jpg	\N	\N
-13	0618154043	0618154043	Unfinished Tales of Numenor and Middle-earth	Christopher Tolkien, J.R.R. Tolkien	\N	en	13	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043	\N	http://ecx.images-amazon.com/images/I/51c7zKC8DSL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51c7zKC8DSL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51c7zKC8DSL.jpg	\N	\N
-39	8499082475	8499082475	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	es	48	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	2011-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N
-14	0765342987	9780765342980	Kushiel's Dart	Jacqueline Carey	\N	en	14	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987	2002-03-01	http://ecx.images-amazon.com/images/I/51wgsbYdF9L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51wgsbYdF9L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51wgsbYdF9L.jpg	\N	\N
-15	0765345048	0765345048	Kushiel's Chosen	Jacqueline Carey	\N	en	15	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048	2003-03-31	http://ecx.images-amazon.com/images/I/510zCCQSX2L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/510zCCQSX2L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/510zCCQSX2L.jpg	\N	\N
-16	0765347539	0765347539	Kushiel's Avatar	Jacqueline Carey	\N	en	16	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539	2004-03-01	http://ecx.images-amazon.com/images/I/41IroVTFHgL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41IroVTFHgL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41IroVTFHgL.jpg	\N	\N
-17	044661002X	9780446610025	Kushiel's Scion	Jacqueline Carey	\N	en	17	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	2007-05-01	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51C8YGxxWuL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51C8YGxxWuL.jpg	\N	\N
-18	0446610143	9780446610148	Kushiel's Justice	Jacqueline Carey	\N	en	18	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	2008-05-01	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51FgNHapbUL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51FgNHapbUL.jpg	\N	\N
-19	044661016X	9780446610162	Kushiel's Mercy	Jacqueline Carey	\N	en	19	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X	2009-06-01	http://ecx.images-amazon.com/images/I/514ZlQoxZyL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/514ZlQoxZyL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/514ZlQoxZyL.jpg	\N	\N
-20	0446198048	0446198048	Naamah's Kiss	Jacqueline Carey	\N	en	20	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048	2010-06-01	http://ecx.images-amazon.com/images/I/51JDVcFFm0L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51JDVcFFm0L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51JDVcFFm0L.jpg	\N	\N
-21	0446198056	9780446198059	Naamah's Curse	Jacqueline Carey	\N	en	21	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056	2010-06-14	http://ecx.images-amazon.com/images/I/517FyWIUZYL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/517FyWIUZYL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/517FyWIUZYL.jpg	\N	\N
-22	0446198072	0446198072	Naamah's Blessing	Jacqueline Carey	\N	en	22	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072	2011-06-29	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51kn%2B%2BlaLJL.jpg	\N	\N
-23	0786852550	0786852550	The Amulet of Samarkand	Jonathan Stroud	\N	en	23	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550	2004-05-12	http://ecx.images-amazon.com/images/I/51DGa4T2v2L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51DGa4T2v2L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51DGa4T2v2L.jpg	\N	\N
-24	1423123727	9781423123729	Bartimaeus: The Ring of Solomon	Jonathan Stroud	\N	\N	24	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727	2010-11-02	http://ecx.images-amazon.com/images/I/41LYVL93LgL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41LYVL93LgL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41LYVL93LgL.jpg	\N	\N
-25	078683868X	078683868X	Ptolemy's Gate	Jonathan Stroud	\N	en	25	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X	2007-01-01	http://ecx.images-amazon.com/images/I/21GDQ710ADL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21GDQ710ADL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21GDQ710ADL.jpg	\N	\N
-26	142310420X	142310420X	The Bartimaeus Trilogy Boxed Set	Jonathan Stroud	\N	\N	26	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X	\N	http://ecx.images-amazon.com/images/I/21E0CGCDZEL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21E0CGCDZEL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21E0CGCDZEL.jpg	\N	\N
-27	038560615X	9780385606158	Golem's Eye	Jonathan Stroud	\N	en	27	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X	2004-10-07	http://ecx.images-amazon.com/images/I/41073NG1J3L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41073NG1J3L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41073NG1J3L.jpg	\N	\N
-28	3802581202	3802581202	Kushiel 01. Das Zeichen	Jacqueline Carey	\N	de	28	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202	2007-09-15	http://ecx.images-amazon.com/images/I/21wTujaDZpL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21wTujaDZpL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/21wTujaDZpL.jpg	\N	\N
-29	3802581210	9783802581212	Kushiel 02. Der Verrat	Jacqueline Carey	\N	de	29	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210	2008-03-15	http://ecx.images-amazon.com/images/I/51L9D5j7YwL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51L9D5j7YwL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51L9D5j7YwL.jpg	\N	\N
-30	3802581229	9783802581229	Kushiel 03. Die Erlösung	Jacqueline Carey	\N	de	30	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229	2008-09-15	http://ecx.images-amazon.com/images/I/51I4wJF2PoL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51I4wJF2PoL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51I4wJF2PoL.jpg	\N	\N
-31	0321751043	0321751043	Art of Computer Programming, Volumes 1-4A Boxed Set, The (3rd Edition)	Donald E. Knuth	\N	en	31	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043	2011-03-03	http://ecx.images-amazon.com/images/I/41gCSRxxVeL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41gCSRxxVeL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41gCSRxxVeL.jpg	\N	\N
-32	0201896834	0201896834	Art of Computer Programming, Volume 1: Fundamental Algorithms	Donald E. Knuth	\N	en	32	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	1997-07-07	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41233D6XS0L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41233D6XS0L.jpg	\N	\N
-33	0201896842	0201896842	Art of Computer Programming, Volume 2: Seminumerical Algorithms	Donald E. Knuth	\N	en	33	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842	1997-11-04	http://ecx.images-amazon.com/images/I/41T1XCAEE1L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41T1XCAEE1L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41T1XCAEE1L.jpg	\N	\N
-34	0201896850	0201896850	Art of Computer Programming, Volume 3: Sorting and Searching	Donald E. Knuth	\N	en	34	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850	1998-06-23	http://ecx.images-amazon.com/images/I/41N01A6R2KL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41N01A6R2KL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41N01A6R2KL.jpg	\N	\N
-35	0201038048	\N	The Art of Computer Programming, Volume 4A: Combinatorial Algorithms, Part 1	Donald E. Knuth	\N	\N	35	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048	\N	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/41Uv2Tm1D4L.jpg	\N	\N
-36	0618260587	0618260587	The Lord of the Rings	J.R.R. Tolkien, Alan Lee	\N	en	36	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587	\N	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/31F0RQ5PXAL.jpg	\N	\N
-37	0756405890	0756405890	The Name of the Wind	Patrick Rothfuss	\N	en	46	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	2009-04-07	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51qxhokQlWL._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/51qxhokQlWL.jpg	\N	\N
-38	360893815X	9783608938159	Der Name des Windes	Patrick Rothfuss	\N	de	47	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	2008-09-01	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL75_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/413fiTHKV5L._SL160_.jpg	\N	\N	http://ecx.images-amazon.com/images/I/413fiTHKV5L.jpg	\N	\N
+COPY publication (id, asin, isbn, libris_id, title, publisher_id, lang, title_id, amazon_url, publication_date, binding, pages, small_image, small_image_width, small_image_height, medium_image, medium_image_width, medium_image_height, large_image, large_image_width, large_image_height, created, modified) FROM stdin;
+93908	0819567965	0819567965	\N	The Begum's Millions	587	en	62011	http://www.amazon.com/exec/obidos/ASIN/0819567965/quelology-20	2005-11-01	hardcover	262	http://images.amazon.com/images/P/0819567965.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0819567965.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0819567965.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 16:06:20.614174	2011-05-06 16:06:20.697658
+110266	0819567043	0819567043	\N	The Kip Brothers	587	en	74299	http://www.amazon.com/exec/obidos/ASIN/0819567043/quelology-20	2007-05-01	hardcover	475	http://images.amazon.com/images/P/0819567043.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0819567043.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0819567043.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 16:46:52.279956	2011-05-06 16:46:52.360643
+30116	0061801267	0061801267	\N	James Cameron's Avatar: The Na'vi Quest	440	en	17600	http://www.amazon.com/exec/obidos/ASIN/0061801267/quelology-20	2009-12-01	paperback	58	http://images.amazon.com/images/P/0061801267.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0061801267.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0061801267.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 13:53:31.262856	2011-05-06 13:53:31.262856
+30117	0061896756	0061896756	11766531	Avatar: A Confidential Report on the Biological and Social History of Pandora	1831	en	17601	http://www.amazon.com/exec/obidos/ASIN/0061896756/quelology-20	2009-12-01	paperback	224	http://images.amazon.com/images/P/0061896756.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0061896756.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0061896756.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 13:53:31.262856	2011-06-18 18:47:48.191631
+141867	1439170835	1439170835	\N	Songs of love & death : all-original tales of star-crossed love	5113	en	35253	\N	2010-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:32.43048	2011-06-04 09:05:32.43048
+19130	1439150141	1439150141	\N	Songs of Love and Death: All-Original Tales of Star-Crossed Love	1266	en	35253	http://www.amazon.com/exec/obidos/ASIN/1439150141/quelology-20	2010-11-16	hardcover	480	http://images.amazon.com/images/P/1439150141.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1439150141.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1439150141.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 13:34:47.986614	2011-05-06 14:35:50.270409
+50357	0312872380	0312872380	\N	Kushiel's Dart	2	en	35254	http://www.amazon.com/exec/obidos/ASIN/0312872380/quelology-20	2001-06-01	hardcover	701	http://images.amazon.com/images/P/0312872380.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872380.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872380.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50358	0765342987	0765342987	\N	Kushiel's Dart	2	en	35254	http://www.amazon.com/exec/obidos/ASIN/0765342987/quelology-20	2002-03-01	paperback	901	http://images.amazon.com/images/P/0765342987.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765342987.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765342987.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50359	140500097X	140500097X	\N	Kushiel's Dart	933	en	35254	http://www.amazon.com/exec/obidos/ASIN/140500097X/quelology-20	2002-09-01	paperback	701	http://images.amazon.com/images/P/140500097X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/140500097X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/140500097X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50360	0330493744	0330493744	\N	Kushiel's Dart	933	en	35254	http://www.amazon.com/exec/obidos/ASIN/0330493744/quelology-20	2003-09-01	paperback	1015	http://images.amazon.com/images/P/0330493744.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330493744.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330493744.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+141869	1400129494	1400129494	\N	Kushiel's dart	45	en	35254	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:32.894945	2011-06-04 09:05:32.894945
+50361	1400109493	1400109493	\N	Kushiel's Dart	45	en	35254	http://www.amazon.com/exec/obidos/ASIN/1400109493/quelology-20	2009-01-01	\N	\N	http://images.amazon.com/images/P/1400109493.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109493.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109493.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+134968	\N	\N	\N	Kushiel's dart	45	en	35254	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:16:20.242538	2011-05-27 12:16:20.242538
+134969	1400159490	1400159490	\N	Kushiel's Dart (Kushiel's Legacy)	45	en	35254	http://www.amazon.com/exec/obidos/ASIN/1400159490/quelology-20	2009-02-09	\N	\N	http://ecx.images-amazon.com/images/I/613Ts6xLPaL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/613Ts6xLPaL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/613Ts6xLPaL.jpg	378	500	2011-05-27 12:16:21.504087	2011-05-27 12:16:21.504087
+134966	140013949X	140013949X	\N	Kushiel's Dart (Kushiel's Legacy)	45	en	35254	http://www.amazon.com/exec/obidos/ASIN/140013949X/quelology-20	2009-02-09	\N	\N	http://ecx.images-amazon.com/images/I/51IAj8nqw5L._SL75_.jpg	72	75	http://ecx.images-amazon.com/images/I/51IAj8nqw5L._SL160_.jpg	154	160	http://ecx.images-amazon.com/images/I/51IAj8nqw5L.jpg	481	500	2011-05-27 12:16:16.38559	2011-05-27 12:16:16.38559
+50362	0312872399	0312872399	\N	Kushiel's Chosen	2	en	35255	http://www.amazon.com/exec/obidos/ASIN/0312872399/quelology-20	2002-04-01	hardcover	704	http://images.amazon.com/images/P/0312872399.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872399.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872399.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50363	0765345048	0765345048	\N	Kushiel's Chosen	2	en	35255	http://www.amazon.com/exec/obidos/ASIN/0765345048/quelology-20	2003-03-01	paperback	678	http://images.amazon.com/images/P/0765345048.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765345048.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765345048.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50364	1405005882	1405005882	\N	Kushiel's Chosen	933	en	35255	http://www.amazon.com/exec/obidos/ASIN/1405005882/quelology-20	2003-09-01	paperback	700	http://images.amazon.com/images/P/1405005882.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1405005882.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1405005882.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50365	0330412779	0330412779	\N	Kushiel's Chosen	933	en	35255	http://www.amazon.com/exec/obidos/ASIN/0330412779/quelology-20	2004-09-01	paperback	893	http://images.amazon.com/images/P/0330412779.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330412779.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330412779.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+134970	\N	\N	\N	Kushiel's chosen	45	en	35255	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:16:21.779652	2011-05-27 12:16:21.779652
+141870	1400129508	1400129508	\N	Kushiel's chosen	45	en	35255	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:33.118895	2011-06-04 09:05:33.118895
+50366	1400109507	1400109507	\N	Kushiel's Chosen	45	en	35255	http://www.amazon.com/exec/obidos/ASIN/1400109507/quelology-20	2009-02-01	\N	\N	http://images.amazon.com/images/P/1400109507.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109507.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109507.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115488	1400139503	1400139503	\N	Kushiel's Chosen (Kushiel's Legacy)	45	en	35255	http://www.amazon.com/exec/obidos/ASIN/1400139503/quelology-20	2009-03-09	\N	\N	http://ecx.images-amazon.com/images/I/515PtWkDnhL._SL75_.jpg	75	66	http://ecx.images-amazon.com/images/I/515PtWkDnhL._SL160_.jpg	160	140	http://ecx.images-amazon.com/images/I/515PtWkDnhL.jpg	500	437	2011-05-18 22:36:41.195199	2011-05-18 22:36:41.195199
+115489	1400159504	1400159504	\N	Kushiel's Chosen (Kushiel's Legacy)	45	en	35255	http://www.amazon.com/exec/obidos/ASIN/1400159504/quelology-20	2009-03-09	\N	\N	http://ecx.images-amazon.com/images/I/51dmBeMcVcL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51dmBeMcVcL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51dmBeMcVcL.jpg	378	500	2011-05-18 22:36:41.899238	2011-05-18 22:36:41.899238
+50367	0312872402	0312872402	\N	Kushiel's Avatar	2	en	35256	http://www.amazon.com/exec/obidos/ASIN/0312872402/quelology-20	2003-04-01	hardcover	702	http://images.amazon.com/images/P/0312872402.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872402.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0312872402.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50368	0765347539	0765347539	\N	Kushiel's Avatar	2	en	35256	http://www.amazon.com/exec/obidos/ASIN/0765347539/quelology-20	2004-03-01	paperback	750	http://images.amazon.com/images/P/0765347539.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765347539.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0765347539.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50369	1405034149	1405034149	\N	Kushiel's Avatar	933	en	35256	http://www.amazon.com/exec/obidos/ASIN/1405034149/quelology-20	2004-09-01	paperback	702	http://images.amazon.com/images/P/1405034149.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1405034149.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1405034149.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50370	0330420011	0330420011	\N	Kushiel's Avatar	933	en	35256	http://www.amazon.com/exec/obidos/ASIN/0330420011/quelology-20	2005-09-01	paperback	967	http://images.amazon.com/images/P/0330420011.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330420011.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0330420011.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+134971	\N	\N	\N	Kushiel's avatar	45	en	35256	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:16:21.875293	2011-05-27 12:16:21.875293
+141871	1400129516	1400129516	\N	Kushiel's avatar	45	en	35256	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:33.254343	2011-06-04 09:05:33.254343
+50371	1400109515	1400109515	\N	Kushiel's Avatar	45	en	35256	http://www.amazon.com/exec/obidos/ASIN/1400109515/quelology-20	2009-03-01	\N	\N	http://images.amazon.com/images/P/1400109515.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109515.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400109515.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115490	1400159512	1400159512	\N	Kushiel's Avatar (Kushiel's Legacy)	45	en	35256	http://www.amazon.com/exec/obidos/ASIN/1400159512/quelology-20	2009-04-06	\N	\N	http://ecx.images-amazon.com/images/I/510CrhYXIlL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/510CrhYXIlL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/510CrhYXIlL.jpg	378	500	2011-05-18 22:36:43.201825	2011-05-18 22:36:43.201825
+115492	1400139511	1400139511	\N	Kushiel's Avatar (Kushiel's Legacy)	45	en	35256	http://www.amazon.com/exec/obidos/ASIN/1400139511/quelology-20	2009-04-06	\N	\N	http://ecx.images-amazon.com/images/I/51HPbOczpuL._SL75_.jpg	75	75	http://ecx.images-amazon.com/images/I/51HPbOczpuL._SL160_.jpg	160	160	http://ecx.images-amazon.com/images/I/51HPbOczpuL.jpg	499	500	2011-05-18 22:36:45.408978	2011-05-18 22:36:45.408978
+50372	044650002X	044650002X	\N	Kushiel's Scion	132	en	35258	http://www.amazon.com/exec/obidos/ASIN/044650002X/quelology-20	2006-06-01	hardcover	753	http://images.amazon.com/images/P/044650002X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044650002X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044650002X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50373	044661002X	044661002X	\N	Kushiel's Scion	132	en	35258	http://www.amazon.com/exec/obidos/ASIN/044661002X/quelology-20	2007-04-01	paperback	943	http://images.amazon.com/images/P/044661002X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044661002X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044661002X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+141874	0446541540	0446541540	\N	Kushiel's scion	132	en	35258	\N	2008-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:33.878053	2011-06-04 09:05:33.878053
+134977	\N	\N	\N	Kushiel's scion	132	en	35258	\N	2008-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:17:44.071619	2011-05-27 12:17:44.071619
+50374	1841493619	1841493619	\N	Kushiel's Scion	12	en	35258	http://www.amazon.com/exec/obidos/ASIN/1841493619/quelology-20	2008-08-01	paperback	753	http://images.amazon.com/images/P/1841493619.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493619.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493619.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50375	1400159520	1400159520	\N	Kushiel's Scion	45	en	35258	http://www.amazon.com/exec/obidos/ASIN/1400159520/quelology-20	2008-11-01	\N	\N	http://images.amazon.com/images/P/1400159520.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400159520.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400159520.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115579	1400109523	1400109523	\N	Kushiel's Scion (Kushiel's Legacy)	45	en	35258	http://www.amazon.com/exec/obidos/ASIN/1400109523/quelology-20	2008-12-08	\N	\N	http://ecx.images-amazon.com/images/I/51et9SUjOfL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51et9SUjOfL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51et9SUjOfL.jpg	378	500	2011-05-18 22:41:05.579192	2011-05-18 22:41:05.579192
+115580	140013952X	140013952X	\N	Kushiel's Scion (Kushiel's Legacy)	45	en	35258	http://www.amazon.com/exec/obidos/ASIN/140013952X/quelology-20	2008-12-08	\N	\N	http://ecx.images-amazon.com/images/I/51et9SUjOfL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51et9SUjOfL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51et9SUjOfL.jpg	378	500	2011-05-18 22:41:06.406153	2011-05-18 22:41:06.406153
+134974	\N	\N	\N	Kushiel's justice	132	en	35259	\N	2007-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:17:43.431406	2011-05-27 12:17:43.431406
+141876	0446196533	0446196533	\N	Kushiel's justice	132	en	35259	\N	2007-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:34.102824	2011-06-04 09:05:34.102824
+141875	0446196517	0446196517	\N	Kushiel's justice	132	en	35259	\N	2007-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:34.02675	2011-06-04 09:05:34.02675
+50376	0446500038	0446500038	\N	Kushiel's Justice	132	en	35259	http://www.amazon.com/exec/obidos/ASIN/0446500038/quelology-20	2007-06-01	hardcover	703	http://images.amazon.com/images/P/0446500038.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446500038.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446500038.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50377	0446610143	0446610143	\N	Kushiel's Justice	2834	en	35259	http://www.amazon.com/exec/obidos/ASIN/0446610143/quelology-20	2008-05-01	paperback	880	http://images.amazon.com/images/P/0446610143.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446610143.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446610143.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50379	1841493627	1841493627	\N	Kushiel's Justice	12	en	35259	http://www.amazon.com/exec/obidos/ASIN/1841493627/quelology-20	2008-09-01	paperback	703	http://images.amazon.com/images/P/1841493627.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493627.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493627.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+116776	\N	\N	\N	Kushiel's justice	45	en	35259	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-19 20:27:23.693905	2011-05-19 20:27:23.693905
+50378	1400159539	1400159539	\N	Kushiel's Justice	45	en	35259	http://www.amazon.com/exec/obidos/ASIN/1400159539/quelology-20	2009-01-01	\N	\N	http://images.amazon.com/images/P/1400159539.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400159539.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1400159539.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115581	1400139538	1400139538	\N	Kushiel's Justice (Kushiel's Legacy)	45	en	35259	http://www.amazon.com/exec/obidos/ASIN/1400139538/quelology-20	2009-01-19	\N	\N	http://ecx.images-amazon.com/images/I/51M29H8M6jL._SL75_.jpg	75	70	http://ecx.images-amazon.com/images/I/51M29H8M6jL._SL160_.jpg	160	149	http://ecx.images-amazon.com/images/I/51M29H8M6jL.jpg	500	467	2011-05-18 22:41:07.246669	2011-05-18 22:41:07.246669
+115583	1400109531	1400109531	\N	Kushiel's Justice (Kushiel's Legacy)	45	en	35259	http://www.amazon.com/exec/obidos/ASIN/1400109531/quelology-20	2009-01-19	\N	\N	http://ecx.images-amazon.com/images/I/51YU6tD-YhL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51YU6tD-YhL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51YU6tD-YhL.jpg	378	500	2011-05-18 22:41:10.028871	2011-05-18 22:41:10.028871
+50380	0446500046	0446500046	\N	Kushiel's Mercy	2834	en	35260	http://www.amazon.com/exec/obidos/ASIN/0446500046/quelology-20	2008-06-01	hardcover	654	http://images.amazon.com/images/P/0446500046.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446500046.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446500046.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50381	140010954X	140010954X	\N	Kushiel's Mercy	45	en	35260	http://www.amazon.com/exec/obidos/ASIN/140010954X/quelology-20	2008-09-01	\N	\N	http://images.amazon.com/images/P/140010954X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/140010954X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/140010954X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115585	1400159547	1400159547	\N	Kushiel's Mercy (Kushiel's Legacy)	45	en	35260	http://www.amazon.com/exec/obidos/ASIN/1400159547/quelology-20	2008-10-06	\N	\N	http://ecx.images-amazon.com/images/I/51o-Tul2trL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51o-Tul2trL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51o-Tul2trL.jpg	378	500	2011-05-18 22:41:12.11979	2011-05-18 22:41:12.11979
+50382	044661016X	044661016X	\N	Kushiel's Mercy	1458	en	35260	http://www.amazon.com/exec/obidos/ASIN/044661016X/quelology-20	2009-06-01	paperback	832	http://images.amazon.com/images/P/044661016X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044661016X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044661016X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50383	1841493635	1841493635	\N	Kushiel's Mercy	12	en	35260	http://www.amazon.com/exec/obidos/ASIN/1841493635/quelology-20	2009-11-01	paperback	653	http://images.amazon.com/images/P/1841493635.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493635.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/1841493635.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+122144	\N	\N	\N	Naamah's kiss	45	en	35249	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-20 11:23:16.355594	2011-05-20 11:23:16.355594
+141878	140019251X	140019251X	\N	Naamah's kiss	45	en	35249	\N	2009-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:34.62619	2011-06-04 09:05:34.62619
+50345	044619803X	044619803X	\N	Naamah's Kiss	1458	en	35249	http://www.amazon.com/exec/obidos/ASIN/044619803X/quelology-20	2009-06-01	hardcover	645	http://images.amazon.com/images/P/044619803X.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044619803X.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/044619803X.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115566	1400142512	1400142512	\N	Naamah's Kiss	45	en	35249	http://www.amazon.com/exec/obidos/ASIN/1400142512/quelology-20	2009-07-09	\N	\N	http://ecx.images-amazon.com/images/I/51TAeKXngDL._SL75_.jpg	75	69	http://ecx.images-amazon.com/images/I/51TAeKXngDL._SL160_.jpg	160	146	http://ecx.images-amazon.com/images/I/51TAeKXngDL.jpg	500	457	2011-05-18 22:40:49.302689	2011-05-18 22:40:49.302689
+115567	1400112516	1400112516	\N	Naamah's Kiss	45	en	35249	http://www.amazon.com/exec/obidos/ASIN/1400112516/quelology-20	2009-07-09	\N	\N	http://ecx.images-amazon.com/images/I/51TiY469IxL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51TiY469IxL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51TiY469IxL.jpg	378	500	2011-05-18 22:40:50.201099	2011-05-18 22:40:50.201099
+115569	1400162513	1400162513	\N	Naamah's Kiss	45	en	35249	http://www.amazon.com/exec/obidos/ASIN/1400162513/quelology-20	2009-07-09	\N	\N	http://ecx.images-amazon.com/images/I/51TiY469IxL._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51TiY469IxL._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51TiY469IxL.jpg	378	500	2011-05-18 22:40:51.818228	2011-05-18 22:40:51.818228
+50347	0575093579	0575093579	\N	Naamah's Kiss	18	en	35249	http://www.amazon.com/exec/obidos/ASIN/0575093579/quelology-20	2010-01-21	paperback	656	http://images.amazon.com/images/P/0575093579.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093579.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093579.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50346	0575093560	0575093560	\N	Naamah's Kiss	18	en	35249	http://www.amazon.com/exec/obidos/ASIN/0575093560/quelology-20	2010-01-21	hardcover	656	http://images.amazon.com/images/P/0575093560.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093560.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093560.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50344	0575093587	0575093587	\N	Naamah's Kiss	18	en	35249	http://www.amazon.com/exec/obidos/ASIN/0575093587/quelology-20	2010-05-13	paperback	672	http://images.amazon.com/images/P/0575093587.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093587.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093587.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50348	0446198048	0446198048	\N	Naamah's Kiss	1458	en	35249	http://www.amazon.com/exec/obidos/ASIN/0446198048/quelology-20	2010-06-01	paperback	800	http://images.amazon.com/images/P/0446198048.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198048.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198048.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+122148	\N	\N	\N	Naamah's curse	18	en	35250	\N	2010-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-20 11:23:16.629787	2011-05-20 11:23:16.629787
+122146	\N	\N	\N	Naamah's curse	45	en	35250	\N	2010-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-20 11:23:16.518408	2011-05-20 11:23:16.518408
+141882	0575093633	0575093633	\N	Naamah's curse	18	en	35250	\N	2010-01-01	ebook	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:34.872684	2011-06-04 09:05:34.872684
+141880	1400193753	1400193753	\N	Naamah's curse	45	en	35250	\N	2010-01-01	audio	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:34.778096	2011-06-04 09:05:34.778096
+50351	0446198056	0446198056	\N	Naamah's Curse	1459	en	35250	http://www.amazon.com/exec/obidos/ASIN/0446198056/quelology-20	2010-06-14	hardcover	576	http://images.amazon.com/images/P/0446198056.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198056.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198056.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50349	0575093609	0575093609	\N	Naamah's Curse	18	en	35250	http://www.amazon.com/exec/obidos/ASIN/0575093609/quelology-20	2010-06-17	hardcover	576	http://images.amazon.com/images/P/0575093609.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093609.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093609.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50350	0575093617	0575093617	\N	Naamah's Curse	18	en	35250	http://www.amazon.com/exec/obidos/ASIN/0575093617/quelology-20	2010-06-17	paperback	576	http://images.amazon.com/images/P/0575093617.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093617.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093617.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+115573	1400163757	9781400163755	\N	Naamah's Curse	45	en	35250	http://www.amazon.com/exec/obidos/ASIN/1400163757/quelology-20	2010-06-22	\N	\N	http://ecx.images-amazon.com/images/I/51bHnrV22vL._SL75_.jpg	52	75	http://ecx.images-amazon.com/images/I/51bHnrV22vL._SL160_.jpg	111	160	http://ecx.images-amazon.com/images/I/51bHnrV22vL.jpg	347	500	2011-05-18 22:40:58.24349	2011-05-18 22:40:58.24349
+115571	1400143756	1400143756	\N	Naamah's Curse	45	en	35250	http://www.amazon.com/exec/obidos/ASIN/1400143756/quelology-20	2010-06-22	\N	\N	http://ecx.images-amazon.com/images/I/51Ezx8npQML._SL75_.jpg	57	75	http://ecx.images-amazon.com/images/I/51Ezx8npQML._SL160_.jpg	121	160	http://ecx.images-amazon.com/images/I/51Ezx8npQML.jpg	378	500	2011-05-18 22:40:56.193849	2011-05-18 22:40:56.193849
+115570	140011375X	140011375X	\N	Naamah's Curse	45	en	35250	http://www.amazon.com/exec/obidos/ASIN/140011375X/quelology-20	2010-06-22	\N	\N	http://ecx.images-amazon.com/images/I/61wLzDiiwTL._SL75_.jpg	75	64	http://ecx.images-amazon.com/images/I/61wLzDiiwTL._SL160_.jpg	160	138	http://ecx.images-amazon.com/images/I/61wLzDiiwTL.jpg	500	430	2011-05-18 22:40:54.730892	2011-05-18 22:40:54.730892
+50352	0575093625	0575093625	\N	Naamah's Curse	18	en	35250	http://www.amazon.com/exec/obidos/ASIN/0575093625/quelology-20	2011-04-14	paperback	576	http://images.amazon.com/images/P/0575093625.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093625.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093625.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50353	0446198064	0446198064	\N	Naamah's Curse	1459	en	35250	http://www.amazon.com/exec/obidos/ASIN/0446198064/quelology-20	2011-05-01	paperback	704	http://images.amazon.com/images/P/0446198064.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198064.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198064.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50354	0446198072	0446198072	\N	Naamah's Blessing	1459	en	35251	http://www.amazon.com/exec/obidos/ASIN/0446198072/quelology-20	2011-06-29	hardcover	624	http://images.amazon.com/images/P/0446198072.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198072.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0446198072.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50355	0575093641	0575093641	\N	Naamah's Blessing	18	en	35251	http://www.amazon.com/exec/obidos/ASIN/0575093641/quelology-20	2011-06-30	hardcover	624	http://images.amazon.com/images/P/0575093641.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093641.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093641.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+50356	0575093668	0575093668	\N	Naamah's Blessing	18	en	35251	http://www.amazon.com/exec/obidos/ASIN/0575093668/quelology-20	2011-06-30	paperback	624	http://images.amazon.com/images/P/0575093668.01.THUMBZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093668.01.MZZZZZZZ.jpg	\N	\N	http://images.amazon.com/images/P/0575093668.01.LZZZZZZZ.jpg	\N	\N	2011-05-06 14:35:50.270409	2011-05-06 14:35:50.270409
+134967	\N	\N	\N	La marque	254	fr	80186	\N	2008-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-27 12:16:17.818036	2011-05-27 12:16:17.818036
+141868	2352942373	2352942373	\N	La marque	254	fr	80186	\N	2008-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:32.655769	2011-06-04 09:05:32.655769
+127047	\N	\N	\N	Il sangue e el traditore : romanzo	757	it	80146	\N	2010-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-05-21 13:51:06.772347	2011-05-21 13:51:06.772347
+141873	8842916536	8842916536	\N	Il sangue e el traditore : romanzo	757	it	80146	\N	2010-01-01	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	\N	2011-06-04 09:05:33.519853	2011-06-04 09:05:33.519853
 \.
 
 
 --
--- Data for Name: publication_attribution; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: publication_attribution; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY publication_attribution (id, publication_id, name, url, retrieved) FROM stdin;
-1	1	amazon	http://www.amazon.com/Lord-Rings-Fellowship-J-Tolkien/dp/0007269706%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269706	2011-04-14
-2	2	amazon	http://www.amazon.com/Two-Towers-Lord-Rings-Part/dp/0618129081%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618129081	2011-04-14
-3	3	amazon	http://www.amazon.com/Lord-Rings-J-R-Tolkien/dp/0007269722%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0007269722	2011-04-14
-4	4	amazon	http://www.amazon.com/Warded-Man-Peter-V-Brett/dp/0345518705%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345518705	2011-04-14
-5	5	amazon	http://www.amazon.com/Desert-Spear-Peter-V-Brett/dp/0345503813%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345503813	2011-04-14
-6	6	amazon	http://www.amazon.com/Magicians-Guild-Black-Magician-Trilogy/dp/006057528X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D006057528X	2011-04-14
-7	7	amazon	http://www.amazon.com/Novice-Black-Magician-Trilogy-Book/dp/0060575298%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575298	2011-04-14
-8	8	amazon	http://www.amazon.com/High-Lord-Black-Magician-Trilogy/dp/0060575301%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0060575301	2011-04-14
-9	9	amazon	http://www.amazon.com/Ambassadors-Mission-Traitor-Spy-Trilogy/dp/0316037834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037834	2011-04-14
-10	10	amazon	http://www.amazon.com/Rogue-Traitor-Spy-Trilogy/dp/0316037869%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0316037869	2011-04-14
-11	11	amazon	http://www.amazon.com/Hobbit-J-R-R-Tolkien/dp/0345296044%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0345296044	2011-04-14
-12	12	amazon	http://www.amazon.com/Silmarillion-Second-J-R-R-Tolkien/dp/B0017PICLQ%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3DB0017PICLQ	2011-04-14
-13	13	amazon	http://www.amazon.com/Unfinished-Numenor-Middle-earth-Christopher-Tolkien/dp/0618154043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618154043	2011-04-14
-14	14	amazon	http://www.amazon.com/Kushiels-Dart-Jacqueline-Carey/dp/0765342987%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765342987	2011-04-14
-15	15	amazon	http://www.amazon.com/Kushiels-Chosen-Jacqueline-Carey/dp/0765345048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765345048	2011-04-14
-16	16	amazon	http://www.amazon.com/Kushiels-Avatar-Legacy-Trilogy/dp/0765347539%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0765347539	2011-04-14
-17	17	amazon	http://www.amazon.com/Kushiels-Scion-Legacy-Jacqueline-Carey/dp/044661002X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661002X	2011-04-14
-18	18	amazon	http://www.amazon.com/Kushiels-Justice-Legacy-Jacqueline-Carey/dp/0446610143%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446610143	2011-04-14
-19	19	amazon	http://www.amazon.com/Kushiels-Mercy-Jacqueline-Carey/dp/044661016X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D044661016X	2011-04-14
-20	20	amazon	http://www.amazon.com/Naamahs-Kushiel-Legacy-Jacqueline-Carey/dp/0446198048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198048	2011-04-14
-21	21	amazon	http://www.amazon.com/Naamahs-Curse-Jacqueline-Carey/dp/0446198056%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198056	2011-04-14
-22	22	amazon	http://www.amazon.com/Naamahs-Blessing-Kushiels-Legacy-Jacqueline/dp/0446198072%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0446198072	2011-04-14
-23	23	amazon	http://www.amazon.com/Amulet-Samarkand-Bartimaeus-Trilogy-Book/dp/0786852550%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0786852550	2011-04-14
-24	24	amazon	http://www.amazon.com/Bartimaeus-Ring-Solomon-Jonathan-Stroud/dp/1423123727%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D1423123727	2011-04-14
-25	25	amazon	http://www.amazon.com/Ptolemys-Gate-Bartimaeus-Trilogy-Book/dp/078683868X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D078683868X	2011-04-14
-26	26	amazon	http://www.amazon.com/Bartimaeus-Trilogy-Boxed-Set/dp/142310420X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D142310420X	2011-04-14
-27	27	amazon	http://www.amazon.com/Golems-Bartimaeus-Trilogy-Jonathan-Stroud/dp/038560615X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D038560615X	2011-04-14
-28	28	amazon	http://www.amazon.com/Kushiel-01-Zeichen-Jacqueline-Carey/dp/3802581202%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581202	2011-04-14
-29	29	amazon	http://www.amazon.com/Kushiel-02-Verrat-Jacqueline-Carey/dp/3802581210%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581210	2011-04-14
-30	30	amazon	http://www.amazon.com/Kushiel-03-Erl%C3%B6sung-Jacqueline-Carey/dp/3802581229%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D3802581229	2011-04-14
-31	31	amazon	http://www.amazon.com/Computer-Programming-Volumes-1-4A-Boxed/dp/0321751043%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0321751043	2011-04-14
-32	32	amazon	http://www.amazon.com/Art-Computer-Programming-Fundamental-Algorithms/dp/0201896834%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896834	2011-04-14
-33	33	amazon	http://www.amazon.com/Art-Computer-Programming-Seminumerical-Algorithms/dp/0201896842%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896842	2011-04-14
-34	34	amazon	http://www.amazon.com/Art-Computer-Programming-Sorting-Searching/dp/0201896850%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201896850	2011-04-14
-35	35	amazon	http://www.amazon.com/Art-Computer-Programming-Combinatorial-Algorithms/dp/0201038048%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0201038048	2011-04-14
-36	36	amazon	http://www.amazon.com/Lord-Rings-J-R-R-Tolkien/dp/0618260587%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0618260587	2011-04-14
-37	37	amazon	http://www.amazon.com/Name-Wind-Kingkiller-Chronicles-Day/dp/0756405890%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D0756405890	2011-04-14
-38	38	amazon	http://www.amazon.com/Name-Windes-Patrick-Rothfuss/dp/360893815X%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D360893815X	2011-04-14
-39	39	amazon	http://www.amazon.com/Nombre-Viento-Name-Wind-Spanish/dp/8499082475%3FSubscriptionId%3DAKIAJQH5L3AY6MOXEEVQ%26tag%3Dquelology-20%26linkCode%3Dxm2%26camp%3D2025%26creative%3D165953%26creativeASIN%3D8499082475	2011-04-14
 \.
 
 
 --
--- Data for Name: publisher; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: publisher; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY publisher (id, isfdb_id, name) FROM stdin;
+587	1031	Wesleyan University Press
+440	3484	HarperFestival
+1831	32322	It Books
+5113	18153	Gallery Books
+1266	32484	Gallery
+2	23	Tor
+933	2126	Tor / Pan Macmillan UK
+45	3889	Tantor Media
+132	30	Warner Books
+12	113	Orbit
+2834	34938	Grand Central
+1458	23109	Grand Central Publishing / Hachette
+18	13	Gollancz
+1459	31835	Grand Central Publishing
+254	5752	Bragelonne
+757	29379	Editrice Nord
 \.
 
 
 --
--- Data for Name: publisher_link; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: publisher_link; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY publisher_link (id, author_id, type, url) FROM stdin;
+COPY publisher_link (id, publisher_id, type, url) FROM stdin;
 \.
 
 
 --
--- Data for Name: title; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: raw_publication; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY title (id, asin, title, author, publisher, lang, root_id, same_as, l, r, level) FROM stdin;
-23	\N	The Amulet of Samarkand	Jonathan Stroud	\N	en	23	\N	1	2	0
-24	\N	Bartimaeus: The Ring of Solomon	Jonathan Stroud	\N	\N	24	\N	1	2	0
-25	\N	Ptolemy's Gate	Jonathan Stroud	\N	en	25	\N	1	2	0
-26	\N	The Bartimaeus Trilogy Boxed Set	Jonathan Stroud	\N	\N	26	\N	1	2	0
-27	\N	Golem's Eye	Jonathan Stroud	\N	en	27	\N	1	2	0
-45	\N	Terre d'Ange	Jacqueline Carey		en	45	\N	1	26	0
-28	\N	Kushiel 01. Das Zeichen	Jacqueline Carey	\N	de	37	\N	2	3	1
-46	\N	The Name of the Wind	Patrick Rothfuss	\N	en	46	\N	1	2	0
-29	\N	Kushiel 02. Der Verrat	Jacqueline Carey	\N	de	37	\N	4	5	1
-37	\N	Kushiels Auserwählte	Jacqueline Carey		de	37	\N	1	8	0
-9	\N	The Ambassador's Mission	Trudi Canavan	\N	en	38	\N	2	3	1
-38	\N	The Traitor Spy Trilogy	Trudi Canavan		en	38	\N	1	6	0
-10	\N	The Rogue	Trudi Canavan	\N	en	38	\N	4	5	1
-6	\N	The Magicians' Guild	Trudi Canavan	\N	en	39	\N	2	3	1
-7	\N	The Novice	Trudi Canavan	\N	en	39	\N	4	5	1
-39	\N	The Black Magician Trilogy	Trudi Canavan		en	39	\N	1	8	0
-8	\N	The High Lord	Trudi Canavan	\N	en	39	\N	6	7	1
-20	\N	Naamah's Kiss	Jacqueline Carey	\N	en	45	\N	19	20	2
-12	\N	The Silmarillion, Second Edition	J.R.R. Tolkien, Christopher Tolkien	\N	\N	44	\N	2	3	1
-21	\N	Naamah's Curse	Jacqueline Carey	\N	en	45	\N	21	22	2
-43	\N	Naamah's Gift (Moirin)	Jacqueline Carey		en	45	\N	18	25	1
-11	\N	The Hobbit	J.R.R. Tolkien	\N	en	44	\N	4	5	1
-4	\N	The Warded Man	Peter V. Brett	\N	en	42	\N	2	3	1
-42	\N	Demon Series	Peter V. Brett		en	42	\N	1	6	0
-5	\N	The Desert Spear	Peter V. Brett	\N	en	42	\N	4	5	1
-22	\N	Naamah's Blessing	Jacqueline Carey	\N	en	45	\N	23	24	2
-1	\N	Lord of the Rings, The: The Fellowship of the Ring	J. R. R. Tolkien	\N	en	44	\N	7	8	2
-2	\N	The Two Towers	J.R.R. Tolkien	\N	en	44	\N	9	10	2
-36	\N	The Lord of the Rings	J.R.R. Tolkien, Alan Lee	\N	en	44	\N	6	13	1
-3	\N	Lord of the Rings, The: The Return of the King	J. R. R. Tolkien	\N	en	44	\N	11	12	2
-44	\N	Middle Earth	J.R.R. Tolkien, Christopher Tolkien, Alan Lee		en	44	\N	1	16	0
-13	\N	Unfinished Tales of Numenor and Middle-earth	Christopher Tolkien, J.R.R. Tolkien	\N	en	44	\N	14	15	1
-47	\N	Der Name des Windes	Patrick Rothfuss	\N	de	47	\N	1	2	0
-14	\N	Kushiel's Dart	Jacqueline Carey	\N	en	45	\N	3	4	2
-15	\N	Kushiel's Chosen	Jacqueline Carey	\N	en	45	\N	5	6	2
-41	\N	Kushiel's Dart (Phedre)	Jacqueline Carey		en	45	\N	2	9	1
-16	\N	Kushiel's Avatar	Jacqueline Carey	\N	en	45	\N	7	8	2
-17	\N	Kushiel's Scion	Jacqueline Carey	\N	en	45	\N	11	12	2
-18	\N	Kushiel's Justice	Jacqueline Carey	\N	en	45	\N	13	14	2
-40	\N	Kushiel's Scion (Imriel)	Jacqueline Carey		en	45	\N	10	17	1
-19	\N	Kushiel's Mercy	Jacqueline Carey	\N	en	45	\N	15	16	2
-48	\N	El Nombre Del Viento / The Name Of The Wind	Patrick Rothfuss	\N	es	48	\N	1	2	0
-32	\N	Art of Computer Programming, Volume 1: Fundamental Algorithms	Donald E. Knuth	\N	en	31	\N	2	3	1
-33	\N	Art of Computer Programming, Volume 2: Seminumerical Algorithms	Donald E. Knuth	\N	en	31	\N	4	5	1
-34	\N	Art of Computer Programming, Volume 3: Sorting and Searching	Donald E. Knuth	\N	en	31	\N	6	7	1
-31	\N	Art of Computer Programming, Volumes 1-4A Boxed Set, The (3rd Edition)	Donald E. Knuth	\N	en	31	\N	1	10	0
-35	\N	The Art of Computer Programming, Volume 4A: Combinatorial Algorithms, Part 1	Donald E. Knuth	\N	\N	31	\N	8	9	1
-30	\N	Kushiel 03. Die Erlösung	Jacqueline Carey	\N	de	37	16	6	7	1
+COPY raw_publication (id, asin, libris_id, isbn, title, authors, publisher, lang, maybe_title_id, amazon_url, publication_date, binding, pages, small_image, small_image_width, small_image_height, medium_image, medium_image_width, medium_image_height, large_image, large_image_width, large_image_height, created, modified) FROM stdin;
 \.
 
 
 --
--- Data for Name: title_attribution; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: raw_publication_attribution; Type: TABLE DATA; Schema: public; Owner: quelology-dev
+--
+
+COPY raw_publication_attribution (id, raw_publication_id, name, url, retrieved) FROM stdin;
+\.
+
+
+--
+-- Data for Name: title; Type: TABLE DATA; Schema: public; Owner: quelology-dev
+--
+
+COPY title (id, title, lang, isfdb_id, root_id, l, r, level, same_as, created, modified) FROM stdin;
+62011	The Begum's Millions	en	179546	62011	1	2	0	\N	2011-05-06 16:06:20.651939	2011-05-06 16:06:20.708519
+74299	The Kip Brothers	en	1142817	74299	1	2	0	\N	2011-05-06 16:46:52.314789	2011-05-06 16:46:52.37165
+17602	James Cameron's Avatar	en	\N	17602	1	6	0	\N	2011-05-06 13:53:31.262856	2011-05-06 13:53:31.262856
+17600	James Cameron's Avatar: The Na'vi Quest	en	1137091	17602	2	3	1	\N	2011-05-06 13:53:31.262856	2011-05-06 13:53:31.262856
+17601	Avatar: A Confidential Report on the Biological and Social History of Pandora	en	1137093	17602	4	5	1	\N	2011-05-06 13:53:31.262856	2011-05-06 13:53:31.262856
+35263	Kushiel's Legacy Universe	en	\N	35263	1	30	0	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35262	Kushiel's Legacy	en	\N	35263	2	21	1	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35257	Phèdre Trilogy	en	\N	35263	3	12	2	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35253	You, and You Alone	en	1195873	35263	4	5	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35254	Kushiel's Dart	en	21713	35263	6	7	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35255	Kushiel's Chosen	en	21714	35263	8	9	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35256	Kushiel's Avatar	en	21715	35263	10	11	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35261	Imriel Trilogy	en	\N	35263	13	20	2	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35258	Kushiel's Scion	en	169100	35263	14	15	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35259	Kushiel's Justice	en	223921	35263	16	17	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35260	Kushiel's Mercy	en	829257	35263	18	19	3	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35252	Moirin Trilogy	en	\N	35263	22	29	1	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35249	Naamah's Kiss	en	930192	35263	23	24	2	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35250	Naamah's Curse	en	1098586	35263	25	26	2	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+35251	Naamah's Blessing	en	1224834	35263	27	28	2	\N	2011-05-06 14:35:50.270409	2011-05-26 11:20:09.829204
+80186	La marque	fr	\N	80186	1	2	0	35254	2011-05-19 20:27:57.322053	2011-05-19 20:27:57.322053
+80615	La maschera e le tenebre : romanzo	it	\N	80615	1	2	0	35256	2011-05-20 11:17:19.626323	2011-05-20 11:17:19.626323
+80146	Il sangue e el traditore : romanzo	it	\N	80146	1	2	0	35258	2011-05-19 20:27:23.533169	2011-05-19 20:27:23.533169
+\.
+
+
+--
+-- Data for Name: title_attribution; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY title_attribution (id, title_id, name, url, retrieved) FROM stdin;
@@ -1115,39 +1363,39 @@ COPY title_attribution (id, title_id, name, url, retrieved) FROM stdin;
 
 
 --
--- Data for Name: user_info; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: title_link; Type: TABLE DATA; Schema: public; Owner: quelology-dev
+--
+
+COPY title_link (id, title_id, url, type, lang) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_auth; Type: TABLE DATA; Schema: public; Owner: quelology-dev
+--
+
+COPY user_auth (id, name, salt, cost, pw_hash) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_info; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
 COPY user_info (id, login_id, real_name, email) FROM stdin;
-1	1	Test	test@example.com
-2	2	Admin	admin@example.com
-3	3	Root	root@example.com
-4	4	Moritz	moritz@example.com
 \.
 
 
 --
--- Data for Name: user_login; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: user_login; Type: TABLE DATA; Schema: public; Owner: quelology-dev
 --
 
-COPY user_login (id, name, salt, cost, pw_hash) FROM stdin;
-1	test	+\\277\\030\\335\\223\\310\\260^\\336\\275qZ\\272Bd\\306	9	\\374\\240\\015.j\\350\\030v0\\200\\326\\006eL\\307\\256\\360\\313\\\\qI\\035Z
-2	admin	\\327\\222\\266\\025t\\034\\213c\\220\\364\\335)FB\\353o	9	\\302\\343b\\371\\332\\344{<\\320\\206\\177\\212\\3511\\245L\\033i\\037\\251\\231\\026U
-3	root	\\311 \\024\\357\\006'a'\\206\\337mCO\\304\\033\\304	9	_\\312\\001\\372`\\343\\014\\345;\\017\\236\\367#e\\023\\314\\360\\356s"h%\\343
-4	moritz	\\2637\\302h\\245\\355\\200\\257o\\233\\223\\241v\\241#\\364	9	{\\214\\275\\377k\\247\\376G2w\\262:\\212\\022\\303i\\226\\206q{\\370\\264[
+COPY user_login (id, name, salt, cost, pw_hash, created, modified) FROM stdin;
 \.
 
 
 --
--- Name: attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY attribution
-    ADD CONSTRAINT attribution_pkey PRIMARY KEY (id);
-
-
---
--- Name: author_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author_attribution
@@ -1155,7 +1403,7 @@ ALTER TABLE ONLY author_attribution
 
 
 --
--- Name: author_isfdb_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_isfdb_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author
@@ -1163,7 +1411,23 @@ ALTER TABLE ONLY author
 
 
 --
--- Name: author_link_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_libris_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY author
+    ADD CONSTRAINT author_libris_id_key UNIQUE (libris_id);
+
+
+--
+-- Name: author_link_author_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY author_link
+    ADD CONSTRAINT author_link_author_id_key UNIQUE (author_id, url);
+
+
+--
+-- Name: author_link_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author_link
@@ -1171,7 +1435,7 @@ ALTER TABLE ONLY author_link
 
 
 --
--- Name: author_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_name_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author
@@ -1179,7 +1443,7 @@ ALTER TABLE ONLY author
 
 
 --
--- Name: author_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author
@@ -1187,7 +1451,7 @@ ALTER TABLE ONLY author
 
 
 --
--- Name: author_title_map_author_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_title_map_author_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author_title_map
@@ -1195,7 +1459,7 @@ ALTER TABLE ONLY author_title_map
 
 
 --
--- Name: author_title_map_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: author_title_map_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY author_title_map
@@ -1203,23 +1467,23 @@ ALTER TABLE ONLY author_title_map
 
 
 --
--- Name: medium_asin_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: login_name_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
-ALTER TABLE ONLY medium
-    ADD CONSTRAINT medium_asin_key UNIQUE (asin);
-
-
---
--- Name: medium_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY medium
-    ADD CONSTRAINT medium_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY login
+    ADD CONSTRAINT login_name_key UNIQUE (name);
 
 
 --
--- Name: publication_asin_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: login_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY login
+    ADD CONSTRAINT login_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: publication_asin_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publication
@@ -1227,7 +1491,7 @@ ALTER TABLE ONLY publication
 
 
 --
--- Name: publication_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publication_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publication_attribution
@@ -1235,7 +1499,15 @@ ALTER TABLE ONLY publication_attribution
 
 
 --
--- Name: publication_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publication_libris_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY publication
+    ADD CONSTRAINT publication_libris_id_key UNIQUE (libris_id);
+
+
+--
+-- Name: publication_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publication
@@ -1243,7 +1515,7 @@ ALTER TABLE ONLY publication
 
 
 --
--- Name: publisher_isfdb_id_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher_isfdb_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publisher
@@ -1251,7 +1523,7 @@ ALTER TABLE ONLY publisher
 
 
 --
--- Name: publisher_link_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher_link_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publisher_link
@@ -1259,7 +1531,7 @@ ALTER TABLE ONLY publisher_link
 
 
 --
--- Name: publisher_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher_name_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publisher
@@ -1267,7 +1539,7 @@ ALTER TABLE ONLY publisher
 
 
 --
--- Name: publisher_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: publisher_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY publisher
@@ -1275,15 +1547,47 @@ ALTER TABLE ONLY publisher
 
 
 --
--- Name: title_asin_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: raw_publication_asin_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
-ALTER TABLE ONLY title
-    ADD CONSTRAINT title_asin_key UNIQUE (asin);
+ALTER TABLE ONLY raw_publication
+    ADD CONSTRAINT raw_publication_asin_key UNIQUE (asin);
 
 
 --
--- Name: title_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: raw_publication_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY raw_publication_attribution
+    ADD CONSTRAINT raw_publication_attribution_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: raw_publication_isbn_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY raw_publication
+    ADD CONSTRAINT raw_publication_isbn_key UNIQUE (isbn);
+
+
+--
+-- Name: raw_publication_libris_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY raw_publication
+    ADD CONSTRAINT raw_publication_libris_id_key UNIQUE (libris_id);
+
+
+--
+-- Name: raw_publication_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY raw_publication
+    ADD CONSTRAINT raw_publication_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: title_attribution_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY title_attribution
@@ -1291,7 +1595,31 @@ ALTER TABLE ONLY title_attribution
 
 
 --
--- Name: title_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: title_isfdb_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY title
+    ADD CONSTRAINT title_isfdb_id_key UNIQUE (isfdb_id);
+
+
+--
+-- Name: title_link_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY title_link
+    ADD CONSTRAINT title_link_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: title_link_title_id_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY title_link
+    ADD CONSTRAINT title_link_title_id_key UNIQUE (title_id, url, lang);
+
+
+--
+-- Name: title_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY title
@@ -1299,7 +1627,31 @@ ALTER TABLE ONLY title
 
 
 --
--- Name: user_info_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: title_same_as_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY title
+    ADD CONSTRAINT title_same_as_key UNIQUE (same_as, lang);
+
+
+--
+-- Name: user_auth_name_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY user_auth
+    ADD CONSTRAINT user_auth_name_key UNIQUE (name);
+
+
+--
+-- Name: user_auth_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+ALTER TABLE ONLY user_auth
+    ADD CONSTRAINT user_auth_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_info_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY user_info
@@ -1307,7 +1659,7 @@ ALTER TABLE ONLY user_info
 
 
 --
--- Name: user_login_name_key; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: user_login_name_key; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY user_login
@@ -1315,7 +1667,7 @@ ALTER TABLE ONLY user_login
 
 
 --
--- Name: user_login_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+-- Name: user_login_pkey; Type: CONSTRAINT; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 ALTER TABLE ONLY user_login
@@ -1323,29 +1675,134 @@ ALTER TABLE ONLY user_login
 
 
 --
--- Name: medium_root_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: author_attribution_author_id; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
-CREATE INDEX medium_root_id_idx ON medium USING btree (root_id);
+CREATE INDEX author_attribution_author_id ON author_attribution USING btree (author_id);
 
 
 --
--- Name: title_root_id_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+-- Name: author_link_author_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX author_link_author_id_idx ON author_link USING btree (author_id);
+
+
+--
+-- Name: publication_attribution_publication_id; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX publication_attribution_publication_id ON publication_attribution USING btree (publication_id);
+
+
+--
+-- Name: publication_publisher_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX publication_publisher_id_idx ON publication USING btree (publisher_id);
+
+
+--
+-- Name: publication_title_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX publication_title_id_idx ON publication USING btree (title_id);
+
+
+--
+-- Name: publisher_link_publisher_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX publisher_link_publisher_id_idx ON publisher_link USING btree (publisher_id);
+
+
+--
+-- Name: raw_publication_attribution_raw_publication_id; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX raw_publication_attribution_raw_publication_id ON raw_publication_attribution USING btree (raw_publication_id);
+
+
+--
+-- Name: title_attributioin_title_id; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX title_attributioin_title_id ON title_attribution USING btree (title_id);
+
+
+--
+-- Name: title_link_title_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
+--
+
+CREATE INDEX title_link_title_id_idx ON title_link USING btree (title_id);
+
+
+--
+-- Name: title_root_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
 CREATE INDEX title_root_id_idx ON title USING btree (root_id);
 
 
 --
--- Name: attribution_medium_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_info_login_id_idx; Type: INDEX; Schema: public; Owner: quelology-dev; Tablespace: 
 --
 
-ALTER TABLE ONLY attribution
-    ADD CONSTRAINT attribution_medium_id_fkey FOREIGN KEY (medium_id) REFERENCES medium(id);
+CREATE INDEX user_info_login_id_idx ON user_info USING btree (login_id);
 
 
 --
--- Name: author_attribution_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: update_author_modtime; Type: TRIGGER; Schema: public; Owner: quelology-dev
+--
+
+CREATE TRIGGER update_author_modtime
+    BEFORE UPDATE ON author
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_modified_column();
+
+
+--
+-- Name: update_publication_modtime; Type: TRIGGER; Schema: public; Owner: quelology-dev
+--
+
+CREATE TRIGGER update_publication_modtime
+    BEFORE UPDATE ON publication
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_modified_column();
+
+
+--
+-- Name: update_raw_publication_modtime; Type: TRIGGER; Schema: public; Owner: quelology-dev
+--
+
+CREATE TRIGGER update_raw_publication_modtime
+    BEFORE UPDATE ON raw_publication
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_modified_column();
+
+
+--
+-- Name: update_title_modtime; Type: TRIGGER; Schema: public; Owner: quelology-dev
+--
+
+CREATE TRIGGER update_title_modtime
+    BEFORE UPDATE ON title
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_modified_column();
+
+
+--
+-- Name: update_user_login_modtime; Type: TRIGGER; Schema: public; Owner: quelology-dev
+--
+
+CREATE TRIGGER update_user_login_modtime
+    BEFORE UPDATE ON user_login
+    FOR EACH ROW
+    EXECUTE PROCEDURE update_modified_column();
+
+
+--
+-- Name: author_attribution_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY author_attribution
@@ -1353,7 +1810,7 @@ ALTER TABLE ONLY author_attribution
 
 
 --
--- Name: author_link_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: author_link_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY author_link
@@ -1361,7 +1818,7 @@ ALTER TABLE ONLY author_link
 
 
 --
--- Name: author_title_map_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: author_title_map_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY author_title_map
@@ -1369,7 +1826,7 @@ ALTER TABLE ONLY author_title_map
 
 
 --
--- Name: author_title_map_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: author_title_map_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY author_title_map
@@ -1377,23 +1834,7 @@ ALTER TABLE ONLY author_title_map
 
 
 --
--- Name: medium_root_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY medium
-    ADD CONSTRAINT medium_root_id_fkey FOREIGN KEY (root_id) REFERENCES medium(id) ON DELETE CASCADE;
-
-
---
--- Name: medium_same_as_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY medium
-    ADD CONSTRAINT medium_same_as_fkey FOREIGN KEY (same_as) REFERENCES medium(id) ON DELETE CASCADE;
-
-
---
--- Name: publication_attribution_publication_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: publication_attribution_publication_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY publication_attribution
@@ -1401,23 +1842,47 @@ ALTER TABLE ONLY publication_attribution
 
 
 --
--- Name: publication_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: publication_publisher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY publication
-    ADD CONSTRAINT publication_title_id_fkey FOREIGN KEY (title_id) REFERENCES title(id);
+    ADD CONSTRAINT publication_publisher_id_fkey FOREIGN KEY (publisher_id) REFERENCES publisher(id);
 
 
 --
--- Name: publisher_link_author_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: publication_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE ONLY publication
+    ADD CONSTRAINT publication_title_id_fkey FOREIGN KEY (title_id) REFERENCES title(id) ON DELETE CASCADE;
+
+
+--
+-- Name: publisher_link_publisher_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY publisher_link
-    ADD CONSTRAINT publisher_link_author_id_fkey FOREIGN KEY (author_id) REFERENCES publisher(id) ON DELETE CASCADE;
+    ADD CONSTRAINT publisher_link_publisher_id_fkey FOREIGN KEY (publisher_id) REFERENCES publisher(id) ON DELETE CASCADE;
 
 
 --
--- Name: title_attribution_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: raw_publication_attribution_raw_publication_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE ONLY raw_publication_attribution
+    ADD CONSTRAINT raw_publication_attribution_raw_publication_id_fkey FOREIGN KEY (raw_publication_id) REFERENCES raw_publication(id) ON DELETE CASCADE;
+
+
+--
+-- Name: raw_publication_maybe_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE ONLY raw_publication
+    ADD CONSTRAINT raw_publication_maybe_title_id_fkey FOREIGN KEY (maybe_title_id) REFERENCES title(id) ON DELETE CASCADE;
+
+
+--
+-- Name: title_attribution_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY title_attribution
@@ -1425,7 +1890,15 @@ ALTER TABLE ONLY title_attribution
 
 
 --
--- Name: title_root_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: title_link_title_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
+--
+
+ALTER TABLE ONLY title_link
+    ADD CONSTRAINT title_link_title_id_fkey FOREIGN KEY (title_id) REFERENCES title(id) ON DELETE CASCADE;
+
+
+--
+-- Name: title_root_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY title
@@ -1433,7 +1906,7 @@ ALTER TABLE ONLY title
 
 
 --
--- Name: title_same_as_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: title_same_as_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY title
@@ -1441,7 +1914,7 @@ ALTER TABLE ONLY title
 
 
 --
--- Name: user_info_login_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: user_info_login_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: quelology-dev
 --
 
 ALTER TABLE ONLY user_info
@@ -1449,7 +1922,7 @@ ALTER TABLE ONLY user_info
 
 
 --
--- Name: public; Type: ACL; Schema: -; Owner: -
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
 --
 
 REVOKE ALL ON SCHEMA public FROM PUBLIC;
