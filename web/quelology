@@ -56,7 +56,7 @@ app->hook(after_static_dispatch => sub {
 # app->hook(before_dispatch => sub {
 #     my $self = shift;
 #     $self->app->log->error("HOST: " . $self->req->url->host);
-# 
+#
 # });
 
 app->helper(shelf => sub {
@@ -803,7 +803,7 @@ __DATA__
 % for my $lang (@first_langs) {
     % my ($l, $c) = map $lang->get_column($_), qw/lang count/;
     <li><a href="/title/<%= $l %>"><%= $loc->get_language_from_code($l) // $l %> (<%= $c %> titles)</a></li>
-% } 
+% }
 % if (@$langs) {
     % my $last_lang = pop @$langs;
     <p>... and more in
@@ -856,7 +856,7 @@ __DATA__
 %} else {
     (no authors known)
 % }
- 
+
 @@ add_shelf_link.html.ep
 <span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to your book shelf</a></span>
 
@@ -1065,7 +1065,7 @@ __DATA__
         % }
     </select>
     <br />
-    and 
+    and
     <br />
     <select name="edit_where" size="5">
         <option value="before">move it before</option>
@@ -1077,7 +1077,7 @@ __DATA__
     <br />
     <select name="target_id" size="<%= $mc %>">
         % for (@ns) {
-            <option value="<%= $_->id %>"><%= $_->title %></option> 
+            <option value="<%= $_->id %>"><%= $_->title %></option>
         % }
     </select>
     <br />
@@ -1101,13 +1101,13 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
     <p>By <%== include authors => for => $node %></p>
 
     <table>
-        % if ($node->date) { 
+        % if ($node->date) {
             <tr>
                 <td>Initial publication</td>
                 <td itemprop="datePublished"><%= $node->date %></td>
             </tr>
         % }
-        % if ($node->language) { 
+        % if ($node->language) {
             <tr>
                 <td itemprop="inLanguage">Language</td>
                 <td itemprop="datePublished"><%= $node->language %></td>
