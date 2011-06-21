@@ -22,39 +22,34 @@ my $r = $t->get_ok('/')
   ;
 
 like $r->tx->res->dom->at('.series')->all_text,
-     qr/Auserwählte/, 'ul content + utf-8';
+     qr/James Cameron's Avatar/, 'series title';
 
-$r->get_ok('/m/45')
+$r->get_ok('/t/35263')
   ->status_is(200)
-  ->text_like(title => qr/Terre d'Ange/)
-  ->text_like(title => qr/Jacqueline Carey/)
-  ->text_like('#content h1' => qr/Terre d'Ange/)
+  ->text_like(title => qr/Kushiel's Legacy/)
+  ->text_like('#content h1' => qr/Kushiel/)
   ;
 
-$r->get_ok('/m/10')
+$r->get_ok('/t/35256')
     ->status_is(200);
 
 
-my $table = $r->tx->res->dom->at('#content table');
+my $table = $r->tx->res->dom->at('#pub_50367');
 my %h = map trim($_->all_text), $table->find('td')->each;
 
-is $h{Language}, 'English',         'medium data language';
-is $h{ISBN},     '0316037869',      'medium data ISBN';
-is $h{Author},   'Trudi Canavan',   'medium data author';
-is $h{'Publication year'}, 2011,    'medium data pub year';
-is $h{Publisher}, 'Orbit',          'medium data pub publisher';
+is $h{Language}, 'English',         'title data language';
+is $h{ISBN},     '0312872402',      'title data ISBN';
+is $h{Date},     '2003-04-01',      'title data pub year';
+is $h{Publisher},'Tor',             'title data pub publisher';
 
 
-$r->get_ok('/publication/16')
+$r->get_ok('/publication/50367')
     ->status_is(200)
     ->text_like(title => qr/Kushiel's Avatar/)
-    ->text_like(title => qr/Jacqueline Carey/)
     ;
-my $contents = $r->tx->res->dom->at('#medium_16')->all_text;
+my $contents = $r->tx->res->dom->at('#pub_50367')->all_text;
 like $contents, qr/Kushiel's Avatar/, 'book title appears in output';
-like $contents, qr/Jacqueline Carey/, 'book author appears in output';
 like $contents, qr/view on amazon/i, 'Amazon link';
-like $contents, qr/German/, 'has a German translations';
 
 for my $page (qw/about login imprint/) {
     $r->get_ok("/$page")
