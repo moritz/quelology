@@ -841,6 +841,7 @@ __DATA__
 <a href="/author/<%= $author->id %>" class="author"><%= $author->name %></a><%= '' =%>
 
 @@ authors.html.ep
+<span itemprop="author">
 % if ($for && (my @a = $for->authors)) {
     % if (@a == 1) {
         <%== include 'single_author', author => $a[0] =%>
@@ -856,6 +857,7 @@ __DATA__
 %} else {
     (no authors known)
 % }
+</span>
 
 @@ add_shelf_link.html.ep
 <span class="add_to_shelf"><a href="#" onclick="add_id_to_shelf(<%= $node->id %>); return false">Add to your book shelf</a></span>
@@ -899,7 +901,8 @@ __DATA__
 % }
 
 @@ author.html.ep
-<h1><%= $author->name %></h1>
+<div id="author_<%= $author->id %>" itemscope itemtype="http://schema.org/Person">
+<h1 itemprop="name"><%= $author->name %></h1>
 <table>
     % my @keys = qw/name legal_name birthplace birthdate deathdate/;
     % my @names = ('Name', 'Legal name', 'Birth place', 'Birth date', 'Death date');
@@ -943,7 +946,7 @@ __DATA__
         <li><a href="/publisher/<%= $_->id %>"><%= $_->name %></a></li>
     % }
 </ul>
-
+</div>
 
 @@ links.html.ep
 % if (@$links) {
