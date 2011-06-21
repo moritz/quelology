@@ -6,6 +6,7 @@ use Quelology::Config qw/schema/;
 use WebService::Libris;
 use Mojo::URL;
 binmode STDOUT, ':encoding(UTF-8)';
+$| = 1;
 
 my $rs = schema->p->search({ libris_id => {'<>' => undef }});
 my %seen;
