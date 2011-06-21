@@ -16,7 +16,6 @@ BEGIN { use_ok('Quelology::Config', 'schema') }
 ok my $schema = schema(), 'can get a schema';
 ok my $m = $schema->t->by_id(35254), 'medium by id';
 is $m->title, "Kushiel's Dart", 'can access title';
-note $m->authors->first->id;
 like $m->authors->first->name, qr/Carey/, 'author';
 my $isbn = $m->publications->first->isbn;
 ok length($isbn) == 10 || length($isbn) == 13, 'isbn is 10 or 13 chars long';
@@ -30,6 +29,7 @@ is $root->lang, 'en', 'language is propagated up to the root';
     my $tr = $schema->t->by_id(35254)->translations;
     is $tr->count, 1, 'we know one translation of a Kushiel book';
     is $tr->first->lang, 'fr', '... and it is French';
+    is $tr->first->title, 'La marque', '... correct title';
 
     my $trans_id = $tr->first->id;
 
