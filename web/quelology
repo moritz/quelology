@@ -695,12 +695,6 @@ post '/raw-publication/confirm' => sub {
 
 };
 
-
-$SIG{INT} = sub {
-    $schema->storage->disconnect;
-    exec $^X, $0, @ARGV;
-};
-
 get '/shelf/connect' => sub {
     my $self = shift;
     my %seen;
