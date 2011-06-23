@@ -58,30 +58,16 @@ sub cook {
     die "Title should be of class 'Q::M::Result::Title', is $title"
         unless $title->isa('Quelology::Model::Result::Title');
     $self->result_source->schema->txn_do(sub {
+        my @columns = grep !/created|modified/,
+                      $self->result_source->schema
+                      ->source('Quelology::Model::Result::Publication')->columns;
+        my %cols = $self->get_columns;
+        my %pub_cols;
+        for (@columns) {
+            $pub_cols{$_} = $cols{$_} if exists $cols{$_};
+        }
         # TODO: automatically generate that list with get_columns or so
-        my $pub = $title->create_related('publications', {
-            asin                => $self->asin,
-            isbn                => $self->isbn,
-            libris_id           => $self->libris_id,
-            title               => $self->title,
-            amazon_url          => $self->amazon_url,
-            publication_date    => $self->publication_date,
-            lang                => $self->lang,
-            binding             => $self->binding,
-            pages               => $self->pages,
-            small_image         => $self->small_image,
-            small_image_width   => $self->small_image_width,
-            small_image_height  => $self->small_image_height,
-            medium_image        => $self->medium_image,
-            medium_image_width  => $self->medium_image_width,
-            medium_image_height => $self->medium_image_height,
-            large_image         => $self->large_image,
-            large_image_width   => $self->large_image_width,
-            large_image_height  => $self->large_image_height,
-# carry over? or set anew?
-#            created             => $self->created,
-#            modified            => $self->modified,
-        });
+        my $pub = $title->create_related('publications', \%pub_cols);
         if ($self->publisher) {
             my @publishers = $self->result_source->schema->resultset('Publisher')
                                 ->search({ name => $self->publisher });
