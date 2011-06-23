@@ -165,6 +165,29 @@ sub import_by_asin {
     }
 }
 
+sub import_from_libris_book {
+    my ($self, $book, %overrides) = @_;
+    my $id = $overrides{id} // $book->id;
+    my %h = (
+        isbn        => $overrides{isbn}     // $book->isbn,
+        asin        => $overrides{isbn}     // $book->isbn,
+        title       => $overrides{title}    // $book->title,
+        publication_date => $overrides{date}// $book->date,
+        lang        => $overrides{language} // $book->language,
+        authors     => $overrides{authors}  // join(', ', $book->authors_text),
+        libris_id   => $id,
+        publisher   => $overrides{publisher}// $book->publisher,
+    );
+    $self->result_source->schema->txn_do(sub {
+            my $new = $self->create(\%h);
+            $new->create_related('attributions', {
+                    name    => 'libris',
+                    url     => "http://libris.kb.se/bib/$id",
+            });
+            return $new;
+    });
+}
+
 sub import_from_xisbn_attrs {
     my ($self, $attrs) = @_;
     if (length($attrs->{lang}) > 2) {
