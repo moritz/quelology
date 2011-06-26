@@ -67,23 +67,23 @@ is $root->lang, 'en', 'language is propagated up to the root';
 # TODO: check the whole tree structure
 
 ok  $schema->resultset('UserLogin')->create({
-        name     => 'test',
+        name     => 'test2',
         password => 'test123',
 }), 'Can create a new user';
 
-ok !$schema->resultset('UserLogin')->authenticate('test', 'wrong'),
+ok !$schema->resultset('UserLogin')->authenticate('test2', 'wrong'),
     'can NOT authenticate with wrong password';
 ok !$schema->resultset('UserLogin')->authenticate('notthere', 'wrong'),
     'can NOT with non-existent user';
 
-ok my $t = $schema->resultset('UserLogin')->authenticate('test', 'test123'),
+ok my $t = $schema->resultset('UserLogin')->authenticate('test2', 'test123'),
     'CAN authenticate with correct credentials';
 
 lives_ok {$t->update({password => 'newpw'}) } 'can update password';
 
-ok !$schema->resultset('UserLogin')->authenticate('test', 'test123'),
+ok !$schema->resultset('UserLogin')->authenticate('test2', 'test123'),
     'can NOT authenticate with old credentials';
-ok  $schema->resultset('UserLogin')->authenticate('test', 'newpw'),
+ok  $schema->resultset('UserLogin')->authenticate('test2', 'newpw'),
     'CAN authenticate with new credentials';
 
 #$m = $schema->t->by_id(44);

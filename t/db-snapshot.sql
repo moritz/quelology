@@ -981,7 +981,7 @@ ALTER SEQUENCE user_login_id_seq OWNED BY user_login.id;
 -- Name: user_login_id_seq; Type: SEQUENCE SET; Schema: public; Owner: quelology-dev
 --
 
-SELECT pg_catalog.setval('user_login_id_seq', 1, false);
+SELECT pg_catalog.setval('user_login_id_seq', 1, true);
 
 
 --
@@ -1391,6 +1391,7 @@ COPY user_info (id, login_id, real_name, email) FROM stdin;
 --
 
 COPY user_login (id, name, salt, cost, pw_hash, created, modified) FROM stdin;
+1	test	t\\342\\000\\034Y\\311*'\\203$\\313\\317\\247\\202\\256\\352	9	*\\037\\314\\0364\\2113\\245\\227\\021\\023\\310\\177\\360!\\224pu#I(\\311\\362	2011-06-26 20:47:17.756223	2011-06-26 20:47:17.756223
 \.
 
 
