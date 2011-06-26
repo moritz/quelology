@@ -10,6 +10,7 @@ Dependencies:
     Crypt::Eksblowfish::Bcrypt
     KinoSearch
     aliased
+    Test::Exception
 
 A postgresql database server, and ideally three databases, one each for
 development, testing and production.
