@@ -57,7 +57,7 @@ for my $page (qw/about login imprint/) {
     ;
 }
 
-for (qw(/edit/44 /shelf/connect)) {
+for (qw(/edit/74299 /shelf/connect)) {
     $r->get_ok($_)
         ->status_is(403, "GET $_ is auth protected");
 }
@@ -68,9 +68,9 @@ for (qw(/lump/ /update/title /update/author /delete /dissolve /edit)) {
 }
 $r->post_form_ok('/login/', { username => 'test', password => 'test123' })
     ->status_is(302);
-$r->header_like(Location => qr{/edit/44$}, 'redirect to the first forbidden location');
+$r->header_like(Location => qr{/edit/74299$}, 'redirect to the first forbidden location');
 
-$r->get_ok('/edit/44')
+$r->get_ok('/edit/74299')
     ->status_is(200, '/edit/$id is open after authentication');
 
 $r->text_like('.flash'  => qr{log ?in}i, 'log in notification');
