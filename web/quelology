@@ -779,6 +779,11 @@ post '/edit' => sub {
     $self->redirect_to('/shelf/connect');
 };
 
+sub DESTROY {
+    $schema->storage->disconnect;
+    warn "Disconnecting schema";
+}
+
 app->start;
 __DATA__
 

@@ -58,7 +58,7 @@ sub cook {
     die "Title should be of class 'Q::M::Result::Title', is $title"
         unless $title->isa('Quelology::Model::Result::Title');
     $self->result_source->schema->txn_do(sub {
-        my @columns = grep !/created|modified/,
+        my @columns = grep !/created|modified|\bid\b/,
                       $self->result_source->schema
                       ->source('Quelology::Model::Result::Publication')->columns;
         my %cols = $self->get_columns;

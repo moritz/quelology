@@ -29,6 +29,7 @@ sub unparen {
 
 sub _fixup_date {
     my $date = shift;
+    $date =~ s/\[[^\]]*\]//g;
     my @d = split /-/, $date;
     push @d, qw/01 01/;
     my $d = join '-', @d[0..2];
@@ -172,7 +173,7 @@ sub import_from_libris_book {
         isbn        => $overrides{isbn}     // $book->isbn,
         asin        => $overrides{isbn}     // $book->isbn,
         title       => $overrides{title}    // $book->title,
-        publication_date => $overrides{date}// $book->date,
+        publication_date => _fixup_date($overrides{date}// $book->date),
         lang        => $overrides{language} // $book->language,
         authors     => $overrides{authors}  // join(', ', $book->authors_text),
         libris_id   => $id,
