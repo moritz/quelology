@@ -36,9 +36,7 @@ while (my $line = <$f>) {
             next;
 
         }
-        my $rp = $schema->rp->find({ isbn => $lp->isbn })
-                // $schema->rp->find({ libris_id => $lp->id })
-                // $schema->rp->import_from_libris_book($lp, language => $lang);
+        my $rp = $schema->rp->from_libris_book($lp, language => $lang);
         my $cook_into = $title->lang eq $lang
                         ? $title
                         : $title->translations->search({lang => $lang })->first;

@@ -166,6 +166,20 @@ sub import_by_asin {
     }
 }
 
+sub from_libris_book {
+    my ($self, $book, %overrides) = @_;
+    my $existing = $self->search({
+        -or =>
+            {
+                isbn        => $book->isbn,
+                asin        => $book->asin,
+                libris_id   => $book->id,
+            }
+    })->first;
+    return $existing if $existing;
+    return $self->import_from_libris_book($book, %overrides);
+}
+
 sub import_from_libris_book {
     my ($self, $book, %overrides) = @_;
     my $id = $overrides{id} // $book->id;
