@@ -1420,7 +1420,7 @@ Disallow: /
 %#    <% } %>
 
     <span class="data_title">
-    <a href="/details/<%= $n->id %>"><%= $n->title %></a>
+    <a href="/title/<%= $n->id %>"><%= $n->title %></a>
     %== include 'edit_marker' => edit => stash('edit'), what => 'title', name => 'title'
     </span>
     by
