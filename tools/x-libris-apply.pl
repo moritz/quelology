@@ -18,8 +18,10 @@ while (my $line = <$f>) {
     if ($line =~ /^\w\w \((\w+)\)/) {
         my $isbn = $1;
         $publication = $schema->p->find({ isbn => $isbn });
+        next unless $publication;
         $title = $publication->title_obj;
     } else {
+        next unless $publication;
         my (undef, $lang1, $lang2, $libris) = split /  /, $line;
         my $lang = chose_lang($lang1, $lang2);
         $libris =~ s/[()]//g;
