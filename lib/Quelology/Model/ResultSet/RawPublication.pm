@@ -172,7 +172,7 @@ sub from_libris_book {
         -or =>
             {
                 isbn        => $book->isbn,
-                asin        => $book->asin,
+                asin        => $book->isbn,
                 libris_id   => $book->id,
             }
     })->first;
