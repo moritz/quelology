@@ -1246,6 +1246,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
 
 @@ robotstxt_prod.txt.ep
 User-agent: *
+Disallow: /edit/
 Allow: /
 
 @@ robotstxt_dev.txt.ep
