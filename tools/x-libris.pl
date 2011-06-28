@@ -18,14 +18,11 @@ while (my $pub = $rs->next) {
     my $lp = WebService::Libris->new(
         type    => 'bib',
         id      => $pub->libris_id,
-        cache   => WebService::Libris::FileCache->new(
-                        directory   => 'data/libris/',
-                   ),
+        cache_dir   => 'data/libris/',
     );
     my $authors_ids = join ', ', $lp->authors_ids;
     printf "%s (%s) %s\n", $pub->lang, $pub->isbn, $pub->title;
-    my $related_collection = $lp->related_books;
-    while (my $related_lp = $related_collection->next) {
+    for my $related_lp ($lp->related_books) {
         $total++;
         my $ai = join ', ', $related_lp->authors_ids;
         my $lang = $related_lp->language // 'XX';

@@ -14,7 +14,7 @@ while (<>) {
     chomp;
     next unless s/^REVIEW:\s*//;
     my ($id, $libris_id) = split;
-    my $l = WebService::Libris->new(type => 'auth', id => $libris_id);
+    my $l = WebService::Libris->new(type => 'auth', id => $libris_id, cache_dir => 'data/libris/');
     my $a = $schema->a->by_id($id);
     eval {
         $schema->txn_do( sub {

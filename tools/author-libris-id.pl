@@ -18,8 +18,9 @@ while (my $pub = $rs->next) {
         my $l = WebService::Libris->new(
             type    => 'bib',
             id      => $pub->libris_id,
+            cache_dir => 'data/libris/',
         );
-        my @la = grep { defined $_->libris_key } $l->authors_obj->all;
+        my @la = grep { defined $_->libris_key } $l->authors_obj;
         next unless @la;
         if (@la == 1) {
             my $munged = munge_name($la[0]->libris_key);

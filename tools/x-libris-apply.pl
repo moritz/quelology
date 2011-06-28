@@ -4,7 +4,6 @@ use warnings;
 use lib 'lib';
 use Quelology::Config qw/schema/;
 use WebService::Libris;
-use WebService::Libris::FileCache;
 
 use utf8;
 binmode STDOUT, ':encoding(UTF-8)';
@@ -29,9 +28,7 @@ while (my $line = <$f>) {
         my $lp = WebService::Libris->new(
             type    => 'bib',
             id      => $libris,
-            cache   => WebService::Libris::FileCache->new(
-                directory   => 'data/libris/',
-            ),
+            cache_dir   => 'data/libris/',
         );
         if ($schema->p->search({ -or =>  { isbn => $lp->isbn, asin => $lp->isbn, libris_id => $lp->id}})->first) {
             say "publication already exists...";
