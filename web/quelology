@@ -1145,7 +1145,7 @@ id="<%= $what %>_<%= $id %>" data-id="<%= $id %>" data-what="<%= $what %>"
             <p><a href="/login/">Log in or create an account</a> to contribute!</p>
         % }
         % for my $rp (@rp) {
-            %== include 'raw-publication', node => $rp, title => $node, partial => 1
+            %== include 'raw-publication', node => $rp, title => $node, partial => 1, maybe_titles => []
             <br />
         % }
         % if (session('logged_in')) {
