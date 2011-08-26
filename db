@@ -7,8 +7,9 @@ use Quelology::Config qw/config/;
 my ($action, $mode) = @ARGV;
 
 my %commands = (
-    shell => ['psql'],
-    dump  => ['pg_dump', '--clean'],
+    shell       => ['psql'],
+    dump        => [qw/pg_dump --clean --exclude-table=user_*/],
+    full_dump   => ['pg_dump', '--clean'],
 );
 
 if (!$action || !$commands{$action}) {
@@ -17,7 +18,8 @@ Usage: $0 action [mode]
 
 action can be:
     shell       start a psql shell
-    dump        dump the database to STDOUT
+    dump        dump the database to STDOUT, excluding user/login data
+    full_dump   dump the full database to STDOUT
 USAGE
 }
 
