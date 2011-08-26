@@ -6,7 +6,6 @@ Dependencies:
     DBD::Pg
     Mojolicious
     Locales
-    JSON::XS
     Crypt::Eksblowfish::Bcrypt
     KinoSearch
     aliased

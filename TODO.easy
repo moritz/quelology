@@ -2,9 +2,6 @@ Easy, small scale TODO tasks. When you do one of them, move them to the end of
 the file below the 'DONE:' marker, and add a small comment if you found it
 easy or not
 
-(1) lib/Quelology/Config.pm uses JSON::XS to parse the config file.
-    Since we use Mojo anyway, rewrite it to use Mojo::JSON instead.
-
 (2) modify tools/create-ksx-index.pl to record the current timestamp
     in a small file (plain text or JSON). Bonus points for actually
     using the time that the database provides. Hint: SELECT NOW()
@@ -31,4 +28,7 @@ easy or not
     top_authors in that new file. Call that method from web/quelology.
 
 DONE:
+
+(1) lib/Quelology/Config.pm uses JSON::XS to parse the config file.
+    Since we use Mojo anyway, rewrite it to use Mojo::JSON instead.
 

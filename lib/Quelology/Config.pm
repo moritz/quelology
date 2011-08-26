@@ -6,7 +6,7 @@ use Exporter qw(import dbh);
 
 our @EXPORT_OK = qw(config schema amazon dbh run_mode);
 use autodie;
-use JSON::XS qw(decode_json);
+use Mojo::JSON;
 
 use DBI;
 use Quelology::Model;
@@ -19,12 +19,12 @@ sub run_mode {
 my $dir = $ENV{QUELOLOGY_HOME} || '.';
 $ENV{MOJO_HOME} //= "$dir/web/";
 
-my $conf = decode_json do {
-    open my $file, '<:encoding(UTF-8)', "$dir/config.json";
+my $conf = Mojo::JSON->new->decode( do {
+    open my $file, '<', "$dir/config.json";
     my $content = do { local $/, <$file> };
     close $file;
     $content;
-};
+});
 unless (exists $conf->{run_mode()}) {
     die sprintf "No config for run mode '%' available (set with the"
                 ."\nQUELOLOGY_RUNMODE environment variable (values dev, test or prod)",
