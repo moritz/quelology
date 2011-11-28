@@ -1290,11 +1290,13 @@ Disallow: /
 </table>
 %== include add_shelf_link => (node => $node);
 
+    % if ($node->amazon_url) {
      <p>
          <a href="<%= $node->amazon_url %>">
              View on amazon US
          </a>
      </p>
+     % }
 
      %== include 'attributions', for => $node, type => "Publication"
 </div>
@@ -1339,11 +1341,13 @@ Disallow: /
         % }
     % }
 </table>
+    % if ($node->amazon_url) {
      <p>
          <a href="<%= $node->amazon_url %>">
              View on amazon US
          </a>
      </p>
+     % }
 
      %== include 'attributions', for => $node, type => "Publication"
 
